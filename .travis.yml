@@ -1,0 +1,19 @@
+language: java
+jdk:
+  - openjdk8
+
+before_install:
+  - chmod +x gradlew
+branches:
+  only:
+    - develop
+
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+    - '$HOME/.gradle'
+
+script: "./gradlew clean build"
+
+notifications:
+  slack: nexters-moss:9lXh4BiaX9LK4HMAKGxP2HDf
