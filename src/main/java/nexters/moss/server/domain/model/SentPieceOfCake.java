@@ -1,21 +1,21 @@
 package nexters.moss.server.domain.model;
 
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "whole_cakes")
+@Table(name = "sent_piece_of_cakes")
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class WholeCake {
+public class SentPieceOfCake {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "whole_cake_id")
+    @Column(name = "sent_piece_of_cake_id")
     private Long id;
 
     @ManyToOne
@@ -26,7 +26,9 @@ public class WholeCake {
     @JoinColumn(name = "habit_id")
     private Habit habit;
 
-    @CreatedDate
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    @Column(name = "note")
+    private String note;
+
+    @OneToMany(mappedBy = "sentPieceOfCake")
+    private List<ReceivedPieceOfCake> receivedPieceOfCakeList = new ArrayList<>();
 }

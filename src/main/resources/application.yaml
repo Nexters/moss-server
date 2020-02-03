@@ -10,7 +10,7 @@ spring:
       idle-timeout: 10000
       minimumIdle: 30
       maximum-pool-size: 150
-      read-only: true
+      read-only: false
       connection-timeout: 20000
 
   jpa:
