@@ -13,7 +13,14 @@ cache:
     - '$HOME/.m2/repository'
     - '$HOME/.gradle'
 
+before_script:
+  - docker-compose -f environments/docker-compose.yaml up -d
+  - sleep 3
+
 script: "./gradlew clean build"
+
+after_script:
+  - docker-compose -f environments/docker-compose.yaml down
 
 notifications:
   slack: nexters-moss:9lXh4BiaX9LK4HMAKGxP2HDf
