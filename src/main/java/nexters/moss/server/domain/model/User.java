@@ -19,7 +19,7 @@ public class User {
     private Long id;
 
     @Column(name = "social_id")
-    private String socialId;
+    private Long socialId;
 
     @Column(name = "account_token")
     private String accountToken;
