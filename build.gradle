@@ -26,6 +26,10 @@ dependencies {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
 
+    // auth
+    compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.9'
+
     // db
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.2.1.RELEASE'
     compile group: 'com.zaxxer', name: 'HikariCP', version: '3.2.0'
