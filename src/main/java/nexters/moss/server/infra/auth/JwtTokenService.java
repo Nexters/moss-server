@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import nexters.moss.server.domain.model.Token;
 import nexters.moss.server.domain.model.TokenService;
 
-import java.security.Key;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -16,7 +15,7 @@ import java.util.Date;
 
 @AllArgsConstructor
 public class JwtTokenService implements TokenService {
-    private Key key;
+    private String key;
     private int expirationPeriod;
 
     @Override

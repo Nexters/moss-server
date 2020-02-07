@@ -40,6 +40,10 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     implementation 'junit:junit:4.12'
 
+    // test
+    testImplementation 'junit:junit:4.12'
+    implementation 'junit:junit:4.12'
+
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 }
