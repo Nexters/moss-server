@@ -27,7 +27,8 @@ public class User {
     @Column(name = "nickname")
     private String nickname;
 
-    @OneToMany(mappedBy = "user")
+    // TODO: modify EAGER to LAZY
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<HabitRecord> habitRecords = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")

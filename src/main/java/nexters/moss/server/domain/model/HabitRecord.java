@@ -1,7 +1,7 @@
 package nexters.moss.server.domain.model;
 
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
+import nexters.moss.server.domain.value.HabitStatus;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -19,13 +19,14 @@ public class HabitRecord {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "habit_id")
+    @JoinColumn(name = "habit_id", nullable = false)
     private Habit habit;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "habit_status")
     private HabitStatus habitStatus;
 

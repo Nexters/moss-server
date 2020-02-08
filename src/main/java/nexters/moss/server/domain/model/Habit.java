@@ -1,6 +1,7 @@
 package nexters.moss.server.domain.model;
 
 import lombok.*;
+import nexters.moss.server.domain.value.Cake;
 
 import javax.persistence.*;
 
@@ -16,11 +17,13 @@ public class Habit {
     @Column(name = "habit_id")
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "habit_name")
-    private String habitName;
+    private nexters.moss.server.domain.value.Habit habitName;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "cake_name")
-    private String cakeName;
+    private Cake cakeName;
 
     @Column(name = "whole_cake_image_path")
     private String wholeCakeImagePath;

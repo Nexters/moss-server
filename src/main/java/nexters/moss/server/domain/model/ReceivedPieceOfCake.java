@@ -19,11 +19,11 @@ public class ReceivedPieceOfCake {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "sent_piece_of_cake_id")
+    @JoinColumn(name = "sent_piece_of_cake_id", nullable = false)
     private SentPieceOfCake sentPieceOfCake;
 
     @CreatedDate
