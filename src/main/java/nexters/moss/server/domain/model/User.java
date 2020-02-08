@@ -27,9 +27,6 @@ public class User {
     @Column(name = "nickname")
     private String nickname;
 
-    @Column(name = "report_count")
-    private Long reportCount;
-
     @OneToMany(mappedBy = "user")
     private List<HabitRecord> habitRecords = new ArrayList<>();
 
