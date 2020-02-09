@@ -10,6 +10,7 @@ import nexters.moss.server.domain.repository.HabitRepository;
 import nexters.moss.server.domain.repository.UserRepository;
 import nexters.moss.server.domain.value.HabitStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class HabitApplicationService {
     private HabitRepository habitRepository;
     private HabitRecordRepository habitRecordRepository;

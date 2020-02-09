@@ -10,7 +10,6 @@ import nexters.moss.server.domain.repository.HabitRecordRepository;
 import nexters.moss.server.domain.repository.HabitRepository;
 import nexters.moss.server.domain.repository.UserRepository;
 import nexters.moss.server.domain.value.Cake;
-import nexters.moss.server.domain.value.HabitStatus;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,10 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -52,51 +49,22 @@ public class HabitApplicationServiceTest {
     }
 
     @Test
-    @Transactional
     public void getHabitHistoryTest() {
-        Habit waterHabit = habitRepository.save(
-                Habit.builder()
-                        .habitName(nexters.moss.server.domain.value.Habit.WATER)
-                        .cakeName(Cake.WATERMELON)
-                        .wholeCakeImagePath("WHOLE_CAKE_IMAGE_PATH")
-                        .pieceOfCakeImagePath("PIECE_OF_CAKE_IMAGE_PATH")
-                        .build()
-        );
+        Response<HabitHistory> createResponse = habitApplicationService.createHabit(testUser.getId(), testHabit.getId());
+        Assert.assertNotNull(createResponse.getData());
 
-        Habit stretchingHabit = habitRepository.save(
-                Habit.builder()
-                        .habitName(nexters.moss.server.domain.value.Habit.STRETCHING)
-                        .cakeName(Cake.WALNUT)
-                        .wholeCakeImagePath("WHOLE_CAKE_IMAGE_PATH")
-                        .pieceOfCakeImagePath("PIECE_OF_CAKE_IMAGE_PATH")
-                        .build()
-        );
-
-        LocalDateTime date = LocalDateTime.now();
-        for (int i = 0; i < 5; i++) {
-            habitRecordRepository.save(
-                    HabitRecord.builder()
-                            .user(testUser)
-                            .habit(waterHabit)
-                            .habitStatus(HabitStatus.NOT_DONE)
-                            .date(date)
-                            .build()
-            );
-
-            habitRecordRepository.save(
-                    HabitRecord.builder()
-                            .user(testUser)
-                            .habit(stretchingHabit)
-                            .habitStatus(HabitStatus.NOT_DONE)
-                            .date(date)
-                            .build()
-            );
+        List<HabitRecord> habitRecords = createResponse.getData().getHabitRecords();
+        Assert.assertEquals(5, habitRecords.size());
+        int nowDay = LocalDateTime.now().minusDays(1).getDayOfMonth();
+        for(HabitRecord habitRecord: habitRecords) {
+            Assert.assertEquals(nowDay, habitRecord.getDate().getDayOfMonth());
+            nowDay++;
         }
 
-        Response<List<HabitHistory>> response = habitApplicationService.getHabitHistory(testUser.getId());
-        Assert.assertEquals(2, response.getData().size());
+        Response<List<HabitHistory>> getResponse = habitApplicationService.getHabitHistory(testUser.getId());
+        Assert.assertEquals(1, getResponse.getData().size());
 
-        for (HabitHistory habitHistory: response.getData()) {
+        for (HabitHistory habitHistory: getResponse.getData()) {
             Assert.assertEquals(5, habitHistory.getHabitRecords().size());
         }
 
@@ -104,12 +72,11 @@ public class HabitApplicationServiceTest {
     }
 
     @Test
-    @Transactional
     public void createHabitTest() {
-        Response<HabitHistory> response = habitApplicationService.createHabit(testUser.getId(), testHabit.getId());
-        Assert.assertNotNull(response.getData());
+        Response<HabitHistory> createResponse = habitApplicationService.createHabit(testUser.getId(), testHabit.getId());
+        Assert.assertNotNull(createResponse.getData());
 
-        List<HabitRecord> habitRecords = response.getData().getHabitRecords();
+        List<HabitRecord> habitRecords = createResponse.getData().getHabitRecords();
         Assert.assertEquals(5, habitRecords.size());
         int nowDay = LocalDateTime.now().minusDays(1).getDayOfMonth();
         for(HabitRecord habitRecord: habitRecords) {
@@ -119,12 +86,11 @@ public class HabitApplicationServiceTest {
     }
 
     @Test
-    @Transactional
     public void deleteHabitTest() {
-        Response<HabitHistory> response = habitApplicationService.createHabit(testUser.getId(), testHabit.getId());
-        Assert.assertNotNull(response.getData());
+        Response<HabitHistory> deleteResponse = habitApplicationService.createHabit(testUser.getId(), testHabit.getId());
+        Assert.assertNotNull(deleteResponse.getData());
 
-        List<HabitRecord> habitRecords = response.getData().getHabitRecords();
+        List<HabitRecord> habitRecords = deleteResponse.getData().getHabitRecords();
         Assert.assertEquals(5, habitRecords.size());
 
         habitApplicationService.deleteHabit(testUser.getId(), testHabit.getId());
