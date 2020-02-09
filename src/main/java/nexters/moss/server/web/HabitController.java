@@ -1,9 +1,12 @@
 package nexters.moss.server.web;
 
 import nexters.moss.server.application.HabitApplicationService;
+import nexters.moss.server.application.dto.HabitHistory;
 import nexters.moss.server.application.dto.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("habit")
@@ -17,7 +20,17 @@ public class HabitController {
     // TODO: JWT Authentication will give user information
     @GetMapping("/history")
     @ResponseStatus(value = HttpStatus.OK)
-    public Response getHabitHistory(@PathVariable Long userId) {
+    public Response<List<HabitHistory>> getHabitHistory(@PathVariable Long userId) {
         return habitApplicationService.getHabitHistory(userId);
+    }
+
+    // TODO: JWT Authentication will give user information
+    @PostMapping("")
+    @ResponseStatus(value = HttpStatus.OK)
+    public Response<HabitHistory> createHabit(
+            @PathVariable Long userId,
+            @RequestBody Long habitId
+    ) {
+        return habitApplicationService.createHabit(userId, habitId);
     }
 }
