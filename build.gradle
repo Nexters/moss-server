@@ -46,6 +46,7 @@ dependencies {
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+    implementation 'junit:junit:4.12'
 }
 
 test {
