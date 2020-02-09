@@ -117,4 +117,17 @@ public class HabitApplicationServiceTest {
             nowDay++;
         }
     }
+
+    @Test
+    @Transactional
+    public void deleteHabitTest() {
+        Response<HabitHistory> response = habitApplicationService.createHabit(testUser.getId(), testHabit.getId());
+        Assert.assertNotNull(response.getData());
+
+        List<HabitRecord> habitRecords = response.getData().getHabitRecords();
+        Assert.assertEquals(5, habitRecords.size());
+
+        habitApplicationService.deleteHabit(testUser.getId(), testHabit.getId());
+        Assert.assertEquals(0, habitRecordRepository.findAllByUserAndHabit(testUser, testHabit).size());
+    }
 }

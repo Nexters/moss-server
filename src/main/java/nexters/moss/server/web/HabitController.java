@@ -33,4 +33,14 @@ public class HabitController {
     ) {
         return habitApplicationService.createHabit(userId, habitId);
     }
+
+    // TODO: JWT Authentication will give user information
+    @DeleteMapping("")
+    @ResponseStatus(value = HttpStatus.OK)
+    public Response<Long> deleteHabit(
+            @PathVariable Long userId,
+            @RequestBody Long habitId
+    ) {
+        return habitApplicationService.deleteHabit(userId, habitId);
+    }
 }

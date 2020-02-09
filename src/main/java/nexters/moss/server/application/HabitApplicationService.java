@@ -77,4 +77,11 @@ public class HabitApplicationService {
 
         return new Response<>(habitHistories);
     }
+
+    public Response<Long> deleteHabit(Long userId, Long habitId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("No Matched User"));
+        Habit habit = habitRepository.findById(habitId).orElseThrow(() -> new IllegalArgumentException("No Matched Habit"));
+        habitRecordRepository.deleteAllByUserAndHabit(user, habit);
+        return new Response<>(habitId);
+    }
 }
