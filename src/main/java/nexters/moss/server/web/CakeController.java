@@ -23,10 +23,16 @@ public class CakeController {
         return cakeApplicationService.getAllHabits();
     }
 
-    @PostMapping("")
+    @PostMapping("/{userId}")
     @ResponseStatus(value = HttpStatus.OK)
-    public Response addCake(@PathVariable Long userId, @RequestBody Map<String, Object> param){
+    public Response addSentPieceOfCake(@PathVariable Long userId, @RequestBody Map<String, Object> data){
+        return cakeApplicationService.addSentPieceOfCake(userId, data);
+    }
 
-        return null;
+
+    @PostMapping(value = "/{userId}", params = "categoryId")
+    @ResponseStatus(value = HttpStatus.OK)
+    public Response addReceivedPieceOfCake(@PathVariable Long userId, @RequestParam long categoryId){
+        return cakeApplicationService.addReceivedPieceOfCake(userId, categoryId);
     }
 }

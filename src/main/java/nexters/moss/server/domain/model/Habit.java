@@ -1,6 +1,5 @@
 package nexters.moss.server.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import nexters.moss.server.domain.value.CakeType;
 import nexters.moss.server.domain.value.HabitType;
@@ -17,7 +16,6 @@ public class Habit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "habit_id")
-    @JsonProperty("CategoryId")
     private Long id;
 
     @ManyToOne
