@@ -9,7 +9,8 @@ import nexters.moss.server.domain.model.User;
 import nexters.moss.server.domain.repository.HabitRecordRepository;
 import nexters.moss.server.domain.repository.HabitRepository;
 import nexters.moss.server.domain.repository.UserRepository;
-import nexters.moss.server.domain.value.Cake;
+import nexters.moss.server.domain.value.CakeType;
+import nexters.moss.server.domain.value.HabitType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +26,7 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class HabitApplicationServiceTest {
+public class HabitTypeApplicationServiceTest {
     private User testUser;
 
     private Habit testHabit;
@@ -45,22 +46,12 @@ public class HabitApplicationServiceTest {
     @Before
     public void setup() {
         testUser = userRepository.save(new User(null, "socialId", "accounToken", "nickName", null, null, null, null));
-        testHabit = habitRepository.save(new Habit(null, nexters.moss.server.domain.value.Habit.WATER, Cake.WATERMELON, null, null));
+        testHabit = habitRepository.save(new Habit(null, HabitType.WATER, CakeType.WATERMELON, null, null));
     }
 
     @Test
     public void getHabitHistoryTest() {
-        Response<HabitHistory> createResponse = habitApplicationService.createHabit(testUser.getId(), testHabit.getId());
-        Assert.assertNotNull(createResponse.getData());
-
-        List<HabitRecord> habitRecords = createResponse.getData().getHabitRecords();
-        Assert.assertEquals(5, habitRecords.size());
-        int nowDay = LocalDateTime.now().minusDays(1).getDayOfMonth();
-        for(HabitRecord habitRecord: habitRecords) {
-            Assert.assertEquals(nowDay, habitRecord.getDate().getDayOfMonth());
-            nowDay++;
-        }
-
+        habitApplicationService.createHabit(testUser.getId(), testHabit.getId());
         Response<List<HabitHistory>> getResponse = habitApplicationService.getHabitHistory(testUser.getId());
         Assert.assertEquals(1, getResponse.getData().size());
 

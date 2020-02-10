@@ -3,7 +3,7 @@ package nexters.moss.server.domain.value;
 import lombok.Getter;
 
 @Getter
-public enum  Habit {
+public enum HabitType {
     WATER("물마시기"),
     STRETCHING("스트레칭"),
     MEDITATION("명상"),
@@ -15,7 +15,7 @@ public enum  Habit {
 
     private String name;
 
-    Habit(String name) {
-
+    HabitType(String name) {
+        this.name = name;
     }
 }

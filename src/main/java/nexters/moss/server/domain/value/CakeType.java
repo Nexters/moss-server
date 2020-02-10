@@ -3,7 +3,7 @@ package nexters.moss.server.domain.value;
 import lombok.Getter;
 
 @Getter
-public enum  Cake {
+public enum CakeType {
     WATERMELON("수박"),
     WALNUT("호두"),
     CHEESE("치즈"),
@@ -15,7 +15,7 @@ public enum  Cake {
 
     private String name;
 
-    Cake(String name) {
+    CakeType(String name) {
         this.name = name;
     }
 }
