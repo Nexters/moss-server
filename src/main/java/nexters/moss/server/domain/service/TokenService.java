@@ -1,4 +1,6 @@
-package nexters.moss.server.domain.model;
+package nexters.moss.server.domain.service;
+
+import nexters.moss.server.domain.model.Token;
 
 public interface TokenService {
     public String createToken(Long userId, String accessToken);

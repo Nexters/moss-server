@@ -1,7 +1,8 @@
-package nexters.moss.server.infra.auth;
+package nexters.moss.server.user;
 
 import nexters.moss.server.domain.model.Token;
-import nexters.moss.server.domain.model.TokenService;
+import nexters.moss.server.domain.service.TokenService;
+import nexters.moss.server.infra.auth.JwtTokenService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

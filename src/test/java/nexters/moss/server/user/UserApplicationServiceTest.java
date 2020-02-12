@@ -1,29 +1,20 @@
-package nexters.moss.server.application;
+package nexters.moss.server.user;
 
-import nexters.moss.server.domain.model.SocialTokenService;
-import nexters.moss.server.domain.model.TokenService;
+import nexters.moss.server.application.UserApplicationService;
+import nexters.moss.server.application.dto.Response;
+import nexters.moss.server.domain.service.SocialTokenService;
 import nexters.moss.server.domain.model.User;
 import nexters.moss.server.domain.repository.UserRepository;
-import nexters.moss.server.infra.auth.JwtTokenService;
-import nexters.moss.server.infra.auth.KakaoTokenService;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.swing.*;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
@@ -50,11 +41,14 @@ public class UserApplicationServiceTest {
                 .willReturn(socialId);
 
         // when
-        userApplicationService.join(accessToken, nickname);
+        Response<Long> joinResponse = userApplicationService.join(accessToken, nickname);
 
         // then
+        assertThat(joinResponse).isNotNull();
+
         User user = userRepository.findAll().get(0);
 
+        assertThat(user.getId()).isEqualTo(joinResponse.getData().longValue());
         assertThat(user.getNickname()).isEqualTo(nickname);
         assertThat(user.getSocialId()).isEqualTo(socialId);
     }

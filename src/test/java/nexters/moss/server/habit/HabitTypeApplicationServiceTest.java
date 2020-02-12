@@ -45,7 +45,7 @@ public class HabitTypeApplicationServiceTest {
 
     @Before
     public void setup() {
-        testUser = userRepository.save(new User(null, "socialId", "accounToken", "nickName", null, null, null, null));
+        testUser = userRepository.save(new User(null, 12345678L, "accounToken", "nickName", null, null, null, null));
         testHabit = habitRepository.save(new Habit(null, HabitType.WATER, CakeType.WATERMELON, null, null));
     }
 

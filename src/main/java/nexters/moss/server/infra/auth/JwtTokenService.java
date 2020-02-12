@@ -4,10 +4,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import nexters.moss.server.domain.model.Token;
-import nexters.moss.server.domain.model.TokenService;
+import nexters.moss.server.domain.service.TokenService;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;

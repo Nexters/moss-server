@@ -1,4 +1,4 @@
-package nexters.moss.server.domain.model;
+package nexters.moss.server.domain.service;
 
 import nexters.moss.server.domain.model.exception.NoSocialUserInfoException;
 

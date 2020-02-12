@@ -1,11 +1,4 @@
-package nexters.moss.server.infra.auth;
-
-import nexters.moss.server.domain.model.SocialTokenService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+package nexters.moss.server.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

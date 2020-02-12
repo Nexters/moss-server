@@ -2,13 +2,11 @@ package nexters.moss.server.infra.auth;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nexters.moss.server.domain.model.SocialTokenService;
+import nexters.moss.server.domain.service.SocialTokenService;
 import nexters.moss.server.domain.model.exception.NoSocialUserInfoException;
 import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.stereotype.Service;
