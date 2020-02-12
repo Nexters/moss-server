@@ -9,16 +9,16 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
-@ActiveProfiles("test")
-public class KakaoTokenServiceTest {
-    private SocialTokenService socialTokenService;
-
-    @Before
-    public void setup() {
-        this.socialTokenService = new KakaoTokenService();
-    }
-
+//@RunWith(SpringRunner.class)
+//@ActiveProfiles("test")
+//public class KakaoTokenServiceTest {
+//    private SocialTokenService socialTokenService;
+//
+//    @Before
+//    public void setup() {
+//        this.socialTokenService = new KakaoTokenService();
+//    }
+//
 //    @Test
 //    public void querySocialUserIdTest() {
 //        // given
@@ -31,4 +31,4 @@ public class KakaoTokenServiceTest {
 //        // then
 //        assertThat(socialUserId).isEqualTo(validatedUserId);
 //    }
-}
+//}

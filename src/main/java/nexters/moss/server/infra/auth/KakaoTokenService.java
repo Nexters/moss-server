@@ -11,12 +11,19 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+@Service
 public class KakaoTokenService implements SocialTokenService {
-    private final static String requestUrl = "https://kapi.kakao.com/v2/user/me";
+    private  String requestUrl;
+
+    // TODO: export to config file
+    public KakaoTokenService() {
+        this.requestUrl = "https://kapi.kakao.com/v2/user/me";
+    }
 
     @Override
     public Long querySocialUserId(String accessToken) throws NoSocialUserInfoException {

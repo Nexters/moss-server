@@ -1,6 +1,6 @@
 package nexters.moss.server.application;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import nexters.moss.server.domain.model.SocialTokenService;
 import nexters.moss.server.domain.model.TokenService;
 import nexters.moss.server.domain.model.User;
@@ -9,18 +9,18 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@RequiredArgsConstructor
 @Service
+@AllArgsConstructor
 public class UserApplicationService {
     private SocialTokenService socialTokenService;
     private TokenService tokenService;
     private UserRepository userRepository;
 
     @Transactional
-    public void Join(String accessToken, String nickname) {
+    public void join(String accessToken, String nickname) {
         Long socialId = socialTokenService.querySocialUserId(accessToken);
 
-        if(isJoinedUser(socialId)) {
+        if(userRepository.findBySocialId(socialId).isPresent()) {
             throw new DuplicateKeyException("Duplicated Social ID User");
         }
 
@@ -30,9 +30,5 @@ public class UserApplicationService {
                 .build();
 
         userRepository.save(newUser);
-    }
-
-    private boolean isJoinedUser(Long socialId) {
-        return userRepository.findBySocialId(socialId).isPresent();
     }
 }

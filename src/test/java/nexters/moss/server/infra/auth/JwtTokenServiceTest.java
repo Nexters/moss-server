@@ -15,10 +15,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class JwtTokenServiceTest {
     private TokenService tokenService;
 
-
     @Before
     public void setup() {
-        this.tokenService = new JwtTokenService("secret", 7);
+        this.tokenService = new JwtTokenService();
     }
 
     @Test

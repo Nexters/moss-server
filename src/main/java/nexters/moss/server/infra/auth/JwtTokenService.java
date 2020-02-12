@@ -5,18 +5,26 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import nexters.moss.server.domain.model.Token;
 import nexters.moss.server.domain.model.TokenService;
+import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
-@AllArgsConstructor
+@Service
 public class JwtTokenService implements TokenService {
     private String key;
     private int expirationPeriod;
+
+    // TODO: export to config file
+    public JwtTokenService() {
+        this.key = "secret";
+        this.expirationPeriod = 7;
+    }
 
     @Override
     public String createToken(Long userId, String accessToken) {
