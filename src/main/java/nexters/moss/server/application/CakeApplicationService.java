@@ -1,5 +1,9 @@
 package nexters.moss.server.application;
 
+import nexters.moss.server.application.dto.cake.ArrivalCake;
+import nexters.moss.server.application.dto.cake.CreateANewCakeRequest;
+import nexters.moss.server.application.dto.cake.CreateANewCakeResponse;
+import nexters.moss.server.application.dto.cake.GetANewCakeResponse;
 import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.domain.model.Habit;
 import nexters.moss.server.domain.model.ReceivedPieceOfCake;
@@ -12,8 +16,6 @@ import nexters.moss.server.domain.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class CakeApplicationService {
@@ -29,32 +31,26 @@ public class CakeApplicationService {
         this.pieceOfCakeReceiveRepository = pieceOfCakeReceiveRepository;
     }
 
-    public Response<List<Habit>> getAllHabits() {
-        List<Habit> habits = habitRepository.findAll();
-        return new Response<List<Habit>>(habits);
-    }
-
     @Transactional
-    public Response<SentPieceOfCake> addSentPieceOfCake(long userId, Map<String, Object> data){
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("No Matched User Id"));
+    public Response<CreateANewCakeResponse> CreateANewCake(CreateANewCakeRequest createANewCakeRequest){
+        User user = userRepository.findById(createANewCakeRequest.getUserId()).orElseThrow(() -> new IllegalArgumentException("No Matched User Id"));
+        Habit habit = habitRepository.findById(createANewCakeRequest.getCategoryId()).orElseThrow(() -> new IllegalArgumentException("No Matched Habit Id"));
 
-        Long categoryId = (Long) data.get("categoryId");
-        Habit habit = habitRepository.findById(categoryId).orElseThrow(() -> new IllegalArgumentException("No Matched Habit Id"));
+        pieceOfCakeSendRepository.save(SentPieceOfCake.builder().user(user).habit(habit).note(createANewCakeRequest.getNote()).build());
 
-        String message = (String) data.get("message");
-
-        SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.save(SentPieceOfCake.builder().user(user).habit(habit).note(message).build());
-        return new Response<SentPieceOfCake>(sentPieceOfCake);
+        return new Response<CreateANewCakeResponse>(new CreateANewCakeResponse(true));
     }
 
 
     @Transactional
-    public  Response<ReceivedPieceOfCake> addReceivedPieceOfCake(long userId, long categoryId){
-        SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findRandomByHabit(categoryId);
+    public Response<GetANewCakeResponse> GetANewCake(long userId, long habitId){
+        SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findRandomOneByHabit(userId, habitId);
 
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("No Matched User Id"));
-        ReceivedPieceOfCake receivedPieceOfCake = pieceOfCakeReceiveRepository.save(ReceivedPieceOfCake.builder().sentPieceOfCake(sentPieceOfCake).user(user).build());
 
-        return new Response<ReceivedPieceOfCake>(receivedPieceOfCake);
+        ReceivedPieceOfCake receivedPOC = pieceOfCakeReceiveRepository.save(ReceivedPieceOfCake.builder().sentPieceOfCake(sentPieceOfCake).user(user).build());
+        ArrivalCake arrivalCake = new ArrivalCake(receivedPOC.getUser().getNickname(), receivedPOC.getSentPieceOfCake().getNote(), receivedPOC.getSentPieceOfCake().getHabit().getCakeName());
+
+        return new Response<GetANewCakeResponse>(new GetANewCakeResponse(true, arrivalCake));
     }
 }

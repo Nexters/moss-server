@@ -41,4 +41,5 @@ public class SentPieceOfCake {
 
     @OneToMany(mappedBy = "sentPieceOfCake")
     private List<ReceivedPieceOfCake> receivedPieceOfCakeList = new ArrayList<>();
+
 }

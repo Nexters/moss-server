@@ -1,38 +1,32 @@
 package nexters.moss.server.web;
 
 import nexters.moss.server.application.CakeApplicationService;
+import nexters.moss.server.application.dto.cake.CreateANewCakeRequest;
+import nexters.moss.server.application.dto.cake.CreateANewCakeResponse;
 import nexters.moss.server.application.dto.Response;
-import nexters.moss.server.domain.repository.UserRepository;
+import nexters.moss.server.application.dto.cake.GetANewCakeResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @RestController
-@RequestMapping("cake")
+@RequestMapping("/cake")
 public class CakeController {
     private CakeApplicationService cakeApplicationService;
 
-    public CakeController(CakeApplicationService cakeApplicationService, UserRepository userRepository) {
+    public CakeController(CakeApplicationService cakeApplicationService) {
         this.cakeApplicationService = cakeApplicationService;
     }
 
-    @GetMapping("/categories")
+    @PostMapping
     @ResponseStatus(value = HttpStatus.OK)
-    public Response getAllHabits() {
-        return cakeApplicationService.getAllHabits();
-    }
-
-    @PostMapping("/{userId}")
-    @ResponseStatus(value = HttpStatus.OK)
-    public Response addSentPieceOfCake(@PathVariable Long userId, @RequestBody Map<String, Object> data){
-        return cakeApplicationService.addSentPieceOfCake(userId, data);
+    public Response<CreateANewCakeResponse> CreateANewCake(@ModelAttribute CreateANewCakeRequest createANewCakeRequest){
+        return cakeApplicationService.CreateANewCake(createANewCakeRequest);
     }
 
 
-    @PostMapping(value = "/{userId}", params = "categoryId")
+    @PostMapping(value = "/{userId}", params = "habitId")
     @ResponseStatus(value = HttpStatus.OK)
-    public Response addReceivedPieceOfCake(@PathVariable Long userId, @RequestParam long categoryId){
-        return cakeApplicationService.addReceivedPieceOfCake(userId, categoryId);
+    public Response<GetANewCakeResponse> GetANewCake(@PathVariable Long userId, @RequestParam long habitId){
+        return cakeApplicationService.GetANewCake(userId, habitId);
     }
 }
