@@ -6,6 +6,8 @@ import nexters.moss.server.infra.auth.JwtTokenService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -13,13 +15,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
+@SpringBootTest
 public class JwtTokenServiceTest {
+    @Autowired
     private TokenService tokenService;
-
-    @Before
-    public void setup() {
-        this.tokenService = new JwtTokenService();
-    }
 
     @Test
     public void createTokenTest() {

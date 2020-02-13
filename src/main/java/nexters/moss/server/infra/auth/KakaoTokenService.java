@@ -3,16 +3,14 @@ package nexters.moss.server.infra.auth;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nexters.moss.server.domain.service.SocialTokenService;
-import nexters.moss.server.domain.model.exception.NoSocialUserInfoException;
+import nexters.moss.server.domain.model.exception.SocialUserInfoException;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 @Service
 public class KakaoTokenService implements SocialTokenService {
@@ -24,35 +22,27 @@ public class KakaoTokenService implements SocialTokenService {
     }
 
     @Override
-    public Long querySocialUserId(String accessToken) throws NoSocialUserInfoException {
-        JsonNode jsonData = getKakaoUserInfo(accessToken);
+    public Long getSocialUserId(String accessToken) throws SocialUserInfoException {
+        return httpTemplate(accessToken, (client, mapper) -> {
+            HttpPost post = new HttpPost(requestUrl);
+            post.addHeader("Authorization", "Bearer " + accessToken);
 
-        return Long.parseLong(jsonData.path("id").asText());
+            HttpResponse response = client.execute(post);
+            JsonNode jsonNode = mapper.readTree(response.getEntity().getContent());
+
+            return jsonNode.path("id").asLong();
+        });
     }
 
-    private JsonNode getKakaoUserInfo(String accessToken)  {
-        HttpPost post = new HttpPost(requestUrl);
-        post.addHeader("Authorization", "Bearer " + accessToken);
-
+    private <T>T httpTemplate(String accessToken, HttpCallback<T> callback) {
         HttpClient client = HttpClientBuilder.create().build();
-        JsonNode returnNode = null;
 
         try {
-            HttpResponse response = client.execute(post);
-
             ObjectMapper mapper = new ObjectMapper();
-            returnNode = mapper.readTree(response.getEntity().getContent());
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            throw new NoSocialUserInfoException();
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-            throw new NoSocialUserInfoException();
+            return callback.getHttpData(client, mapper);
         } catch (IOException e) {
             e.printStackTrace();
-            throw new NoSocialUserInfoException();
+            throw new SocialUserInfoException("No Matched User with Social ID");
         }
-
-        return returnNode;
     }
 }

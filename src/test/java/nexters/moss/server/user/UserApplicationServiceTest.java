@@ -33,11 +33,10 @@ public class UserApplicationServiceTest {
     public void joinTest() {
         // given
         String accessToken = "accessToken";
-
         String nickname = "nickname";
         Long socialId = 12345678L;
 
-        given(socialTokenService.querySocialUserId(accessToken))
+        given(socialTokenService.getSocialUserId(accessToken))
                 .willReturn(socialId);
 
         // when

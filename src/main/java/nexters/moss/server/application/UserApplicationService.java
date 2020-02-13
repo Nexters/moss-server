@@ -19,9 +19,9 @@ public class UserApplicationService {
 
     @Transactional
     public Response<Long> join(String accessToken, String nickname) {
-        Long socialId = socialTokenService.querySocialUserId(accessToken);
+        Long socialId = socialTokenService.getSocialUserId(accessToken);
 
-        if (userRepository.findBySocialId(socialId).isPresent()) {
+        if (userRepository.existsBySocialId(socialId)) {
             throw new DuplicateKeyException("Duplicated Social ID User");
         }
 
