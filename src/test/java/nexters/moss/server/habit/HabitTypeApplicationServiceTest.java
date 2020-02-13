@@ -3,9 +3,11 @@ package nexters.moss.server.habit;
 import nexters.moss.server.application.HabitApplicationService;
 import nexters.moss.server.application.dto.HabitHistory;
 import nexters.moss.server.application.dto.Response;
+import nexters.moss.server.domain.model.Category;
 import nexters.moss.server.domain.model.Habit;
 import nexters.moss.server.domain.model.HabitRecord;
 import nexters.moss.server.domain.model.User;
+import nexters.moss.server.domain.repository.CategoryRepository;
 import nexters.moss.server.domain.repository.HabitRecordRepository;
 import nexters.moss.server.domain.repository.HabitRepository;
 import nexters.moss.server.domain.repository.UserRepository;
@@ -32,6 +34,9 @@ public class HabitTypeApplicationServiceTest {
     private Habit testHabit;
 
     @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
     private HabitApplicationService habitApplicationService;
 
     @Autowired
@@ -45,8 +50,29 @@ public class HabitTypeApplicationServiceTest {
 
     @Before
     public void setup() {
-        testUser = userRepository.save(new User(null, 12345678L, "accounToken", "nickName", null, null, null, null));
-        testHabit = habitRepository.save(new Habit(null, HabitType.WATER, CakeType.WATERMELON, null, null));
+        Category category = new Category(null, HabitType.WATER, CakeType.WATERMELON);
+        category = categoryRepository.save(category);
+
+        testUser = userRepository.save(
+                new User(
+                        null,
+                        12345678L,
+                        "accountToken",
+                        "nickname",
+                        null,
+                        null,
+                        null,
+                        null
+                )
+        );
+        testHabit = habitRepository.save(
+                new Habit(
+                        null,
+                        category,
+                        null,
+                        null
+                )
+        );
     }
 
     @Test
@@ -55,7 +81,7 @@ public class HabitTypeApplicationServiceTest {
         Response<List<HabitHistory>> getResponse = habitApplicationService.getHabitHistory(testUser.getId());
         Assert.assertEquals(1, getResponse.getData().size());
 
-        for (HabitHistory habitHistory: getResponse.getData()) {
+        for (HabitHistory habitHistory : getResponse.getData()) {
             Assert.assertEquals(5, habitHistory.getHabitRecords().size());
         }
 
@@ -70,7 +96,7 @@ public class HabitTypeApplicationServiceTest {
         List<HabitRecord> habitRecords = createResponse.getData().getHabitRecords();
         Assert.assertEquals(5, habitRecords.size());
         int nowDay = LocalDateTime.now().minusDays(1).getDayOfMonth();
-        for(HabitRecord habitRecord: habitRecords) {
+        for (HabitRecord habitRecord : habitRecords) {
             Assert.assertEquals(nowDay, habitRecord.getDate().getDayOfMonth());
             nowDay++;
         }

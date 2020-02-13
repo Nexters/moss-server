@@ -26,6 +26,10 @@ public class WholeCake {
     @JoinColumn(name = "habit_id", nullable = false)
     private Habit habit;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+
     @CreatedDate
     @Column(name = "created_at")
     private LocalDateTime createdAt;

@@ -26,6 +26,10 @@ public class ReceivedPieceOfCake {
     @JoinColumn(name = "sent_piece_of_cake_id", nullable = false)
     private SentPieceOfCake sentPieceOfCake;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+
     @CreatedDate
     @Column(name = "created_at")
     private LocalDateTime createdAt;

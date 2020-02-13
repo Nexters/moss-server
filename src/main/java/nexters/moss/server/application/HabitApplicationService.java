@@ -9,12 +9,9 @@ import nexters.moss.server.domain.repository.HabitRecordRepository;
 import nexters.moss.server.domain.repository.HabitRepository;
 import nexters.moss.server.domain.repository.UserRepository;
 import nexters.moss.server.domain.service.HabitRecordService;
-import nexters.moss.server.domain.value.HabitStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +44,7 @@ public class HabitApplicationService {
         List<HabitRecord> habitRecords = habitRecordService.createHabitRecords(user, habit);
         habitRecords = habitRecordRepository.saveAll(habitRecords);
         return new Response(
-                new HabitHistory(habit.getId(), habit.getHabitType(), habitRecords)
+                new HabitHistory(habit.getId(), habit.getCategory().getHabitType(), habitRecords)
         );
     }
 
@@ -59,12 +56,11 @@ public class HabitApplicationService {
                 .stream()
                 .collect(Collectors.groupingBy(HabitRecord::getHabit));
 
-
         habitHistoryMap.forEach((habit, habitRecords) -> {
             habitHistories.add(
                     new HabitHistory(
                             habit.getId(),
-                            habit.getHabitType(),
+                            habit.getCategory().getHabitType(),
                             habitRecordService.validateAndRefreshHabitHistory(habitRecords)
                     )
             );

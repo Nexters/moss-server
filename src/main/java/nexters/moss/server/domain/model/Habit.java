@@ -18,17 +18,13 @@ public class Habit {
     @Column(name = "habit_id")
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "habit_type")
-    private HabitType habitType;
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "cake_type")
-    private CakeType cakeType;
+    @Column(name = "isActivated", columnDefinition = "boolean default false")
+    private Boolean isActivated;
 
-    @Column(name = "whole_cake_image_path")
-    private String wholeCakeImagePath;
-
-    @Column(name = "piece_of_cake_image_path")
-    private String pieceOfCakeImagePath;
+    @Column(name = "isFirstCheck", columnDefinition = "boolean default false")
+    private Boolean isFirstCheck;
 }
