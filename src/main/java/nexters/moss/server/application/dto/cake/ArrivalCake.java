@@ -13,5 +13,4 @@ public class ArrivalCake {
     private String nickname;
     private String note;
     private String cakeName;
-//    private String description;
 }

@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateANewCakeResponse {
-    @JsonProperty("result")
-    boolean result;
+    @JsonProperty("pieceOfCakeSendId")
+    private long pieceOfCakeSendId;
 }

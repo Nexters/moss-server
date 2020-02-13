@@ -19,14 +19,14 @@ public class CakeController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.OK)
-    public Response<CreateANewCakeResponse> CreateANewCake(@ModelAttribute CreateANewCakeRequest createANewCakeRequest){
-        return cakeApplicationService.CreateANewCake(createANewCakeRequest);
+    public Response<CreateANewCakeResponse> createANewCake(@ModelAttribute CreateANewCakeRequest createANewCakeRequest){
+        return cakeApplicationService.createANewCake(createANewCakeRequest);
     }
 
 
     @PostMapping(value = "/{userId}", params = "habitId")
     @ResponseStatus(value = HttpStatus.OK)
-    public Response<GetANewCakeResponse> GetANewCake(@PathVariable Long userId, @RequestParam long habitId){
-        return cakeApplicationService.GetANewCake(userId, habitId);
+    public Response<GetANewCakeResponse> getANewCake(@PathVariable Long userId, @RequestParam long habitId){
+        return cakeApplicationService.getANewCake(userId, habitId);
     }
 }
