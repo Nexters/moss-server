@@ -5,6 +5,6 @@ import org.apache.http.client.HttpClient;
 
 import java.io.IOException;
 
-public interface HttpCallback<T> {
-    public T getHttpData(HttpClient client, ObjectMapper mapper) throws IOException;
+public interface Http<T> {
+    public T get(HttpClient client, ObjectMapper mapper) throws IOException;
 }

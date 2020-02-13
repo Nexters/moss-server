@@ -14,11 +14,13 @@ import java.io.IOException;
 
 @Service
 public class KakaoTokenService implements SocialTokenService {
-    private  String requestUrl;
+    private String requestUrl;
+    private ObjectMapper objectMapper;
 
     // TODO: export to config file
-    public KakaoTokenService() {
+    public KakaoTokenService(ObjectMapper objectMapper) {
         this.requestUrl = "https://kapi.kakao.com/v2/user/me";
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -34,12 +36,11 @@ public class KakaoTokenService implements SocialTokenService {
         });
     }
 
-    private <T>T httpTemplate(String accessToken, HttpCallback<T> callback) {
+    private <T>T httpTemplate(String accessToken, Http<T> http) {
         HttpClient client = HttpClientBuilder.create().build();
 
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            return callback.getHttpData(client, mapper);
+            return http.get(client, objectMapper);
         } catch (IOException e) {
             e.printStackTrace();
             throw new SocialUserInfoException("No Matched User with Social ID");
