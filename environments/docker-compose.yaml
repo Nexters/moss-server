@@ -1,11 +1,47 @@
 version: '3'
 services:
-  postgres:
-    image: postgres:11.2-alpine
+  nginx:
+    container_name: habikery-nginx
+    image: nginx:1.14
     restart: always
     ports:
-      - "5432:5432"
+      - 80:80
+#      - 443:443
+    volumes:
+      - /home/habikery/nginx:/etc/nginx
+    networks:
+      - back
+    depends_on:
+      - app
+  postgresql:
+    container_name: habikery-postgres
+    image: postgres:11.2-alpine
+    volumes:
+      - /home/habikery/postgresql/data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: habikery
       POSTGRES_USER: moss
       POSTGRES_DB: habikery
+    #    ports:
+    #      - "3306:3306"
+    networks:
+      - back
+    restart: always
+
+  app:
+    container_name: habikery-jar
+    image: habikery/moss:latest
+    #    build:
+    #      context: .
+    #      dockerfile: ./Dockerfile
+    #    ports:
+    #      - "8080:8080"
+    depends_on:
+      - postgresql
+    networks:
+      - back
+    restart: always
+
+networks:
+  back:
+    driver: bridge
