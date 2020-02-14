@@ -1,6 +1,5 @@
 package nexters.moss.server.application.dto.cake;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,9 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetANewCakeResponse {
-    @JsonProperty("result")
-    private boolean result;
-    @JsonProperty("data")
-    private ArrivalCake arrivalCake;
+public class NewCakeDTO {
+    private String nickname;
+    private String note;
+    private String cakeName;
 }

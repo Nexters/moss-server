@@ -1,10 +1,8 @@
 package nexters.moss.server.application;
 
 import nexters.moss.server.application.dto.Response;
-import nexters.moss.server.application.dto.cake.ArrivalCake;
+import nexters.moss.server.application.dto.cake.NewCakeDTO;
 import nexters.moss.server.application.dto.cake.CreateANewCakeRequest;
-import nexters.moss.server.application.dto.cake.CreateANewCakeResponse;
-import nexters.moss.server.application.dto.cake.GetANewCakeResponse;
 import nexters.moss.server.domain.model.Habit;
 import nexters.moss.server.domain.model.ReceivedPieceOfCake;
 import nexters.moss.server.domain.model.SentPieceOfCake;
@@ -24,7 +22,9 @@ public class CakeApplicationService {
     private PieceOfCakeSendRepository pieceOfCakeSendRepository;
     private PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository;
 
-    public CakeApplicationService(HabitRepository habitRepository, UserRepository userRepository, PieceOfCakeSendRepository pieceOfCakeSendRepository, PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository) {
+    public CakeApplicationService(HabitRepository habitRepository, UserRepository userRepository,
+                                  PieceOfCakeSendRepository pieceOfCakeSendRepository,
+                                  PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository) {
         this.habitRepository = habitRepository;
         this.userRepository = userRepository;
         this.pieceOfCakeSendRepository = pieceOfCakeSendRepository;
@@ -32,33 +32,39 @@ public class CakeApplicationService {
     }
 
     @Transactional
-    public Response<CreateANewCakeResponse> createANewCake(CreateANewCakeRequest createANewCakeRequest){
-        User user = userRepository.findById(createANewCakeRequest.getUserId()).orElseThrow(() -> new IllegalArgumentException("No Matched User Id"));
-        Habit habit = habitRepository.findById(createANewCakeRequest.getCategoryId()).orElseThrow(() -> new IllegalArgumentException("No Matched Habit Id"));
+    public Response<Long> createANewCake(CreateANewCakeRequest createANewCakeRequest) {
+        User user =
+                userRepository.findById(createANewCakeRequest.getUserId()).orElseThrow(() -> new IllegalArgumentException("No Matched User Id"));
+        Habit habit =
+                habitRepository.findById(createANewCakeRequest.getCategoryId()).orElseThrow(() -> new IllegalArgumentException("No Matched Habit Id"));
 
-        long pieceOfCakeSendId = pieceOfCakeSendRepository.save(SentPieceOfCake
-                                                                .builder()
-                                                                .user(user)
-                                                                .habit(habit)
-                                                                .note(createANewCakeRequest
-                                                                .getNote())
-                                                                .build()).getId();
-
-        return new Response<CreateANewCakeResponse>(new CreateANewCakeResponse(pieceOfCakeSendId));
+        return new Response<Long>(
+                pieceOfCakeSendRepository.save(
+                        SentPieceOfCake
+                                .builder()
+                                .user(user)
+                                .habit(habit)
+                                .note(createANewCakeRequest.getNote())
+                                .build())
+                        .getId()
+        );
     }
 
 
     @Transactional
-    public Response<GetANewCakeResponse> getANewCake(long userId, long habitId){
-        SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findRandomOneByHabit(userId, habitId);
+    public Response<NewCakeDTO> getANewCake(Long userId, Long categoryId) {
+        SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findRandomOneByHabit(userId, categoryId);
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("No Matched User Id"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("No Matched User " +
+                "Id"));
 
-        ReceivedPieceOfCake receivedPOC = pieceOfCakeReceiveRepository.save(ReceivedPieceOfCake.builder().sentPieceOfCake(sentPieceOfCake).user(user).build());
-        ArrivalCake arrivalCake = new ArrivalCake(receivedPOC.getUser().getNickname()
-                                                  ,receivedPOC.getSentPieceOfCake().getNote()
-                                                  ,receivedPOC.getSentPieceOfCake().getHabit().getCakeType().getName());
+        ReceivedPieceOfCake receivedPOC =
+                pieceOfCakeReceiveRepository.save(ReceivedPieceOfCake.builder().sentPieceOfCake(sentPieceOfCake).user(user).build());
 
-        return new Response<GetANewCakeResponse>(new GetANewCakeResponse(true, arrivalCake));
+        return new Response<NewCakeDTO>(new NewCakeDTO(receivedPOC.getUser().getNickname()
+                                            ,receivedPOC.getSentPieceOfCake().getNote()
+                                            ,receivedPOC.getSentPieceOfCake().getHabit().getCakeType().getName()));
     }
+
+
 }

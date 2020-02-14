@@ -1,4 +1,4 @@
-package nexters.moss.server.application.dto.cake;
+package nexters.moss.server.application.dto.diary;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ArrivalCake {
-    private String nickname;
-    private String note;
+public class DiaryDTO {
+    private String habitName;
+    private String description;
     private String cakeName;
+    private int count;
+    private String imagePath;
 }

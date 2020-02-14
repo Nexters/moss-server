@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateANewCakeRequest {
-    private long userId;
-    private long categoryId;
+    private Long userId;
+    private Long categoryId;
     private String note;
 }

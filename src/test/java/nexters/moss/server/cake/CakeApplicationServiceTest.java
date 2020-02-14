@@ -3,8 +3,7 @@ package nexters.moss.server.cake;
 import nexters.moss.server.application.CakeApplicationService;
 import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.application.dto.cake.CreateANewCakeRequest;
-import nexters.moss.server.application.dto.cake.CreateANewCakeResponse;
-import nexters.moss.server.application.dto.cake.GetANewCakeResponse;
+import nexters.moss.server.application.dto.cake.NewCakeDTO;
 import nexters.moss.server.domain.model.Habit;
 import nexters.moss.server.domain.model.SentPieceOfCake;
 import nexters.moss.server.domain.model.User;
@@ -68,10 +67,10 @@ public class CakeApplicationServiceTest {
     @Test
     public void createANewCakeTest(){
         CreateANewCakeRequest req = new CreateANewCakeRequest(sender.getId(), testHabit.getId(), "note~!!");
-        Response<CreateANewCakeResponse> res = cakeApplicationService.createANewCake(req);
+        Response<Long> res = cakeApplicationService.createANewCake(req);
         Assert.assertNotNull(res.getData());
 
-        SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findById(res.getData().getPieceOfCakeSendId()).get();
+        SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findById(res.getData()).get();
         Assert.assertEquals(req.getNote(), sentPieceOfCake.getNote());
 
     }
@@ -81,7 +80,7 @@ public class CakeApplicationServiceTest {
         long userId = receiver.getId();
         long habitId = testHabit.getId();
 
-        Response<GetANewCakeResponse> testResponse = cakeApplicationService.getANewCake(userId, habitId);
+        Response<NewCakeDTO> testResponse = cakeApplicationService.getANewCake(userId, habitId);
         Assert.assertNotNull(testResponse.getData());
     }
 }

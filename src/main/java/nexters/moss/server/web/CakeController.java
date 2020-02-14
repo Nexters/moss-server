@@ -1,15 +1,13 @@
 package nexters.moss.server.web;
 
 import nexters.moss.server.application.CakeApplicationService;
-import nexters.moss.server.application.dto.cake.CreateANewCakeRequest;
-import nexters.moss.server.application.dto.cake.CreateANewCakeResponse;
+import nexters.moss.server.application.dto.cake.*;
 import nexters.moss.server.application.dto.Response;
-import nexters.moss.server.application.dto.cake.GetANewCakeResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/cake")
+@RequestMapping("cake")
 public class CakeController {
     private CakeApplicationService cakeApplicationService;
 
@@ -19,14 +17,13 @@ public class CakeController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.OK)
-    public Response<CreateANewCakeResponse> createANewCake(@ModelAttribute CreateANewCakeRequest createANewCakeRequest){
+    public Response<Long> createANewCake(@ModelAttribute CreateANewCakeRequest createANewCakeRequest) {
         return cakeApplicationService.createANewCake(createANewCakeRequest);
     }
 
-
-    @PostMapping(value = "/{userId}", params = "habitId")
+    @GetMapping(value = "{userId}", params = "categoryId")
     @ResponseStatus(value = HttpStatus.OK)
-    public Response<GetANewCakeResponse> getANewCake(@PathVariable Long userId, @RequestParam long habitId){
-        return cakeApplicationService.getANewCake(userId, habitId);
+    public Response<NewCakeDTO> getANewCake(@PathVariable Long userId, @RequestParam Long categoryId) {
+        return cakeApplicationService.getANewCake(userId, categoryId);
     }
 }
