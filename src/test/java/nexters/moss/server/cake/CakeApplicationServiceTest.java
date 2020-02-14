@@ -2,7 +2,7 @@ package nexters.moss.server.cake;
 
 import nexters.moss.server.application.CakeApplicationService;
 import nexters.moss.server.application.dto.Response;
-import nexters.moss.server.application.dto.cake.CreateANewCakeRequest;
+import nexters.moss.server.application.dto.cake.CreateNewCakeRequest;
 import nexters.moss.server.application.dto.cake.NewCakeDTO;
 import nexters.moss.server.domain.model.Habit;
 import nexters.moss.server.domain.model.SentPieceOfCake;
@@ -66,7 +66,7 @@ public class CakeApplicationServiceTest {
 
     @Test
     public void createANewCakeTest(){
-        CreateANewCakeRequest req = new CreateANewCakeRequest(sender.getId(), testHabit.getId(), "note~!!");
+        CreateNewCakeRequest req = new CreateNewCakeRequest(sender.getId(), testHabit.getId(), "note~!!");
         Response<Long> res = cakeApplicationService.createANewCake(req);
         Assert.assertNotNull(res.getData());
 

@@ -2,7 +2,7 @@ package nexters.moss.server.application;
 
 import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.application.dto.cake.NewCakeDTO;
-import nexters.moss.server.application.dto.cake.CreateANewCakeRequest;
+import nexters.moss.server.application.dto.cake.CreateNewCakeRequest;
 import nexters.moss.server.domain.model.Habit;
 import nexters.moss.server.domain.model.ReceivedPieceOfCake;
 import nexters.moss.server.domain.model.SentPieceOfCake;
@@ -32,11 +32,11 @@ public class CakeApplicationService {
     }
 
     @Transactional
-    public Response<Long> createANewCake(CreateANewCakeRequest createANewCakeRequest) {
+    public Response<Long> createANewCake(CreateNewCakeRequest createNewCakeRequest) {
         User user =
-                userRepository.findById(createANewCakeRequest.getUserId()).orElseThrow(() -> new IllegalArgumentException("No Matched User Id"));
+                userRepository.findById(createNewCakeRequest.getUserId()).orElseThrow(() -> new IllegalArgumentException("No Matched User Id"));
         Habit habit =
-                habitRepository.findById(createANewCakeRequest.getCategoryId()).orElseThrow(() -> new IllegalArgumentException("No Matched Habit Id"));
+                habitRepository.findById(createNewCakeRequest.getCategoryId()).orElseThrow(() -> new IllegalArgumentException("No Matched Habit Id"));
 
         return new Response<Long>(
                 pieceOfCakeSendRepository.save(
@@ -44,7 +44,7 @@ public class CakeApplicationService {
                                 .builder()
                                 .user(user)
                                 .habit(habit)
-                                .note(createANewCakeRequest.getNote())
+                                .note(createNewCakeRequest.getNote())
                                 .build())
                         .getId()
         );

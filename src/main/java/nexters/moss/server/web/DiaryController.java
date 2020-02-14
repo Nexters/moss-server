@@ -9,21 +9,21 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("diary")
+@RequestMapping("/diary")
 public class DiaryController {
     private DiaryApplicationService diaryApplicationService;
 
-    @GetMapping("piece/{userId}")
+    @GetMapping("/piece/{userId}")
     public Response<List<DiaryDTO>> getAPieceOfCakeDiary(@PathVariable Long userId) {
         return diaryApplicationService.getAPieceOfCakeDiary(userId);
     }
 
-    @GetMapping("whole/{userId}")
+    @GetMapping("/whole/{userId}")
     public Response<List<DiaryDTO>> getWholeCakeDiary(@PathVariable Long userId) {
         return diaryApplicationService.getWholeCakeDiary(userId);
     }
 
-    @GetMapping("history/{userId}")
+    @GetMapping("/history/{userId}")
     public Response<HistoryResponse>getCakeHistory(@PathVariable Long userId, @RequestParam Long categoryId){
         return diaryApplicationService.getCakeHistory(userId, categoryId);
     }

@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("cake")
+@RequestMapping("/cake")
 public class CakeController {
     private CakeApplicationService cakeApplicationService;
 
@@ -17,11 +17,11 @@ public class CakeController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.OK)
-    public Response<Long> createANewCake(@ModelAttribute CreateANewCakeRequest createANewCakeRequest) {
-        return cakeApplicationService.createANewCake(createANewCakeRequest);
+    public Response<Long> createANewCake(@ModelAttribute CreateNewCakeRequest createNewCakeRequest) {
+        return cakeApplicationService.createANewCake(createNewCakeRequest);
     }
 
-    @GetMapping(value = "{userId}", params = "categoryId")
+    @GetMapping(value = "/{userId}", params = "categoryId")
     @ResponseStatus(value = HttpStatus.OK)
     public Response<NewCakeDTO> getANewCake(@PathVariable Long userId, @RequestParam Long categoryId) {
         return cakeApplicationService.getANewCake(userId, categoryId);

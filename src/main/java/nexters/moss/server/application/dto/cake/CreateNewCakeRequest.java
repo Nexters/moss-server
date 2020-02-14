@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateANewCakeRequest {
+public class CreateNewCakeRequest {
     private Long userId;
     private Long categoryId;
     private String note;
