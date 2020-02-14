@@ -21,6 +21,7 @@ public class User {
     @Column(name = "social_id")
     private Long socialId;
 
+    @Setter
     @Column(name = "account_token")
     private String accountToken;
 
