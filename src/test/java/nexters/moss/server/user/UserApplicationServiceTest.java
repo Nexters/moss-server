@@ -2,7 +2,6 @@ package nexters.moss.server.user;
 
 import nexters.moss.server.application.UserApplicationService;
 import nexters.moss.server.application.dto.Response;
-import nexters.moss.server.application.dto.UserLogin;
 import nexters.moss.server.domain.service.SocialTokenService;
 import nexters.moss.server.domain.model.User;
 import nexters.moss.server.domain.repository.UserRepository;
@@ -70,12 +69,11 @@ public class UserApplicationServiceTest {
         userRepository.save(testUser);
 
         // when
-        Response<UserLogin> loginResponse = userApplicationService.login(testAccessToken);
+        Response<String> loginResponse = userApplicationService.login(testAccessToken);
 
         // then
         assertThat(loginResponse).isNotNull();
-        assertThat(loginResponse.getData().getUserId()).isEqualTo(testUser.getId());
-        assertThat(loginResponse.getData().getAccountToken()).isNotNull();
+        assertThat(loginResponse.getData()).isNotNull();
 
         User resultUser = userRepository.findAll().get(0);
 

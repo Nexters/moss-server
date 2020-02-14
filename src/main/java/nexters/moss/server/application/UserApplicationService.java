@@ -2,7 +2,6 @@ package nexters.moss.server.application;
 
 import lombok.AllArgsConstructor;
 import nexters.moss.server.application.dto.Response;
-import nexters.moss.server.application.dto.UserLogin;
 import nexters.moss.server.domain.model.exception.SocialUserInfoException;
 import nexters.moss.server.domain.service.SocialTokenService;
 import nexters.moss.server.domain.service.TokenService;
@@ -38,7 +37,7 @@ public class UserApplicationService {
     }
 
     @Transactional
-    public Response<UserLogin> login(String accessToken) {
+    public Response<String> login(String accessToken) {
         Long socialId = socialTokenService.getSocialUserId(accessToken);
         User user = userRepository.findBySocialId(socialId).orElseThrow(() -> new SocialUserInfoException("No Matched User"));
 
@@ -46,8 +45,6 @@ public class UserApplicationService {
         user.setAccountToken(accountToken);
         User updatedUser = userRepository.save(user);
 
-        return new Response<>(
-                new UserLogin(updatedUser.getId(), updatedUser.getAccountToken())
-        );
+        return new Response<>(updatedUser.getAccountToken());
     }
 }
