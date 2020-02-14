@@ -18,7 +18,7 @@ public class UserApplicationService {
     private UserRepository userRepository;
 
     @Transactional
-    public Response<Long> join(String accessToken, String nickname) {
+    public void join(String accessToken, String nickname) {
         Long socialId = socialTokenService.getSocialUserId(accessToken);
 
         if (userRepository.existsBySocialId(socialId)) {
@@ -31,7 +31,5 @@ public class UserApplicationService {
                         .nickname(nickname)
                         .build()
         );
-
-        return new Response<>(newUser.getId());
     }
 }
