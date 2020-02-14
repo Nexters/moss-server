@@ -56,8 +56,8 @@ public class CakeApplicationServiceTest {
         testHabit = habitRepository.save(new Habit(null, habitTypes.get(0), cakeTypes.get(0), null, null));
 
 
-        sender = userRepository.save(new User(null, "socialId", "accounToken", "nickName", null, null, null, null));
-        receiver = userRepository.save(new User(null, "socialId2", "accounToken2", "nickName2", null, null, null, null));
+        sender = userRepository.save(new User(null, null, "accounToken", "nickName", null, null, null, null));
+        receiver = userRepository.save(new User(null, null, "accounToken2", "nickName2", null, null, null, null));
 
         pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, testHabit, "hello" , null));
         pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, testHabit, "hello123" , null));
