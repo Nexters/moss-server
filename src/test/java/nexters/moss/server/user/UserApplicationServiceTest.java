@@ -80,4 +80,19 @@ public class UserApplicationServiceTest {
         assertThat(resultUser.getId()).isEqualTo(testUser.getId());
         assertThat(resultUser.getAccountToken()).isNotNull();
     }
+
+    @Test
+    public void leaveTest() {
+        // given
+        userApplicationService.join(testAccessToken, testUser.getNickname());
+        userApplicationService.login(testAccessToken);
+        User savedUser = userRepository.findAll().get(0);
+
+        // when
+        Response leaveResponse = userApplicationService.leave(savedUser.getAccountToken());
+
+        // then
+        assertThat(leaveResponse).isNotNull();
+        assertThat(userRepository.count()).isEqualTo(0);
+    }
 }
