@@ -8,7 +8,8 @@ import nexters.moss.server.domain.model.*;
 import nexters.moss.server.domain.repository.PieceOfCakeReceiveRepository;
 import nexters.moss.server.domain.repository.ReportRepository;
 import nexters.moss.server.domain.service.SocialTokenService;
-import nexters.moss.server.domain.service.TokenService;
+import nexters.moss.server.domain.service.HabikeryTokenService;
+import nexters.moss.server.domain.model.User;
 import nexters.moss.server.domain.repository.UserRepository;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class UserApplicationService {
     private SocialTokenService socialTokenService;
-    private TokenService tokenService;
+    private HabikeryTokenService habikeryTokenService;
     private UserRepository userRepository;
     private ReportRepository reportRepository;
     private PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository;
@@ -45,7 +46,7 @@ public class UserApplicationService {
         Long socialId = socialTokenService.getSocialUserId(accessToken);
         User user = userRepository.findBySocialId(socialId).orElseThrow(() -> new UserInfoException("No Matched Habikery User with Social ID"));
 
-        String accountToken = tokenService.createToken(user.getId(), accessToken);
+        String accountToken = habikeryTokenService.createToken(user.getId(), accessToken);
         user.setAccountToken(accountToken);
         User updatedUser = userRepository.save(user);
 
@@ -53,7 +54,7 @@ public class UserApplicationService {
     }
 
     public Response leave(String accountToken) {
-        Token token = tokenService.recoverToken(accountToken);
+        Token token = habikeryTokenService.recoverToken(accountToken);
         User user = userRepository.findById(token.getUserId()).orElseThrow(() -> new UserInfoException("No Matched Habikery User with User ID"));
 
         userRepository.deleteById(user.getId());
@@ -62,7 +63,7 @@ public class UserApplicationService {
     }
 
     public Response<String> getUserInfo(String accountToken) {
-        Token token = tokenService.recoverToken(accountToken);
+        Token token = habikeryTokenService.recoverToken(accountToken);
         User user = userRepository.findById(token.getUserId()).orElseThrow(() -> new UserInfoException("No Matched Habikery User with User ID"));
 
         return new Response<>(user.getNickname());
@@ -70,7 +71,7 @@ public class UserApplicationService {
 
     @Transactional
     public Response report(String accountToken, Long receivedPieceOfCakeId, String reason) {
-        Token token = tokenService.recoverToken(accountToken);
+        Token token = habikeryTokenService.recoverToken(accountToken);
 
         ReceivedPieceOfCake receivedPieceOfCake = pieceOfCakeReceiveRepository.findById(receivedPieceOfCakeId).orElseThrow(() -> new IllegalArgumentException("No Matched ReceivedPieceOfCake"));
         User reportedUser = receivedPieceOfCake.getSentPieceOfCake().getUser();

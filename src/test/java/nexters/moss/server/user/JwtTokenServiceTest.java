@@ -1,9 +1,7 @@
 package nexters.moss.server.user;
 
 import nexters.moss.server.domain.model.Token;
-import nexters.moss.server.domain.service.TokenService;
-import nexters.moss.server.infra.auth.JwtTokenService;
-import org.junit.Before;
+import nexters.moss.server.domain.service.HabikeryTokenService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 public class JwtTokenServiceTest {
     @Autowired
-    private TokenService tokenService;
+    private HabikeryTokenService habikeryTokenService;
 
     @Test
     public void createTokenTest() {
@@ -28,7 +26,7 @@ public class JwtTokenServiceTest {
         String accountToken = "accountTokenString";
 
         // when
-        String testToken = tokenService.createToken(userId, accessToken, accountToken);
+        String testToken = habikeryTokenService.createToken(userId, accessToken, accountToken);
 
         // then
         assertThat(testToken).isNotEmpty();
@@ -40,10 +38,10 @@ public class JwtTokenServiceTest {
         long userId = 12345678L;
         String accessToken = "socialTokenString";
         String accountToken = "accountTokenString";
-        String jwtToken = tokenService.createToken(userId, accessToken, accountToken);
+        String jwtToken = habikeryTokenService.createToken(userId, accessToken, accountToken);
 
         // when
-        Token testToken = tokenService.recoverToken(jwtToken);
+        Token testToken = habikeryTokenService.recoverToken(jwtToken);
 
         // then
         assertThat(testToken.getUserId()).isEqualTo(userId);

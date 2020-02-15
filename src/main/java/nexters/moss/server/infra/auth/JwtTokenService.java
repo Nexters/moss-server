@@ -5,7 +5,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import nexters.moss.server.domain.model.Token;
-import nexters.moss.server.domain.service.TokenService;
+import nexters.moss.server.domain.service.HabikeryTokenService;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -14,7 +14,7 @@ import java.time.ZoneId;
 import java.util.Date;
 
 @Service
-public class JwtTokenService implements TokenService {
+public class JwtTokenService implements HabikeryTokenService {
     private String key;
     private int expirationPeriod;
 
