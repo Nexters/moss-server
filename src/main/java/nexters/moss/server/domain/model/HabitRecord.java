@@ -1,5 +1,6 @@
 package nexters.moss.server.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import nexters.moss.server.domain.value.HabitStatus;
 
@@ -19,10 +20,12 @@ public class HabitRecord {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "habit_id", nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Habit habit;
 
     @Enumerated(EnumType.STRING)
