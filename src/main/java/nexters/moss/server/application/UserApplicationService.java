@@ -4,9 +4,11 @@ import lombok.AllArgsConstructor;
 import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.domain.model.exception.UserInfoException;
 import nexters.moss.server.domain.model.Token;
+import nexters.moss.server.domain.model.*;
+import nexters.moss.server.domain.repository.PieceOfCakeReceiveRepository;
+import nexters.moss.server.domain.repository.ReportRepository;
 import nexters.moss.server.domain.service.SocialTokenService;
 import nexters.moss.server.domain.service.TokenService;
-import nexters.moss.server.domain.model.User;
 import nexters.moss.server.domain.repository.UserRepository;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ public class UserApplicationService {
     private SocialTokenService socialTokenService;
     private TokenService tokenService;
     private UserRepository userRepository;
+    private ReportRepository reportRepository;
+    private PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository;
 
     public Response join(String accessToken, String nickname) {
         Long socialId = socialTokenService.getSocialUserId(accessToken);
@@ -62,5 +66,22 @@ public class UserApplicationService {
         User user = userRepository.findById(token.getUserId()).orElseThrow(() -> new UserInfoException("No Matched Habikery User with User ID"));
 
         return new Response<>(user.getNickname());
+    }
+
+    @Transactional
+    public Response report(String accountToken, Long receivedPieceOfCakeId, String reason) {
+        Token token = tokenService.recoverToken(accountToken);
+
+        ReceivedPieceOfCake receivedPieceOfCake = pieceOfCakeReceiveRepository.findById(receivedPieceOfCakeId).orElseThrow(() -> new IllegalArgumentException("No Matched ReceivedPieceOfCake"));
+        User reportedUser = receivedPieceOfCake.getSentPieceOfCake().getUser();
+
+        reportRepository.save(
+                Report.builder()
+                .user(reportedUser)
+                .reason(reason)
+                .build()
+        );
+
+        return new Response();
     }
 }

@@ -38,4 +38,14 @@ public class UserController {
     ) {
         return userApplicationService.getUserInfo(accountToken);
     }
+
+    @PostMapping("/report")
+    @ResponseStatus(value = HttpStatus.OK)
+    public Response report(
+            @RequestHeader String accountToken,
+            @RequestBody Long receivedPieceOfCakeId,
+            @RequestBody String reason
+    ) {
+        return userApplicationService.report(accountToken, receivedPieceOfCakeId, reason);
+    }
 }
