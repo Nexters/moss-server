@@ -14,12 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class UserApplicationService {
     private SocialTokenService socialTokenService;
     private TokenService tokenService;
     private UserRepository userRepository;
 
-    @Transactional
     public Response join(String accessToken, String nickname) {
         Long socialId = socialTokenService.getSocialUserId(accessToken);
 
@@ -37,7 +37,6 @@ public class UserApplicationService {
         return new Response();
     }
 
-    @Transactional
     public Response<String> login(String accessToken) {
         Long socialId = socialTokenService.getSocialUserId(accessToken);
         User user = userRepository.findBySocialId(socialId).orElseThrow(() -> new UserInfoException("No Matched Habikery User with Social ID"));
@@ -49,7 +48,6 @@ public class UserApplicationService {
         return new Response<>(updatedUser.getAccountToken());
     }
 
-    @Transactional
     public Response leave(String accountToken) {
        Token token = tokenService.recoverToken(accountToken);
        User user = userRepository.findById(token.getUserId()).orElseThrow(() -> new UserInfoException("No Matched Habikery User with User ID"));
