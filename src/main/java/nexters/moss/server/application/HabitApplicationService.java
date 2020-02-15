@@ -8,6 +8,15 @@ import nexters.moss.server.application.value.ImageEvent;
 import nexters.moss.server.config.exception.ResourceNotFoundException;
 import nexters.moss.server.domain.model.*;
 import nexters.moss.server.domain.repository.*;
+import nexters.moss.server.config.exception.HabikeryUserNotFoundException;
+import nexters.moss.server.domain.model.Category;
+import nexters.moss.server.domain.model.Habit;
+import nexters.moss.server.domain.model.HabitRecord;
+import nexters.moss.server.domain.model.User;
+import nexters.moss.server.domain.repository.CategoryRepository;
+import nexters.moss.server.domain.repository.HabitRecordRepository;
+import nexters.moss.server.domain.repository.HabitRepository;
+import nexters.moss.server.domain.repository.UserRepository;
 import nexters.moss.server.domain.service.HabitRecordService;
 import nexters.moss.server.domain.service.HabitService;
 import org.springframework.stereotype.Service;
@@ -55,8 +64,8 @@ public class HabitApplicationService {
     }
 
     public Response<HabitHistory> createHabit(Long userId, Long categoryId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("No Matched User"));
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new IllegalArgumentException("No Matched Category"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new HabikeryUserNotFoundException("No Matched User"));
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("No Matched Category"));
         if (habitRepository.existsByUser_IdAndCategory_Id(userId, categoryId)) {
             throw new IllegalArgumentException("Already Has Habit");
         }
@@ -82,7 +91,7 @@ public class HabitApplicationService {
     }
 
     public Response<List<HabitHistory>> getHabitHistory(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("No Matched User"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new HabikeryUserNotFoundException("No Matched User"));
 
         return new Response<>(
                 user.getHabits()
@@ -111,8 +120,8 @@ public class HabitApplicationService {
     }
 
     public Response<HabitDoneResponse> doneHabit(Long userId, Long habitId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("No Matched User"));
-        Habit habit = habitRepository.findById(habitId).orElseThrow(() -> new IllegalArgumentException("No Matched Habit"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new HabikeryUserNotFoundException("No Matched User"));
+        Habit habit = habitRepository.findById(habitId).orElseThrow(() -> new ResourceNotFoundException("No Matched Habit"));
         habitService.doDoneHabit(habit);
         habitRepository.save(habit);
 

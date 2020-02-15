@@ -2,8 +2,8 @@ package nexters.moss.server.infra.auth;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import nexters.moss.server.config.exception.SocialUserNotFoundException;
 import nexters.moss.server.domain.service.SocialTokenService;
-import nexters.moss.server.config.exception.UserInfoException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -24,7 +24,7 @@ public class KakaoTokenService implements SocialTokenService {
     }
 
     @Override
-    public Long getSocialUserId(String accessToken) throws UserInfoException {
+    public Long getSocialUserId(String accessToken) throws SocialUserNotFoundException {
         return httpTemplate(accessToken, (client, mapper) -> {
             HttpPost post = new HttpPost(requestUrl);
             post.addHeader("Authorization", "Bearer " + accessToken);
@@ -42,8 +42,7 @@ public class KakaoTokenService implements SocialTokenService {
         try {
             return http.get(client, objectMapper);
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new UserInfoException("No Matched User with Social ID");
+            throw new SocialUserNotFoundException("No Matched Social User");
         }
     }
 }
