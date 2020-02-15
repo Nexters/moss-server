@@ -1,6 +1,7 @@
 package nexters.moss.server.domain.model;
 
 import lombok.*;
+import nexters.moss.server.application.dto.cake.CreateNewCakeRequest;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -25,10 +26,6 @@ public class SentPieceOfCake {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "habit_id", nullable = false)
-    private Habit habit;
-
-    @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
@@ -42,4 +39,13 @@ public class SentPieceOfCake {
     @OneToMany(mappedBy = "sentPieceOfCake")
     private List<ReceivedPieceOfCake> receivedPieceOfCakeList = new ArrayList<>();
 
+    public SentPieceOfCake(CreateNewCakeRequest createNewCakeRequest) {
+        this.user = User.builder()
+                .id(createNewCakeRequest.getUserId())
+                .build();
+        this.category = Category.builder()
+                .id(createNewCakeRequest.getCategoryId())
+                .build();
+        this.note = createNewCakeRequest.getNote();
+    }
 }

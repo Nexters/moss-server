@@ -1,0 +1,8 @@
+INSERT INTO habit (habit_name, cake_name) VALUES ('WATER', 'WATERMELON')
+INSERT INTO habit (habit_name, cake_name) VALUES ('STRETCHING', 'WALNUT')
+INSERT INTO habit (habit_name, cake_name) VALUES ('MEDITATION', 'CHEESE')
+INSERT INTO habit (habit_name, cake_name) VALUES ('WALK', 'GREEN_TEA')
+INSERT INTO habit (habit_name, cake_name) VALUES ('NEWS', 'WHIPPING_CREAM')
+INSERT INTO habit (habit_name, cake_name) VALUES ('BREAKFAST', 'APPLE')
+INSERT INTO habit (habit_name, cake_name) VALUES ('DIARY', 'COFFEE')
+INSERT INTO habit (habit_name, cake_name) VALUES ('READING', 'CHESTNUT')

@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface HabitRecordRepository extends JpaRepository<HabitRecord, Long> {
-    void deleteAllByUserAndHabit(User user, Habit habit);
-    List<HabitRecord> findAllByUserAndHabit(User user, Habit habit);
-    List<HabitRecord> findAllByUser(User user);
+    void deleteAllByUser_IdAndHabit_Id(Long userId, Long habitId);
+    List<HabitRecord> findAllByUser_IdAndHabit_Id(Long userId, Long habitId);
+    List<HabitRecord> findAllByUser_Id(Long userId);
 }

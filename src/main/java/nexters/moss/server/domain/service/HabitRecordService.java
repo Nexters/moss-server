@@ -1,8 +1,6 @@
 package nexters.moss.server.domain.service;
 
-import nexters.moss.server.domain.model.Habit;
 import nexters.moss.server.domain.model.HabitRecord;
-import nexters.moss.server.domain.model.User;
 import nexters.moss.server.domain.value.HabitStatus;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +11,7 @@ import java.util.List;
 
 @Service
 public class HabitRecordService {
-    public List<HabitRecord> createHabitRecords(User user, Habit habit) {
+    public List<HabitRecord> createHabitRecords(Long userId, Long habitId) {
         LocalDateTime date = LocalDate.now().minusDays(1).atTime(0, 0, 0);
         List<HabitRecord> habitRecords = new ArrayList<>();
         for(int day = 0 ; day < 5 ; day++) {
@@ -24,8 +22,8 @@ public class HabitRecordService {
             }
             habitRecords.add(
                     HabitRecord.builder()
-                            .user(user)
-                            .habit(habit)
+                            .userId(userId)
+                            .habitId(habitId)
                             .habitStatus(habitStatus)
                             .date(date.plusDays(day))
                             .build()

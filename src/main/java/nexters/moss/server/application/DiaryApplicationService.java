@@ -3,22 +3,19 @@ package nexters.moss.server.application;
 import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.application.dto.diary.DiaryDTO;
 import nexters.moss.server.application.dto.diary.HistoryResponse;
-import nexters.moss.server.domain.model.Category;
-import nexters.moss.server.domain.model.HabitRecord;
-import nexters.moss.server.domain.model.User;
-import nexters.moss.server.domain.model.WholeCake;
+import nexters.moss.server.domain.model.*;
 import nexters.moss.server.domain.repository.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class DiaryApplicationService {
     private WholeCakeRepository wholeCakeRepository;
     private DescriptionRepository descriptionRepository;
-    private HabitRecordRepository habitRecordRepository;
     private PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository;
     private UserRepository userRepository;
     private CategoryRepository categoryRepository;
@@ -26,82 +23,63 @@ public class DiaryApplicationService {
     public DiaryApplicationService(
             WholeCakeRepository wholeCakeRepository,
             DescriptionRepository descriptionRepository,
-            HabitRecordRepository habitRecordRepository,
             PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository,
             UserRepository userRepository,
             CategoryRepository categoryRepository
     ) {
         this.wholeCakeRepository = wholeCakeRepository;
         this.descriptionRepository = descriptionRepository;
-        this.habitRecordRepository = habitRecordRepository;
         this.pieceOfCakeReceiveRepository = pieceOfCakeReceiveRepository;
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
     }
 
     public Response<List<DiaryDTO>> getPieceOfCakeDiary(Long userId) {
-        List<HabitRecord> habits = habitRecordRepository.findAllByUser(
-                userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("No Matched User Id"))
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("No Matched User Id"));
+        return new Response<>(
+                user.getHabits()
+                        .stream()
+                        .map(habit ->
+                                new DiaryDTO(
+                                        habit.getCategory().getHabitType().getName(),
+                                        habit.getCategory().getCakeType().getName(),
+                                        descriptionRepository.findByCategory_Id(habit.getCategory().getId()).getDiary(),
+                                        pieceOfCakeReceiveRepository.countAllByUser_IdAndCategory_Id(userId, habit.getCategory().getId())
+                                )
+                        )
+                        .collect(Collectors.toList())
         );
-        List<DiaryDTO> diaries = new ArrayList<>();
-
-        for (HabitRecord habit : habits) {
-            diaries.add(
-                    new DiaryDTO(
-                            habit.getHabit().getCategory().getHabitType().getName(),
-                            habit.getHabit().getCategory().getCakeType().getName(),
-                            descriptionRepository.findByCategory(habit.getHabit().getCategory()).getDiary(),
-                            pieceOfCakeReceiveRepository.countAllByUserAndCategory(
-                                    userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException(
-                                            "No Matched User Id")),
-                                    habit.getHabit().getCategory()
-                            )
-                    )
-            );
-        }
-        return new Response<List<DiaryDTO>>(diaries);
     }
 
     public Response<List<DiaryDTO>> getWholeCakeDiary(Long userId) {
-        List<HabitRecord> habits = habitRecordRepository.findAllByUser(
-                userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("No Matched User Id"))
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("No Matched User Id"));
+        return new Response<>(
+                user.getHabits()
+                        .stream()
+                        .map(habit ->
+                                new DiaryDTO(
+                                        habit.getCategory().getHabitType().getName(),
+                                        habit.getCategory().getCakeType().getName(),
+                                        descriptionRepository.findByCategory_Id(habit.getCategory().getId()).getDiary(),
+                                        wholeCakeRepository.countAllByUser_IdAndCategory_Id(user.getId(), habit.getCategory().getId())
+                                )
+                        )
+                        .collect(Collectors.toList())
         );
-        List<DiaryDTO> diaries = new ArrayList<>();
-
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("No Matched User " +
-                "Id"));
-        for (HabitRecord habit : habits) {
-            diaries.add(
-                    new DiaryDTO(
-                            habit.getHabit().getCategory().getHabitType().getName(),
-                            habit.getHabit().getCategory().getCakeType().getName(),
-                            descriptionRepository.findByCategory(habit.getHabit().getCategory()).getDiary(),
-                            wholeCakeRepository.countAllByUserAndCategory(user, habit.getHabit().getCategory())
-                    )
-            );
-        }
-        return new Response<List<DiaryDTO>>(diaries);
     }
 
     public Response<HistoryResponse> getCakeHistory(Long userId, Long categoryId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("No Matched User " +
-                "Id"));
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new IllegalArgumentException(
-                "No Matched Category Id"));
-
-        List<WholeCake> wholeCakeList = wholeCakeRepository.findAllByUserAndCategory(user, category);
-
-        List<LocalDateTime> dates = new ArrayList<>();
-        for (WholeCake wholeCake : wholeCakeList) {
-            dates.add(wholeCake.getCreatedAt());
-        }
-
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new IllegalArgumentException("No Matched Category Id"));
         return new Response<HistoryResponse>(
                 new HistoryResponse(
                         category.getHabitType().getName(),
-                        descriptionRepository.findByCategory(category).getCakeHistory(),
+                        descriptionRepository.findByCategory_Id(categoryId).getCakeHistory(),
                         category.getCakeType().getName(),
-                        dates)
+                        wholeCakeRepository.findAllByUser_IdAndCategory_Id(userId, categoryId)
+                                .stream()
+                                .map(wholeCake -> wholeCake.getCreatedAt())
+                                .collect(Collectors.toList())
+                )
         );
     }
 }

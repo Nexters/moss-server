@@ -13,6 +13,10 @@ import java.util.List;
 public class DiaryController {
     private DiaryApplicationService diaryApplicationService;
 
+    public DiaryController(DiaryApplicationService diaryApplicationService) {
+        this.diaryApplicationService = diaryApplicationService;
+    }
+
     @GetMapping("/piece/{userId}")
     public Response<List<DiaryDTO>> getPieceOfCakeDiary(@PathVariable Long userId) {
         return diaryApplicationService.getPieceOfCakeDiary(userId);

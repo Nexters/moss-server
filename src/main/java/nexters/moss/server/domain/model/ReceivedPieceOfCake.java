@@ -33,4 +33,20 @@ public class ReceivedPieceOfCake {
     @CreatedDate
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    public ReceivedPieceOfCake(
+            Long userId,
+            Long sentPieceOfCakeId,
+            Long categoryId
+    ) {
+        this.user = User.builder()
+                .id(userId)
+                .build();
+        this.sentPieceOfCake = SentPieceOfCake.builder()
+                .id(sentPieceOfCakeId)
+                .build();
+        this.category = Category.builder()
+                .id(categoryId)
+                .build();
+    }
 }

@@ -1,10 +1,10 @@
 package nexters.moss.server.domain.model;
 
 import lombok.*;
-import nexters.moss.server.domain.value.CakeType;
-import nexters.moss.server.domain.value.HabitType;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "habits")
@@ -21,6 +21,13 @@ public class Habit {
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @OneToMany(mappedBy = "habit")
+    private List<HabitRecord> habitRecords = new ArrayList<>();
 
     @Column(name = "isActivated", columnDefinition = "boolean default false")
     private Boolean isActivated;

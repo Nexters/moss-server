@@ -6,5 +6,5 @@ import nexters.moss.server.domain.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PieceOfCakeReceiveRepository extends JpaRepository<ReceivedPieceOfCake, Long> {
-    int countAllByUserAndCategory(User user, Category category);
+    int countAllByUser_IdAndCategory_Id(Long userId, Long categoryId);
 }

@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface WholeCakeRepository extends JpaRepository<WholeCake, Long> {
-    List<WholeCake> findAllByUserAndCategory(User user, Category category);
-    int countAllByUserAndCategory(User user, Category category);
+    List<WholeCake> findAllByUser_IdAndCategory_Id(Long userId, Long categoryId);
+    int countAllByUser_IdAndCategory_Id(Long userId, Long categoryId);
 }

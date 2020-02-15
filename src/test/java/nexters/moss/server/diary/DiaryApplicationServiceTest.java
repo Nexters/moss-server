@@ -24,14 +24,11 @@ import java.util.List;
 @SpringBootTest
 @ActiveProfiles("test")
 public class DiaryApplicationServiceTest {
-
     private User receiver;
     private User sender;
 
     private Habit habit;
     private Category category;
-    private Description description;
-    private HabitRecord habitRecord;
     private SentPieceOfCake sentPieceOfCake;
     private WholeCake wholeCake;
 
@@ -57,15 +54,15 @@ public class DiaryApplicationServiceTest {
 
     @Before
     public void setup() {
-        sender = userRepository.save(userRepository.save(new User(Integer.toUnsignedLong(1), null, "accounToken", "sender", null, null, null, null)));
-        receiver = userRepository.save(userRepository.save(new User(Integer.toUnsignedLong(2), null, "accounToken", "reciever", null, null, null, null)));
+        sender = userRepository.save(new User(null, null, "accounToken", "sender", null));
+        receiver = userRepository.save(new User(null, null, "accounToken", "reciever", null));
         category = categoryRepository.save(new Category(null, HabitType.BREAKFAST, CakeType.APPLE));
 
-        habit = habitRepository.save(new Habit(null, category, null, null));
-        habitRecord =  habitRecordRepository.save(new HabitRecord(null,receiver, habit, null, null));
-        description = descriptionRepository.save(new Description(null, category, "receivePieceOfCake", "diary", "cakeHistory"));
+        habit = habitRepository.save(new Habit(null, category, receiver, null, false, false));
+        habitRecordRepository.save(new HabitRecord(null,receiver, habit, null, null));
+        descriptionRepository.save(new Description(null, category, "receivePieceOfCake", "diary", "cakeHistory"));
 
-        sentPieceOfCake = pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, habit, category, "note~!!!", null, null));
+        sentPieceOfCake = pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, category, "note~!!!", null, null));
         pieceOfCakeReceiveRepository.save(new ReceivedPieceOfCake(null, receiver, sentPieceOfCake, category, null ));
         wholeCake = wholeCakeRepository.save(new WholeCake(null, receiver, habit, category, null));
 

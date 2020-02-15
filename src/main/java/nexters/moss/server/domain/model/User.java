@@ -29,14 +29,5 @@ public class User {
     private String nickname;
 
     @OneToMany(mappedBy = "user")
-    private List<HabitRecord> habitRecords = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    private List<SentPieceOfCake> sentPieceOfCakes = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    private List<ReceivedPieceOfCake> receivedPieceOfCakes = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    private List<WholeCake> wholeCakes = new ArrayList<>();
+    private List<Habit> habits = new ArrayList<>();
 }

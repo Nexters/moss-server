@@ -13,10 +13,15 @@ public class DiaryDTO {
     private String habitName;
     private String cakeName;
     private String description;
-    private int count;
+    private long count;
     private String imagePath;
 
-    public DiaryDTO(String habitName, String cakeName, String description, int count) {
+    public DiaryDTO(
+            String habitName,
+            String cakeName,
+            String description,
+            long count
+    ) {
         this.habitName = habitName;
         this.cakeName = cakeName;
         this.description = description;

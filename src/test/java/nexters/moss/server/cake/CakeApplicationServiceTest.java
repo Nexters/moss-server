@@ -59,20 +59,20 @@ public class CakeApplicationServiceTest {
             categoryRepository.save(new Category(null, habitTypes.get(i), cakeTypes.get(i)));
         }
         category = categoryRepository.save(new Category(null, habitTypes.get(0), cakeTypes.get(0)));
-        testHabit = habitRepository.save(new Habit(null, category, null, null ));
+        testHabit = habitRepository.save(new Habit(null, category, null, null, false, false));
 
-        sender = userRepository.save(new User(null, null, "accounToken", "nickName", null, null, null, null));
-        receiver = userRepository.save(new User(null, null, "accounToken2", "nickName2", null, null, null, null));
+        sender = userRepository.save(new User(null, null, "accounToken", "nickName", null));
+        receiver = userRepository.save(new User(null, null, "accounToken2", "nickName2", null));
 
-        pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, testHabit, category,"hello" , null, null));
-        pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, testHabit, category, "hello123" , null, null));
-        pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, testHabit, category, "hello123456" , null, null));
+        pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, category,"hello" , null, null));
+        pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, category, "hello123" , null, null));
+        pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, category, "hello123456" , null, null));
     }
 
     @Test
     public void createANewCakeTest(){
         CreateNewCakeRequest req = new CreateNewCakeRequest(sender.getId(), testHabit.getId(), "note~!!");
-        Response<Long> res = cakeApplicationService.createANewCake(req);
+        Response<Long> res = cakeApplicationService.createNewCake(req);
         Assert.assertNotNull(res.getData());
 
         SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findById(res.getData()).get();
@@ -85,7 +85,7 @@ public class CakeApplicationServiceTest {
         long userId = receiver.getId();
         long habitId = testHabit.getId();
 
-        Response<NewCakeDTO> testResponse = cakeApplicationService.getANewCake(userId, habitId);
+        Response<NewCakeDTO> testResponse = cakeApplicationService.getNewCake(userId, habitId);
         Assert.assertNotNull(testResponse.getData());
     }
 }
