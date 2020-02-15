@@ -18,7 +18,7 @@ public class HabitController {
     }
 
     // TODO: JWT Authentication will give user information
-    @GetMapping("/history")
+    @GetMapping("/history/{userId}")
     @ResponseStatus(value = HttpStatus.OK)
     public Response<List<HabitHistory>> getHabitHistory(@PathVariable Long userId) {
         return habitApplicationService.getHabitHistory(userId);
