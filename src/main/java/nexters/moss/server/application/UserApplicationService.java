@@ -47,14 +47,21 @@ public class UserApplicationService {
         User user = userRepository.findBySocialId(socialId).orElseThrow(() -> new UserInfoException("No Matched Habikery User with Social ID"));
 
         String habikeryToken = habikeryTokenService.createToken(user.getId(), accessToken);
-        user.setHabikeryToken(habikeryToken);
-        User updatedUser = userRepository.save(user);
+        User updatedUser = userRepository.save(
+                new User(
+                        user.getId(),
+                        user.getSocialId(),
+                        habikeryToken,
+                        user.getNickname(),
+                        user.getHabits()
+                )
+        );
 
         return new Response<>(updatedUser.getHabikeryToken());
     }
 
-    public Response leave(String accountToken) {
-        Token token = habikeryTokenService.recoverToken(accountToken);
+    public Response leave(String habikeryToken) {
+        Token token = habikeryTokenService.recoverToken(habikeryToken);
         User user = userRepository.findById(token.getUserId()).orElseThrow(() -> new UserInfoException("No Matched Habikery User with User ID"));
 
         userRepository.deleteById(user.getId());
@@ -62,16 +69,16 @@ public class UserApplicationService {
         return new Response();
     }
 
-    public Response<String> getUserInfo(String accountToken) {
-        Token token = habikeryTokenService.recoverToken(accountToken);
+    public Response<String> getUserInfo(String habikeryToken) {
+        Token token = habikeryTokenService.recoverToken(habikeryToken);
         User user = userRepository.findById(token.getUserId()).orElseThrow(() -> new UserInfoException("No Matched Habikery User with User ID"));
 
         return new Response<>(user.getNickname());
     }
 
     @Transactional
-    public Response report(String accountToken, Long receivedPieceOfCakeId, String reason) {
-        Token token = habikeryTokenService.recoverToken(accountToken);
+    public Response report(String habikeryToken, Long receivedPieceOfCakeId, String reason) {
+        Token token = habikeryTokenService.recoverToken(habikeryToken);
 
         ReceivedPieceOfCake receivedPieceOfCake = pieceOfCakeReceiveRepository.findById(receivedPieceOfCakeId).orElseThrow(() -> new IllegalArgumentException("No Matched ReceivedPieceOfCake"));
         User reportedUser = receivedPieceOfCake.getSentPieceOfCake().getUser();

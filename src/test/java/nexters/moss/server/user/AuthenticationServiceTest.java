@@ -1,6 +1,5 @@
 package nexters.moss.server.user;
 
-import nexters.moss.server.application.UserApplicationService;
 import nexters.moss.server.domain.model.User;
 import nexters.moss.server.domain.repository.UserRepository;
 import nexters.moss.server.domain.service.AuthenticationService;
@@ -41,10 +40,7 @@ public class AuthenticationServiceTest {
                 user.getSocialId(),
                 testHabikeryToken,
                 user.getNickname(),
-                null,
-                null,
-                null,
-                null
+                user.getHabits()
         ));
     }
 

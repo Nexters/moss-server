@@ -7,9 +7,9 @@ import nexters.moss.server.domain.repository.*;
 import nexters.moss.server.domain.service.SocialTokenService;
 import nexters.moss.server.domain.model.User;
 import nexters.moss.server.domain.repository.UserRepository;
-import nexters.moss.server.domain.service.TokenService;
 import nexters.moss.server.domain.value.CakeType;
 import nexters.moss.server.domain.value.HabitType;
+import nexters.moss.server.domain.service.HabikeryTokenService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,7 +52,7 @@ public class UserApplicationServiceTest {
     private SocialTokenService socialTokenService;
 
     @Autowired
-    private TokenService tokenService;
+    private HabikeryTokenService habikeryTokenService;
 
     @Autowired
     private UserApplicationService userApplicationService;
@@ -118,7 +118,7 @@ public class UserApplicationServiceTest {
         User savedUser = userList.get(userCount - 1);
 
         // when
-        Response leaveResponse = userApplicationService.leave(savedUser.getAccountToken());
+        Response leaveResponse = userApplicationService.leave(savedUser.getHabikeryToken());
 
         // then
         assertThat(leaveResponse).isNotNull();
@@ -134,7 +134,7 @@ public class UserApplicationServiceTest {
         User savedUser = userList.get(userList.size() - 1);
 
         // when
-        Response<String> getUserInfoResponse = userApplicationService.getUserInfo(savedUser.getAccountToken());
+        Response<String> getUserInfoResponse = userApplicationService.getUserInfo(savedUser.getHabikeryToken());
 
         // then
         assertThat(getUserInfoResponse).isNotNull();
@@ -163,7 +163,7 @@ public class UserApplicationServiceTest {
         String reportReason = "기타";
 
         // when
-        Response reportResponse = userApplicationService.report(receivingUser.getAccountToken(), receivedCake.getId(), reportReason);
+        Response reportResponse = userApplicationService.report(receivingUser.getHabikeryToken(), receivedCake.getId(), reportReason);
 
         // then
         assertThat(reportResponse).isNotNull();

@@ -26,17 +26,17 @@ public class UserController {
     @DeleteMapping("")
     @ResponseStatus(value = HttpStatus.OK)
     public Response leave(
-            @RequestHeader String accountToken
+            @RequestHeader String habikeryToken
     ) {
-        return userApplicationService.leave(accountToken);
+        return userApplicationService.leave(habikeryToken);
     }
 
     @GetMapping("")
     @ResponseStatus(value = HttpStatus.OK)
     public Response<String> getUserInfo(
-            @RequestHeader String accountToken
+            @RequestHeader String habikeryToken
     ) {
-        return userApplicationService.getUserInfo(accountToken);
+        return userApplicationService.getUserInfo(habikeryToken);
     }
 
     @PostMapping("/report")
