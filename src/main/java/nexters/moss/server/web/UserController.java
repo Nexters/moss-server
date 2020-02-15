@@ -30,4 +30,12 @@ public class UserController {
     ) {
         return userApplicationService.leave(accountToken);
     }
+
+    @GetMapping("")
+    @ResponseStatus(value = HttpStatus.OK)
+    public Response<String> getUserInfo(
+            @RequestHeader String accountToken
+    ) {
+        return userApplicationService.getUserInfo(accountToken);
+    }
 }

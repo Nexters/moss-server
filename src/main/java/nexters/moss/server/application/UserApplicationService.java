@@ -49,11 +49,18 @@ public class UserApplicationService {
     }
 
     public Response leave(String accountToken) {
-       Token token = tokenService.recoverToken(accountToken);
-       User user = userRepository.findById(token.getUserId()).orElseThrow(() -> new UserInfoException("No Matched Habikery User with User ID"));
+        Token token = tokenService.recoverToken(accountToken);
+        User user = userRepository.findById(token.getUserId()).orElseThrow(() -> new UserInfoException("No Matched Habikery User with User ID"));
 
-       userRepository.deleteById(user.getId());
+        userRepository.deleteById(user.getId());
 
-       return new Response();
+        return new Response();
+    }
+
+    public Response<String> getUserInfo(String accountToken) {
+        Token token = tokenService.recoverToken(accountToken);
+        User user = userRepository.findById(token.getUserId()).orElseThrow(() -> new UserInfoException("No Matched Habikery User with User ID"));
+
+        return new Response<>(user.getNickname());
     }
 }

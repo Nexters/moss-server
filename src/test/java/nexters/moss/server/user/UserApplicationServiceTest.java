@@ -95,4 +95,16 @@ public class UserApplicationServiceTest {
         assertThat(leaveResponse).isNotNull();
         assertThat(userRepository.count()).isEqualTo(0);
     }
+
+    @Test
+    public void getUserInfoTest() {
+        // given
+
+
+        // when
+
+
+        // then
+
+    }
 }
