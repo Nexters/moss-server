@@ -18,7 +18,8 @@ public class CakeApplicationService {
     private CategoryRepository categoryRepository;
 
     public CakeApplicationService(HabitRepository habitRepository,
-                                  UserRepository userRepository, PieceOfCakeSendRepository pieceOfCakeSendRepository,
+                                  UserRepository userRepository,
+                                  PieceOfCakeSendRepository pieceOfCakeSendRepository,
                                   PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository,
                                   CategoryRepository categoryRepository) {
         this.habitRepository = habitRepository;
@@ -30,10 +31,8 @@ public class CakeApplicationService {
 
     @Transactional
     public Response<Long> createANewCake(CreateNewCakeRequest createNewCakeRequest) {
-        User user =
-                userRepository.findById(createNewCakeRequest.getUserId()).orElseThrow(() -> new IllegalArgumentException("No Matched User Id"));
-        Habit habit =
-                habitRepository.findById(createNewCakeRequest.getCategoryId()).orElseThrow(() -> new IllegalArgumentException("No Matched Habit Id"));
+        User user = userRepository.findById(createNewCakeRequest.getUserId()).orElseThrow(() -> new IllegalArgumentException("No Matched User Id"));
+        Habit habit = habitRepository.findById(createNewCakeRequest.getCategoryId()).orElseThrow(() -> new IllegalArgumentException("No Matched Habit Id"));
 
         return new Response<Long>(
                 pieceOfCakeSendRepository.save(
@@ -44,24 +43,31 @@ public class CakeApplicationService {
                                 .category(habit.getCategory())
                                 .note(createNewCakeRequest.getNote())
                                 .build())
-                                .getId()
+                        .getId()
         );
     }
 
 
     @Transactional
     public Response<NewCakeDTO> getANewCake(Long userId, Long categoryId) {
-
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("No Matched User Id"));
-        Category category = categoryRepository.findById(categoryId).get();
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new IllegalArgumentException("No Matched Category Id"));
         SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findRandomOneByHabit(userId, categoryId);
 
-        ReceivedPieceOfCake receivedPOC =
-                pieceOfCakeReceiveRepository.save(ReceivedPieceOfCake.builder().user(user).sentPieceOfCake(sentPieceOfCake).category(category).build());
+        ReceivedPieceOfCake receivedPOC = pieceOfCakeReceiveRepository.save(
+                ReceivedPieceOfCake.builder()
+                        .user(user)
+                        .sentPieceOfCake(sentPieceOfCake)
+                        .category(category)
+                        .build()
+        );
 
-        return new Response<NewCakeDTO>(new NewCakeDTO(receivedPOC.getUser().getNickname()
-                                            ,receivedPOC.getSentPieceOfCake().getNote()
-                                            ,receivedPOC.getSentPieceOfCake().getCategory().getCakeType().getName()));
+        return new Response<NewCakeDTO>(
+                new NewCakeDTO(
+                        receivedPOC.getUser().getNickname(),
+                        receivedPOC.getSentPieceOfCake().getNote(),
+                        receivedPOC.getSentPieceOfCake().getCategory().getCakeType().getName())
+        );
     }
 
 

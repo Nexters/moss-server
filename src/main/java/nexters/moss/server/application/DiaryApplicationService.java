@@ -23,7 +23,14 @@ public class DiaryApplicationService {
     private UserRepository userRepository;
     private CategoryRepository categoryRepository;
 
-    public DiaryApplicationService(WholeCakeRepository wholeCakeRepository, DescriptionRepository descriptionRepository, HabitRecordRepository habitRecordRepository, PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository, UserRepository userRepository, CategoryRepository categoryRepository) {
+    public DiaryApplicationService(
+            WholeCakeRepository wholeCakeRepository,
+            DescriptionRepository descriptionRepository,
+            HabitRecordRepository habitRecordRepository,
+            PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository,
+            UserRepository userRepository,
+            CategoryRepository categoryRepository
+    ) {
         this.wholeCakeRepository = wholeCakeRepository;
         this.descriptionRepository = descriptionRepository;
         this.habitRecordRepository = habitRecordRepository;
@@ -32,47 +39,69 @@ public class DiaryApplicationService {
         this.categoryRepository = categoryRepository;
     }
 
-    public Response<List<DiaryDTO>> getPieceOfCakeDiary(Long userId){
-        List<HabitRecord> habits = habitRecordRepository.findAllByUser(userRepository.findById(userId).get());
+    public Response<List<DiaryDTO>> getPieceOfCakeDiary(Long userId) {
+        List<HabitRecord> habits = habitRecordRepository.findAllByUser(
+                userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("No Matched User Id"))
+        );
         List<DiaryDTO> diaries = new ArrayList<>();
 
-        for(HabitRecord habit : habits){
-            diaries.add(new DiaryDTO(habit.getHabit().getCategory().getHabitType().getName()
-                                    ,habit.getHabit().getCategory().getCakeType().getName()
-                                    ,descriptionRepository.findByCategory(habit.getHabit().getCategory()).getDiary()
-                                    ,pieceOfCakeReceiveRepository.countAllByUserAndCategory(userRepository.findById(userId).get(),habit.getHabit().getCategory()) ,null));
+        for (HabitRecord habit : habits) {
+            diaries.add(
+                    new DiaryDTO(
+                            habit.getHabit().getCategory().getHabitType().getName(),
+                            habit.getHabit().getCategory().getCakeType().getName(),
+                            descriptionRepository.findByCategory(habit.getHabit().getCategory()).getDiary(),
+                            pieceOfCakeReceiveRepository.countAllByUserAndCategory(
+                                    userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException(
+                                            "No Matched User Id")),
+                                    habit.getHabit().getCategory()
+                            )
+                    )
+            );
         }
         return new Response<List<DiaryDTO>>(diaries);
     }
 
-    public Response<List<DiaryDTO>> getWholeCakeDiary(Long userId){
-        List<HabitRecord> habits = habitRecordRepository.findAllByUser(userRepository.findById(userId).get());
+    public Response<List<DiaryDTO>> getWholeCakeDiary(Long userId) {
+        List<HabitRecord> habits = habitRecordRepository.findAllByUser(
+                userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("No Matched User Id"))
+        );
         List<DiaryDTO> diaries = new ArrayList<>();
 
-        User user = userRepository.findById(userId).get();
-        for(HabitRecord habit : habits){
-            diaries.add(new DiaryDTO(habit.getHabit().getCategory().getHabitType().getName()
-                    ,habit.getHabit().getCategory().getCakeType().getName()
-                    ,descriptionRepository.findByCategory(habit.getHabit().getCategory()).getDiary()
-                    ,wholeCakeRepository.countAllByUserAndCategory(user, habit.getHabit().getCategory()) ,null));
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("No Matched User " +
+                "Id"));
+        for (HabitRecord habit : habits) {
+            diaries.add(
+                    new DiaryDTO(
+                            habit.getHabit().getCategory().getHabitType().getName(),
+                            habit.getHabit().getCategory().getCakeType().getName(),
+                            descriptionRepository.findByCategory(habit.getHabit().getCategory()).getDiary(),
+                            wholeCakeRepository.countAllByUserAndCategory(user, habit.getHabit().getCategory())
+                    )
+            );
         }
         return new Response<List<DiaryDTO>>(diaries);
     }
 
-    public Response<HistoryResponse> getCakeHistory(Long userId, Long categoryId){
-        User user = userRepository.findById(userId).get();
-        Category category = categoryRepository.findById(categoryId).get();
+    public Response<HistoryResponse> getCakeHistory(Long userId, Long categoryId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("No Matched User " +
+                "Id"));
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new IllegalArgumentException(
+                "No Matched Category Id"));
 
         List<WholeCake> wholeCakeList = wholeCakeRepository.findAllByUserAndCategory(user, category);
 
         List<LocalDateTime> dates = new ArrayList<>();
-        for(WholeCake wholeCake : wholeCakeList){
+        for (WholeCake wholeCake : wholeCakeList) {
             dates.add(wholeCake.getCreatedAt());
         }
 
-        return new Response<HistoryResponse>(new HistoryResponse(category.getHabitType().getName(),
-                                                                descriptionRepository.findByCategory(category).getCakeHistory(),
-                                                                category.getCakeType().getName(),
-                                                                dates));
+        return new Response<HistoryResponse>(
+                new HistoryResponse(
+                        category.getHabitType().getName(),
+                        descriptionRepository.findByCategory(category).getCakeHistory(),
+                        category.getCakeType().getName(),
+                        dates)
+        );
     }
 }

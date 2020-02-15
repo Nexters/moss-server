@@ -15,4 +15,12 @@ public class DiaryDTO {
     private String description;
     private int count;
     private String imagePath;
+
+    public DiaryDTO(String habitName, String cakeName, String description, int count) {
+        this.habitName = habitName;
+        this.cakeName = cakeName;
+        this.description = description;
+        this.count = count;
+        this.imagePath = "";
+    }
 }
