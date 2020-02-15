@@ -2,7 +2,8 @@ package nexters.moss.server.application;
 
 import lombok.AllArgsConstructor;
 import nexters.moss.server.application.dto.Response;
-import nexters.moss.server.domain.model.exception.SocialUserInfoException;
+import nexters.moss.server.domain.model.exception.UserInfoException;
+import nexters.moss.server.domain.model.Token;
 import nexters.moss.server.domain.service.SocialTokenService;
 import nexters.moss.server.domain.service.TokenService;
 import nexters.moss.server.domain.model.User;
@@ -39,12 +40,22 @@ public class UserApplicationService {
     @Transactional
     public Response<String> login(String accessToken) {
         Long socialId = socialTokenService.getSocialUserId(accessToken);
-        User user = userRepository.findBySocialId(socialId).orElseThrow(() -> new SocialUserInfoException("No Matched User"));
+        User user = userRepository.findBySocialId(socialId).orElseThrow(() -> new UserInfoException("No Matched Habikery User with Social ID"));
 
         String accountToken = tokenService.createToken(user.getId(), accessToken);
         user.setAccountToken(accountToken);
         User updatedUser = userRepository.save(user);
 
         return new Response<>(updatedUser.getAccountToken());
+    }
+
+    @Transactional
+    public Response leave(String accountToken) {
+       Token token = tokenService.recoverToken(accountToken);
+       User user = userRepository.findById(token.getUserId()).orElseThrow(() -> new UserInfoException("No Matched Habikery User with User ID"));
+
+       userRepository.deleteById(user.getId());
+
+       return new Response();
     }
 }

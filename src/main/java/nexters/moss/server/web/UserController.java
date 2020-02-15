@@ -22,4 +22,12 @@ public class UserController {
     ) {
         return userApplicationService.join(accessToken, nickname);
     }
+
+    @DeleteMapping("")
+    @ResponseStatus(value = HttpStatus.OK)
+    public Response leave(
+            @RequestHeader String accountToken
+    ) {
+        return userApplicationService.leave(accountToken);
+    }
 }

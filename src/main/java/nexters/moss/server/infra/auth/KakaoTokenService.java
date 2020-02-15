@@ -3,7 +3,7 @@ package nexters.moss.server.infra.auth;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nexters.moss.server.domain.service.SocialTokenService;
-import nexters.moss.server.domain.model.exception.SocialUserInfoException;
+import nexters.moss.server.domain.model.exception.UserInfoException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -24,7 +24,7 @@ public class KakaoTokenService implements SocialTokenService {
     }
 
     @Override
-    public Long getSocialUserId(String accessToken) throws SocialUserInfoException {
+    public Long getSocialUserId(String accessToken) throws UserInfoException {
         return httpTemplate(accessToken, (client, mapper) -> {
             HttpPost post = new HttpPost(requestUrl);
             post.addHeader("Authorization", "Bearer " + accessToken);
@@ -43,7 +43,7 @@ public class KakaoTokenService implements SocialTokenService {
             return http.get(client, objectMapper);
         } catch (IOException e) {
             e.printStackTrace();
-            throw new SocialUserInfoException("No Matched User with Social ID");
+            throw new UserInfoException("No Matched User with Social ID");
         }
     }
 }
