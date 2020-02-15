@@ -2,10 +2,14 @@ package nexters.moss.server.user;
 
 import nexters.moss.server.application.UserApplicationService;
 import nexters.moss.server.application.dto.Response;
+import nexters.moss.server.domain.model.*;
+import nexters.moss.server.domain.repository.*;
 import nexters.moss.server.domain.service.SocialTokenService;
 import nexters.moss.server.domain.model.User;
 import nexters.moss.server.domain.repository.UserRepository;
 import nexters.moss.server.domain.service.TokenService;
+import nexters.moss.server.domain.value.CakeType;
+import nexters.moss.server.domain.value.HabitType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +19,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -26,6 +32,21 @@ import static org.mockito.BDDMockito.given;
 public class UserApplicationServiceTest {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ReportRepository reportRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private HabitRepository habitRepository;
+
+    @Autowired
+    private PieceOfCakeSendRepository pieceOfCakeSendRepository;
+
+    @Autowired
+    private PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository;
 
     @MockBean(name = "socialTokenService")
     private SocialTokenService socialTokenService;
@@ -113,5 +134,78 @@ public class UserApplicationServiceTest {
         // then
         assertThat(getUserInfoResponse).isNotNull();
         assertThat(getUserInfoResponse.getData()).isEqualTo(savedUser.getNickname());
+    }
+
+    @Test
+    public void reportTest() {
+        // given
+        User receivingUser = setupJoinAndLogin(testAccessToken, testUser);
+
+        String senderAccessToken = "senderAccessToken";
+        User sendingUser = User.builder()
+                .socialId(87654321L)
+                .nickname("senderNickname")
+                .build();
+        given(socialTokenService.getSocialUserId(senderAccessToken))
+                .willReturn(sendingUser.getSocialId());
+        sendingUser = setupJoinAndLogin(senderAccessToken, sendingUser);
+
+        Category category = setupCategory();
+        Habit habit = setupHabit(category);
+        SentPieceOfCake sentCake = setupSentPieceOfCake(sendingUser, habit, category);
+        ReceivedPieceOfCake receivedCake = setupReceivedPieceOfCake(receivingUser, category, sentCake);
+
+        String reportReason = "기타";
+
+        // when
+        Response reportResponse = userApplicationService.report(receivingUser.getAccountToken(), receivedCake.getId(), reportReason);
+
+        // then
+        assertThat(reportResponse).isNotNull();
+
+        assertThat(reportRepository.count()).isEqualTo(1);
+        Report report = reportRepository.findAll().get(0);
+        assertThat(report.getUser().getId()).isEqualTo(sendingUser.getId());
+        assertThat(report.getReason()).isEqualTo(reportReason);
+    }
+
+    private User setupJoinAndLogin(String accessToken, User user) {
+        userApplicationService.join(accessToken, user.getNickname());
+        userApplicationService.login(accessToken);
+
+        List<User> userList = userRepository.findAll();
+        return userList.get(userList.size()-1);
+    }
+
+    private Category setupCategory() {
+        Category category = Category.builder()
+                .habitType(HabitType.WATER)
+                .cakeType(CakeType.WATERMELON)
+                .build();
+        return categoryRepository.save(category);
+    }
+
+    private Habit setupHabit(Category category) {
+        Habit habit = Habit.builder()
+                .category(category)
+                .build();
+        return habitRepository.save(habit);
+    }
+
+    private SentPieceOfCake setupSentPieceOfCake(User sendingUser, Habit habit, Category category) {
+        SentPieceOfCake sentCake = SentPieceOfCake.builder()
+                .user(sendingUser)
+                .category(category)
+                .build();
+        return pieceOfCakeSendRepository.save(sentCake);
+    }
+
+    private ReceivedPieceOfCake setupReceivedPieceOfCake(User receivingUser, Category category, SentPieceOfCake sentCake) {
+        ReceivedPieceOfCake receivedCake = ReceivedPieceOfCake.builder()
+                .user(receivingUser)
+                .sentPieceOfCake(sentCake)
+                .category(category)
+                .build();
+        return pieceOfCakeReceiveRepository.save(receivedCake);
     }
 }
