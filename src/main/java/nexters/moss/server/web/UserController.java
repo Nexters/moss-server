@@ -16,10 +16,10 @@ public class UserController {
 
     @PostMapping("")
     @ResponseStatus(value = HttpStatus.OK)
-    public void join(
+    public Response join(
             @RequestHeader String accessToken,
             @RequestBody String nickname
     ) {
-        userApplicationService.join(accessToken, nickname);
+        return userApplicationService.join(accessToken, nickname);
     }
 }

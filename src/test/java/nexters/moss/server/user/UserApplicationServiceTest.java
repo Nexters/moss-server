@@ -40,11 +40,13 @@ public class UserApplicationServiceTest {
                 .willReturn(socialId);
 
         // when
-        userApplicationService.join(accessToken, nickname);
+        Response joinResponse = userApplicationService.join(accessToken, nickname);
 
         // then
-        User user = userRepository.findAll().get(0);
+        assertThat(joinResponse).isNotNull();
+        assertThat(joinResponse.getData()).isNull();
 
+        User user = userRepository.findAll().get(0);
         assertThat(user.getNickname()).isEqualTo(nickname);
         assertThat(user.getSocialId()).isEqualTo(socialId);
     }
