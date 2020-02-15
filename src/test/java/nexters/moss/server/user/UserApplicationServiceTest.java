@@ -105,7 +105,7 @@ public class UserApplicationServiceTest {
         User resultUser = userList.get(userList.size() - 1);
 
         assertThat(resultUser.getId()).isEqualTo(testUser.getId());
-        assertThat(resultUser.getAccountToken()).isNotNull();
+        assertThat(resultUser.getHabikeryToken()).isNotNull();
     }
 
     @Test

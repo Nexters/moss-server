@@ -22,8 +22,8 @@ public class User extends TimeProvider {
     private Long socialId;
 
     @Setter
-    @Column(name = "account_token")
-    private String accountToken;
+    @Column(name = "habikery_token")
+    private String habikeryToken;
 
     @Column(name = "nickname")
     private String nickname;

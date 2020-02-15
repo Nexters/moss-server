@@ -46,11 +46,11 @@ public class UserApplicationService {
         Long socialId = socialTokenService.getSocialUserId(accessToken);
         User user = userRepository.findBySocialId(socialId).orElseThrow(() -> new UserInfoException("No Matched Habikery User with Social ID"));
 
-        String accountToken = habikeryTokenService.createToken(user.getId(), accessToken);
-        user.setAccountToken(accountToken);
+        String habikeryToken = habikeryTokenService.createToken(user.getId(), accessToken);
+        user.setHabikeryToken(habikeryToken);
         User updatedUser = userRepository.save(user);
 
-        return new Response<>(updatedUser.getAccountToken());
+        return new Response<>(updatedUser.getHabikeryToken());
     }
 
     public Response leave(String accountToken) {

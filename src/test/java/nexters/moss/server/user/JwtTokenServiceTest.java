@@ -23,10 +23,10 @@ public class JwtTokenServiceTest {
         // given
         long userId = 12345678L;
         String accessToken = "socialTokenString";
-        String accountToken = "accountTokenString";
+        String habikeryToken = "habikeryTokenString";
 
         // when
-        String testToken = habikeryTokenService.createToken(userId, accessToken, accountToken);
+        String testToken = habikeryTokenService.createToken(userId, accessToken, habikeryToken);
 
         // then
         assertThat(testToken).isNotEmpty();
@@ -37,8 +37,8 @@ public class JwtTokenServiceTest {
         // given
         long userId = 12345678L;
         String accessToken = "socialTokenString";
-        String accountToken = "accountTokenString";
-        String jwtToken = habikeryTokenService.createToken(userId, accessToken, accountToken);
+        String habikeryToken = "habikeryTokenString";
+        String jwtToken = habikeryTokenService.createToken(userId, accessToken, habikeryToken);
 
         // when
         Token testToken = habikeryTokenService.recoverToken(jwtToken);
@@ -46,6 +46,6 @@ public class JwtTokenServiceTest {
         // then
         assertThat(testToken.getUserId()).isEqualTo(userId);
         assertThat(testToken.getAccessToken()).isEqualTo(accessToken);
-        assertThat(testToken.getAccountToken()).isEqualTo(accountToken);
+        assertThat(testToken.getHabikeryToken()).isEqualTo(habikeryToken);
     }
 }

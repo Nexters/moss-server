@@ -30,7 +30,7 @@ public class JwtTokenService implements HabikeryTokenService {
     }
 
     @Override
-    public String createToken(Long userId, String accessToken, String accountToken) {
+    public String createToken(Long userId, String accessToken, String habikeryToken) {
         LocalDateTime expirationLocalDateTime = LocalDateTime.now().plus(Duration.ofDays(expirationPeriod));
         Date expirationDate = Date.from(expirationLocalDateTime.atZone(ZoneId.systemDefault()).toInstant());
 
@@ -38,23 +38,23 @@ public class JwtTokenService implements HabikeryTokenService {
                 .setSubject(userId.toString())
                 .setExpiration(expirationDate)
                 .claim("accessToken", accessToken)
-                .claim("accountToken", accountToken)
+                .claim("habikeryToken", habikeryToken)
                 .signWith(SignatureAlgorithm.HS256, key)
                 .compact();
     }
 
     @Override
-    public Token recoverToken(String accountToken) {
+    public Token recoverToken(String habikeryToken) {
         Jws<Claims> claims = Jwts.parser()
                 .setSigningKey(key)
-                .parseClaimsJws(accountToken);
+                .parseClaimsJws(habikeryToken);
 
         Claims body = claims.getBody();
 
         return new Token(
                 Long.parseLong(body.getSubject()),
                 body.get("accessToken", String.class),
-                body.get("accountToken", String.class)
+                body.get("habikeryToken", String.class)
         );
     }
 }
