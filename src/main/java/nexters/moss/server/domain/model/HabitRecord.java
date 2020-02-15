@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "habit_records")
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class HabitRecord {
@@ -35,7 +36,6 @@ public class HabitRecord {
     @Column(name = "date")
     private LocalDateTime date;
 
-    @Builder
     public HabitRecord(
             Long userId,
             Long habitId,

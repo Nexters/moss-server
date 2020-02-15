@@ -59,10 +59,11 @@ public class CakeApplicationServiceTest {
             categoryRepository.save(new Category(null, habitTypes.get(i), cakeTypes.get(i)));
         }
         category = categoryRepository.save(new Category(null, habitTypes.get(0), cakeTypes.get(0)));
-        testHabit = habitRepository.save(new Habit(null, category, null, null, false, false));
-
         sender = userRepository.save(new User(null, null, "accounToken", "nickName", null));
         receiver = userRepository.save(new User(null, null, "accounToken2", "nickName2", null));
+
+        habitRepository.save(new Habit(null, category, sender, null, false, false));
+        testHabit = habitRepository.save(new Habit(null, category, receiver, null, false, false));
 
         pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, category,"hello" , null, null));
         pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, category, "hello123" , null, null));
@@ -70,7 +71,7 @@ public class CakeApplicationServiceTest {
     }
 
     @Test
-    public void createANewCakeTest(){
+    public void createNewCakeTest(){
         CreateNewCakeRequest req = new CreateNewCakeRequest(sender.getId(), testHabit.getId(), "note~!!");
         Response<Long> res = cakeApplicationService.createNewCake(req);
         Assert.assertNotNull(res.getData());
@@ -81,11 +82,11 @@ public class CakeApplicationServiceTest {
     }
 
     @Test
-    public void getANewCakeTest(){
+    public void getNewCakeTest(){
         long userId = receiver.getId();
-        long habitId = testHabit.getId();
+        long categoryId = category.getId();
 
-        Response<NewCakeDTO> testResponse = cakeApplicationService.getNewCake(userId, habitId);
+        Response<NewCakeDTO> testResponse = cakeApplicationService.getNewCake(userId, categoryId);
         Assert.assertNotNull(testResponse.getData());
     }
 }

@@ -4,6 +4,7 @@ import nexters.moss.server.application.dto.HabitHistory;
 import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.domain.model.Category;
 import nexters.moss.server.domain.model.Habit;
+import nexters.moss.server.domain.model.HabitRecord;
 import nexters.moss.server.domain.model.User;
 import nexters.moss.server.domain.repository.CategoryRepository;
 import nexters.moss.server.domain.repository.HabitRecordRepository;
@@ -40,16 +41,25 @@ public class HabitApplicationService {
     }
 
     public Response<HabitHistory> createHabit(Long userId, Long categoryId) {
-        Habit habit = habitRepository.save(new Habit(categoryId, userId));
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("No Matched User"));
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new IllegalArgumentException("No Matched User"));
+        Habit habit = habitRepository.save(
+                Habit.builder()
+                        .user(user)
+                        .category(category)
+                        .isActivated(false)
+                        .isFirstCheck(false)
+                        .build()
+        );
+        List<HabitRecord> habitRecords = habitRecordService.createHabitRecords(user, habit);
+        habitRecords = habitRecordRepository.saveAll(habitRecords);
         habit.onActivation();
         return new Response(
                 new HabitHistory(
                         habit.getId(),
-                        habit.getCategory().getHabitType(),
+                        category.getHabitType(),
                         habit.getIsFirstCheck(),
-                        habitRecordRepository.saveAll(
-                                habitRecordService.createHabitRecords(userId, habit.getId())
-                        )
+                        habitRecords
                 )
         );
     }

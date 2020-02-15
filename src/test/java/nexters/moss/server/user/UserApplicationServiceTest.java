@@ -151,7 +151,7 @@ public class UserApplicationServiceTest {
         sendingUser = setupJoinAndLogin(senderAccessToken, sendingUser);
 
         Category category = setupCategory();
-        Habit habit = setupHabit(category);
+        Habit habit = setupHabit(category, receivingUser);
         SentPieceOfCake sentCake = setupSentPieceOfCake(sendingUser, habit, category);
         ReceivedPieceOfCake receivedCake = setupReceivedPieceOfCake(receivingUser, category, sentCake);
 
@@ -185,9 +185,10 @@ public class UserApplicationServiceTest {
         return categoryRepository.save(category);
     }
 
-    private Habit setupHabit(Category category) {
+    private Habit setupHabit(Category category, User user) {
         Habit habit = Habit.builder()
                 .category(category)
+                .user(user)
                 .build();
         return habitRepository.save(habit);
     }

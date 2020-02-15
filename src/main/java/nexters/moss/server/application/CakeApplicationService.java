@@ -11,13 +11,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CakeApplicationService {
+    private UserRepository userRepository;
+    private CategoryRepository categoryRepository;
     private PieceOfCakeSendRepository pieceOfCakeSendRepository;
     private PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository;
 
     public CakeApplicationService(
+            UserRepository userRepository,
+            CategoryRepository categoryRepository,
             PieceOfCakeSendRepository pieceOfCakeSendRepository,
             PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository
     ) {
+        this.userRepository = userRepository;
+        this.categoryRepository = categoryRepository;
         this.pieceOfCakeSendRepository = pieceOfCakeSendRepository;
         this.pieceOfCakeReceiveRepository = pieceOfCakeReceiveRepository;
     }
@@ -31,15 +37,16 @@ public class CakeApplicationService {
         );
     }
 
-
     @Transactional
     public Response<NewCakeDTO> getNewCake(Long userId, Long categoryId) {
+        User user = userRepository.findById(userId).get();
+        Category category = categoryRepository.findById(categoryId).get();
         ReceivedPieceOfCake receivedPOC = pieceOfCakeReceiveRepository.save(
-                new ReceivedPieceOfCake(
-                        userId,
-                        pieceOfCakeSendRepository.findRandomByUser_IdAndHabit_Id(userId, categoryId).getId(),
-                        categoryId
-                )
+                ReceivedPieceOfCake.builder()
+                .user(user)
+                .category(category)
+                .sentPieceOfCake(pieceOfCakeSendRepository.findRandomByUser_IdAndCategory_Id(userId, categoryId))
+                .build()
         );
 
         return new Response<NewCakeDTO>(
