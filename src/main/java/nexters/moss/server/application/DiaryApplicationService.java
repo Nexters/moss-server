@@ -73,7 +73,7 @@ public class DiaryApplicationService {
         return new Response<HistoryResponse>(
                 new HistoryResponse(
                         category.getHabitType().getName(),
-                        descriptionRepository.findByCategory_Id(categoryId).getCakeHistory(),
+                        descriptionRepository.findByCategory_Id(categoryId).getDiary(),
                         category.getCakeType().getName(),
                         wholeCakeRepository.findAllByUser_IdAndCategory_Id(userId, categoryId)
                                 .stream()

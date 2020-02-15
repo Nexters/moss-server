@@ -30,8 +30,28 @@ public class Habit {
     private List<HabitRecord> habitRecords = new ArrayList<>();
 
     @Column(name = "isActivated", columnDefinition = "boolean default false")
-    private Boolean isActivated;
+    private Boolean isActivated = false;
 
     @Column(name = "isFirstCheck", columnDefinition = "boolean default false")
-    private Boolean isFirstCheck;
+    private Boolean isFirstCheck = false;
+
+    public Habit(
+            Long categoryId,
+            Long userId
+    ) {
+        this.category = Category.builder()
+                .id(categoryId)
+                .build();
+        this.user = User.builder()
+                .id(userId)
+                .build();
+    }
+
+    public void onActivation() {
+        this.isActivated = true;
+    }
+
+    public void onFirstCheck() {
+        this.isFirstCheck = true;
+    }
 }

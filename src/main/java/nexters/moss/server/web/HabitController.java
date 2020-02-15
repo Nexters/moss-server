@@ -29,9 +29,9 @@ public class HabitController {
     @ResponseStatus(value = HttpStatus.OK)
     public Response<HabitHistory> createHabit(
             @PathVariable Long userId,
-            @RequestBody Long habitId
+            @RequestBody Long categoryId
     ) {
-        return habitApplicationService.createHabit(userId, habitId);
+        return habitApplicationService.createHabit(userId, categoryId);
     }
 
     // TODO: JWT Authentication will give user information
@@ -42,5 +42,12 @@ public class HabitController {
             @RequestBody Long habitId
     ) {
         return habitApplicationService.deleteHabit(userId, habitId);
+    }
+
+    // TODO: JWT Authentication will give user information
+    @PutMapping("/record")
+    @ResponseStatus(value = HttpStatus.OK)
+    public Response<HabitHistory> doneHabit(@RequestBody Long habitId) {
+        return habitApplicationService.doneHabit(habitId);
     }
 }

@@ -60,7 +60,7 @@ public class DiaryApplicationServiceTest {
 
         habit = habitRepository.save(new Habit(null, category, receiver, null, false, false));
         habitRecordRepository.save(new HabitRecord(null,receiver, habit, null, null));
-        descriptionRepository.save(new Description(null, category, "receivePieceOfCake", "diary", "cakeHistory"));
+        descriptionRepository.save(new Description(null, category, "receivePieceOfCake", "diary"));
 
         sentPieceOfCake = pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, category, "note~!!!", null, null));
         pieceOfCakeReceiveRepository.save(new ReceivedPieceOfCake(null, receiver, sentPieceOfCake, category, null ));

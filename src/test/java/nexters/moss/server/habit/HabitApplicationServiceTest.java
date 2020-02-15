@@ -102,13 +102,16 @@ public class HabitApplicationServiceTest {
 
     @Test
     public void deleteHabitTest() {
-        Response<HabitHistory> deleteResponse = habitApplicationService.createHabit(testUser.getId(), testHabit.getId());
-        Assert.assertNotNull(deleteResponse.getData());
-
-        List<HabitRecord> habitRecords = deleteResponse.getData().getHabitRecords();
-        Assert.assertEquals(5, habitRecords.size());
-
+        habitApplicationService.createHabit(testUser.getId(), testHabit.getId());
         habitApplicationService.deleteHabit(testUser.getId(), testHabit.getId());
         Assert.assertEquals(0, habitRecordRepository.findAllByUser_IdAndHabit_Id(testUser.getId(), testHabit.getId()).size());
+    }
+
+    @Test
+    public void doneHabitTest() {
+        habitApplicationService.createHabit(testUser.getId(), testHabit.getId());
+        habitApplicationService.doneHabit(testHabit.getId());
+        Habit habit = habitRepository.findById(testHabit.getId()).get();
+        Assert.assertEquals(habit.getIsFirstCheck(), true);
     }
 }

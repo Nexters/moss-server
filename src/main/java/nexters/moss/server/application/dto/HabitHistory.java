@@ -19,6 +19,7 @@ public class HabitHistory {
     private Long habitId;
     @JsonProperty("name")
     private HabitType habitTypeName;
+    private boolean isFirstCheck;
     @JsonProperty("records")
     private List<HabitRecord> habitRecords;
 }

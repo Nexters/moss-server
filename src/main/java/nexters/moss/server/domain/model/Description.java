@@ -25,7 +25,4 @@ public class Description {
 
     @Column(name = "diary")
     private String diary;
-
-    @Column(name = "cake_history")
-    private String cakeHistory;
 }
