@@ -16,9 +16,9 @@ public class Description {
     @Column(name = "description_id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "habit_id", nullable = false)
-    private Habit habit;
+    @OneToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 
     @Column(name = "receive_piece_of_cake")
     private String receivePieceOfCake;

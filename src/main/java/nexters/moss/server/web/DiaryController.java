@@ -14,8 +14,8 @@ public class DiaryController {
     private DiaryApplicationService diaryApplicationService;
 
     @GetMapping("/piece/{userId}")
-    public Response<List<DiaryDTO>> getAPieceOfCakeDiary(@PathVariable Long userId) {
-        return diaryApplicationService.getAPieceOfCakeDiary(userId);
+    public Response<List<DiaryDTO>> getPieceOfCakeDiary(@PathVariable Long userId) {
+        return diaryApplicationService.getPieceOfCakeDiary(userId);
     }
 
     @GetMapping("/whole/{userId}")

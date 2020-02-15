@@ -3,14 +3,8 @@ package nexters.moss.server.application;
 import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.application.dto.cake.NewCakeDTO;
 import nexters.moss.server.application.dto.cake.CreateNewCakeRequest;
-import nexters.moss.server.domain.model.Habit;
-import nexters.moss.server.domain.model.ReceivedPieceOfCake;
-import nexters.moss.server.domain.model.SentPieceOfCake;
-import nexters.moss.server.domain.model.User;
-import nexters.moss.server.domain.repository.HabitRepository;
-import nexters.moss.server.domain.repository.PieceOfCakeReceiveRepository;
-import nexters.moss.server.domain.repository.PieceOfCakeSendRepository;
-import nexters.moss.server.domain.repository.UserRepository;
+import nexters.moss.server.domain.model.*;
+import nexters.moss.server.domain.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,14 +15,17 @@ public class CakeApplicationService {
     private UserRepository userRepository;
     private PieceOfCakeSendRepository pieceOfCakeSendRepository;
     private PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository;
+    private CategoryRepository categoryRepository;
 
-    public CakeApplicationService(HabitRepository habitRepository, UserRepository userRepository,
-                                  PieceOfCakeSendRepository pieceOfCakeSendRepository,
-                                  PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository) {
+    public CakeApplicationService(HabitRepository habitRepository,
+                                  UserRepository userRepository, PieceOfCakeSendRepository pieceOfCakeSendRepository,
+                                  PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository,
+                                  CategoryRepository categoryRepository) {
         this.habitRepository = habitRepository;
         this.userRepository = userRepository;
         this.pieceOfCakeSendRepository = pieceOfCakeSendRepository;
         this.pieceOfCakeReceiveRepository = pieceOfCakeReceiveRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Transactional
@@ -44,26 +41,27 @@ public class CakeApplicationService {
                                 .builder()
                                 .user(user)
                                 .habit(habit)
+                                .category(habit.getCategory())
                                 .note(createNewCakeRequest.getNote())
                                 .build())
-                        .getId()
+                                .getId()
         );
     }
 
 
     @Transactional
     public Response<NewCakeDTO> getANewCake(Long userId, Long categoryId) {
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("No Matched User Id"));
+        Category category = categoryRepository.findById(categoryId).get();
         SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findRandomOneByHabit(userId, categoryId);
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("No Matched User " +
-                "Id"));
-
         ReceivedPieceOfCake receivedPOC =
-                pieceOfCakeReceiveRepository.save(ReceivedPieceOfCake.builder().sentPieceOfCake(sentPieceOfCake).user(user).build());
+                pieceOfCakeReceiveRepository.save(ReceivedPieceOfCake.builder().user(user).sentPieceOfCake(sentPieceOfCake).category(category).build());
 
         return new Response<NewCakeDTO>(new NewCakeDTO(receivedPOC.getUser().getNickname()
                                             ,receivedPOC.getSentPieceOfCake().getNote()
-                                            ,receivedPOC.getSentPieceOfCake().getHabit().getCakeType().getName()));
+                                            ,receivedPOC.getSentPieceOfCake().getCategory().getCakeType().getName()));
     }
 
 

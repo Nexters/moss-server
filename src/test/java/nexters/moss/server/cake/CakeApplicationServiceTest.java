@@ -4,9 +4,11 @@ import nexters.moss.server.application.CakeApplicationService;
 import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.application.dto.cake.CreateNewCakeRequest;
 import nexters.moss.server.application.dto.cake.NewCakeDTO;
+import nexters.moss.server.domain.model.Category;
 import nexters.moss.server.domain.model.Habit;
 import nexters.moss.server.domain.model.SentPieceOfCake;
 import nexters.moss.server.domain.model.User;
+import nexters.moss.server.domain.repository.CategoryRepository;
 import nexters.moss.server.domain.repository.HabitRepository;
 import nexters.moss.server.domain.repository.PieceOfCakeSendRepository;
 import nexters.moss.server.domain.repository.UserRepository;
@@ -31,12 +33,13 @@ public class CakeApplicationServiceTest {
     private Habit testHabit;
     private User sender;
     private User receiver;
+    private Category category;
 
     @Autowired
     private CakeApplicationService cakeApplicationService;
 
     @Autowired
-    private HabitRepository habitRepository;
+    private CategoryRepository categoryRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -44,24 +47,26 @@ public class CakeApplicationServiceTest {
     @Autowired
     private PieceOfCakeSendRepository pieceOfCakeSendRepository;
 
+    @Autowired
+    private HabitRepository habitRepository;
+
     @Before
     public void setup() {
         List<HabitType> habitTypes = Arrays.asList(HabitType.values());
         List<CakeType> cakeTypes = Arrays.asList(CakeType.values());
 
         for (int i=1; i<habitTypes.size(); i++){
-            habitRepository.save(new Habit(null, habitTypes.get(i), cakeTypes.get(i),null, null));
+            categoryRepository.save(new Category(null, habitTypes.get(i), cakeTypes.get(i)));
         }
-
-        testHabit = habitRepository.save(new Habit(null, habitTypes.get(0), cakeTypes.get(0), null, null));
-
+        category = categoryRepository.save(new Category(null, habitTypes.get(0), cakeTypes.get(0)));
+        testHabit = habitRepository.save(new Habit(null, category, null, null ));
 
         sender = userRepository.save(new User(null, null, "accounToken", "nickName", null, null, null, null));
         receiver = userRepository.save(new User(null, null, "accounToken2", "nickName2", null, null, null, null));
 
-        pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, testHabit, "hello" , null));
-        pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, testHabit, "hello123" , null));
-        pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, testHabit, "hello123456" , null));
+        pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, testHabit, category,"hello" , null, null));
+        pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, testHabit, category, "hello123" , null, null));
+        pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, testHabit, category, "hello123456" , null, null));
     }
 
     @Test

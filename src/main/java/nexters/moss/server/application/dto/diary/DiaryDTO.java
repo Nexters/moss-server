@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DiaryDTO {
     private String habitName;
-    private String description;
     private String cakeName;
+    private String description;
     private int count;
     private String imagePath;
 }
