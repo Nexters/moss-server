@@ -5,6 +5,7 @@ import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.domain.service.SocialTokenService;
 import nexters.moss.server.domain.model.User;
 import nexters.moss.server.domain.repository.UserRepository;
+import nexters.moss.server.domain.service.TokenService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +29,9 @@ public class UserApplicationServiceTest {
 
     @MockBean(name = "socialTokenService")
     private SocialTokenService socialTokenService;
+
+    @Autowired
+    private TokenService tokenService;
 
     @Autowired
     private UserApplicationService userApplicationService;
@@ -99,12 +103,15 @@ public class UserApplicationServiceTest {
     @Test
     public void getUserInfoTest() {
         // given
-
+        userApplicationService.join(testAccessToken, testUser.getNickname());
+        userApplicationService.login(testAccessToken);
+        User savedUser = userRepository.findAll().get(0);
 
         // when
-
+        Response<String> getUserInfoResponse = userApplicationService.getUserInfo(savedUser.getAccountToken());
 
         // then
-
+        assertThat(getUserInfoResponse).isNotNull();
+        assertThat(getUserInfoResponse.getData()).isEqualTo(savedUser.getNickname());
     }
 }
