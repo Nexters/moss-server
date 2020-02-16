@@ -12,10 +12,17 @@ public class ImageService {
     }
 
     public String getMoveImagePath(HabitType habitType, ImageEvent event){
-        return url+habitType.getKey()+"/"+event.getName()+".gif";
+        return url+
+                habitType.getKey()+
+                "/"+event.getName()+
+                ".gif";
     }
 
     public String getDiaryImagePath(HabitType habitType, ImageEvent event, int count){
-        return url+habitType.getKey()+"/"+event.getName()+"_"+count+".png";
+        return url+
+                habitType.getKey()+
+                "/"+event.getName()+
+                "_"+count+
+                ".png";
     }
 }
