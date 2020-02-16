@@ -15,7 +15,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class HabitHistory {
-    @JsonProperty("id")
     private Long habitId;
     @JsonProperty("name")
     private HabitType habitTypeName;
