@@ -32,10 +32,12 @@ public class HabitRecord {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "habit_status")
+    @Setter
     private HabitStatus habitStatus;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
     @Column(name = "date")
+    @Setter
     private LocalDateTime date;
 
     public HabitRecord(
@@ -52,5 +54,14 @@ public class HabitRecord {
                 .build();
         this.habitStatus = habitStatus;
         this.date = date;
+    }
+
+    public void switchHabitStatus(HabitStatus habitStatus) {
+        this.habitStatus = habitStatus;
+    }
+
+    public void changeContents(HabitRecord habitRecord) {
+        this.habitStatus = habitRecord.habitStatus;
+        this.date = habitRecord.getDate();
     }
 }

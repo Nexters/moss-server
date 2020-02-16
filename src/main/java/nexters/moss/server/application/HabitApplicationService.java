@@ -11,6 +11,7 @@ import nexters.moss.server.domain.repository.HabitRecordRepository;
 import nexters.moss.server.domain.repository.HabitRepository;
 import nexters.moss.server.domain.repository.UserRepository;
 import nexters.moss.server.domain.service.HabitRecordService;
+import nexters.moss.server.domain.service.HabitService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,7 @@ public class HabitApplicationService {
     private HabitRepository habitRepository;
     private HabitRecordRepository habitRecordRepository;
     private HabitRecordService habitRecordService;
+    private HabitService habitService;
     private UserRepository userRepository;
 
     public HabitApplicationService(
@@ -31,12 +33,14 @@ public class HabitApplicationService {
             HabitRepository habitRepository,
             HabitRecordRepository habitRecordRepository,
             HabitRecordService habitRecordService,
+            HabitService habitService,
             UserRepository userRepository
     ) {
         this.categoryRepository = categoryRepository;
         this.habitRepository = habitRepository;
         this.habitRecordRepository = habitRecordRepository;
         this.habitRecordService = habitRecordService;
+        this.habitService = habitService;
         this.userRepository = userRepository;
     }
 
@@ -66,16 +70,22 @@ public class HabitApplicationService {
 
     public Response<List<HabitHistory>> getHabitHistory(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("No Matched User"));
+
         return new Response<>(
                 user.getHabits()
                         .stream()
-                        .map(habit -> new HabitHistory(
-                                        habit.getId(),
-                                        habit.getCategory().getHabitType(),
-                                        habit.getIsFirstCheck(),
-                                        // TODO: refresh 되었다면 habitRecord db에 반영
-                                        habitRecordService.validateAndRefreshHabitHistory(habit.getHabitRecords())
-                                )
+                        .map(habit -> {
+                                    List<HabitRecord> habitRecords = habit.getHabitRecords();
+                                    if (habitRecordService.refreshHabitHistoryAndReturnIsChanged(habitRecords)) {
+                                        habitRecords = habitRecordRepository.saveAll(habitRecords);
+                                    }
+                                    return new HabitHistory(
+                                            habit.getId(),
+                                            habit.getCategory().getHabitType(),
+                                            habit.getIsFirstCheck(),
+                                            habitRecords
+                                    );
+                                }
                         )
                         .collect(Collectors.toList())
         );
@@ -89,16 +99,20 @@ public class HabitApplicationService {
 
     public Response<HabitHistory> doneHabit(Long habitId) {
         Habit habit = habitRepository.findById(habitId).orElseThrow(() -> new IllegalArgumentException("No Matched Habit"));
-        habit.onFirstCheck();
-
+        habitService.doDoneHabit(habit);
         habitRepository.save(habit);
+
+        List<HabitRecord> habitRecords = habit.getHabitRecords();
+        if (habitRecordService.refreshHabitHistoryAndReturnIsChanged(habitRecords)) {
+            habitRecords = habitRecordRepository.saveAll(habitRecords);
+        }
+
         return new Response<>(
                 new HabitHistory(
                         habit.getId(),
                         habit.getCategory().getHabitType(),
                         habit.getIsFirstCheck(),
-                        // TODO: refresh 되었다면 habitRecord db에 반영
-                        habitRecordService.validateAndRefreshHabitHistory(habit.getHabitRecords())
+                        habitRecords
                 )
         );
     }
