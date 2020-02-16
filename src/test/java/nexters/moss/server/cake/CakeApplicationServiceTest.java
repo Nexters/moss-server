@@ -14,6 +14,7 @@ import nexters.moss.server.domain.repository.PieceOfCakeSendRepository;
 import nexters.moss.server.domain.repository.UserRepository;
 import nexters.moss.server.domain.value.CakeType;
 import nexters.moss.server.domain.value.HabitType;
+import nexters.moss.server.domain.value.ImageEvent;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -87,6 +88,8 @@ public class CakeApplicationServiceTest {
         long categoryId = category.getId();
 
         Response<NewCakeDTO> testResponse = cakeApplicationService.getNewCake(userId, categoryId);
+        String imagePath = "nexters-habikery-image.s3.ap-northeast-2.amazonaws.com/"+category.getHabitType().getKey()+"/"+ ImageEvent.NEW_CAKE.getName()+".gif";
+        Assert.assertEquals(imagePath, testResponse.getData().getImagePath());
         Assert.assertNotNull(testResponse.getData());
     }
 }
