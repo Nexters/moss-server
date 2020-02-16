@@ -83,6 +83,7 @@ public class HabitRecordService {
                         habitRecords.get(day).getDate().plusDays(1)
                 );
                 habitRecords.get(day).setHabitStatus(habitStatus);
+                continue;
             }
 
             habitRecords.get(day).setDate(
@@ -93,19 +94,22 @@ public class HabitRecordService {
     }
 
     private void refreshHabitRecords(List<HabitRecord> habitRecords) {
-        HabitStatus newHabitStatus = null;
-        if (habitRecords.get(3).getHabitStatus() == HabitStatus.CAKE_NOT_DONE) {
-            newHabitStatus = HabitStatus.NOT_DONE;
-        } else if (habitRecords.get(3).getHabitStatus() == HabitStatus.NOT_DONE) {
-            newHabitStatus = HabitStatus.CAKE_NOT_DONE;
-        }
-
+        HabitStatus yesterdayHabitStatus = habitRecords.get(0).getHabitStatus();
+        HabitRecord lastHabitRecord = habitRecords.get(4);
         for (int index = 0; index < 5; index++) {
             if (index == 4) {
-                habitRecords.get(index).setHabitStatus(newHabitStatus);
+                if(yesterdayHabitStatus == HabitStatus.DONE) {
+                    if (lastHabitRecord.getHabitStatus() == HabitStatus.CAKE_NOT_DONE) {
+                        lastHabitRecord.setHabitStatus(HabitStatus.NOT_DONE);
+                    } else if (lastHabitRecord.getHabitStatus() == HabitStatus.NOT_DONE) {
+                        lastHabitRecord.setHabitStatus(HabitStatus.CAKE_NOT_DONE);
+                    }
+                }
+
                 habitRecords.get(index).setDate(
                         habitRecords.get(index).getDate().plusDays(1)
                 );
+                continue;
             }
             habitRecords.get(index).changeContents(
                     habitRecords.get(index + 1)
