@@ -17,18 +17,18 @@ public class DiaryController {
         this.diaryApplicationService = diaryApplicationService;
     }
 
-    @GetMapping("/piece/{userId}")
-    public Response<List<DiaryDTO>> getPieceOfCakeDiary(@PathVariable Long userId) {
+    @GetMapping("/piece")
+    public Response<List<DiaryDTO>> getPieceOfCakeDiary(@RequestParam Long userId) {
         return diaryApplicationService.getPieceOfCakeDiary(userId);
     }
 
-    @GetMapping("/whole/{userId}")
-    public Response<List<DiaryDTO>> getWholeCakeDiary(@PathVariable Long userId) {
+    @GetMapping("/whole")
+    public Response<List<DiaryDTO>> getWholeCakeDiary(@RequestParam Long userId) {
         return diaryApplicationService.getWholeCakeDiary(userId);
     }
 
-    @GetMapping("/history/{userId}")
-    public Response<HistoryResponse>getCakeHistory(@PathVariable Long userId, @RequestParam Long categoryId){
+    @GetMapping("/history")
+    public Response<HistoryResponse>getCakeHistory(@RequestParam Long userId, @RequestParam Long categoryId){
         return diaryApplicationService.getCakeHistory(userId, categoryId);
     }
 }

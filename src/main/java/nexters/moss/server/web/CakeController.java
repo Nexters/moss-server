@@ -17,13 +17,13 @@ public class CakeController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.OK)
-    public Response<Long> createNewCake(@ModelAttribute CreateNewCakeRequest createNewCakeRequest) {
+    public Response<Long> createNewCake(@RequestBody CreateNewCakeRequest createNewCakeRequest) {
         return cakeApplicationService.createNewCake(createNewCakeRequest);
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("")
     @ResponseStatus(value = HttpStatus.OK)
-    public Response<NewCakeDTO> getNewCake(@PathVariable Long userId, @RequestParam Long categoryId) {
+    public Response<NewCakeDTO> getNewCake(@RequestParam Long userId, @RequestParam Long categoryId) {
         return cakeApplicationService.getNewCake(userId, categoryId);
     }
 }

@@ -30,23 +30,29 @@ public class CakeApplicationService {
 
     @Transactional
     public Response<Long> createNewCake(CreateNewCakeRequest createNewCakeRequest) {
+        User user = userRepository.findById(createNewCakeRequest.getUserId()).orElseThrow(() -> new IllegalArgumentException("No Matched User"));
+        Category category = categoryRepository.findById(createNewCakeRequest.getCategoryId()).orElseThrow(() -> new IllegalArgumentException("No Matched User"));
         return new Response<Long>(
                 pieceOfCakeSendRepository.save(
-                        new SentPieceOfCake(createNewCakeRequest))
-                        .getId()
+                        SentPieceOfCake.builder()
+                        .user(user)
+                        .category(category)
+                        .note(createNewCakeRequest.getNote())
+                        .build()
+                ).getId()
         );
     }
 
     @Transactional
     public Response<NewCakeDTO> getNewCake(Long userId, Long categoryId) {
-        User user = userRepository.findById(userId).get();
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("No Matched User"));
         Category category = categoryRepository.findById(categoryId).get();
         ReceivedPieceOfCake receivedPOC = pieceOfCakeReceiveRepository.save(
                 ReceivedPieceOfCake.builder()
-                .user(user)
-                .category(category)
-                .sentPieceOfCake(pieceOfCakeSendRepository.findRandomByUser_IdAndCategory_Id(userId, categoryId))
-                .build()
+                        .user(user)
+                        .category(category)
+                        .sentPieceOfCake(pieceOfCakeSendRepository.findRandomByUser_IdAndCategory_Id(userId, categoryId))
+                        .build()
         );
 
         return new Response<NewCakeDTO>(
