@@ -3,6 +3,8 @@ package nexters.moss.server.web;
 import nexters.moss.server.application.HabitApplicationService;
 import nexters.moss.server.application.dto.HabitHistory;
 import nexters.moss.server.application.dto.Response;
+import nexters.moss.server.web.value.CategoryRequest;
+import nexters.moss.server.web.value.HabitReqeust;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,9 +32,9 @@ public class HabitController {
     @ResponseStatus(value = HttpStatus.OK)
     public Response<HabitHistory> createHabit(
             @RequestParam Long userId,
-            @RequestBody Long categoryId
+            @RequestBody CategoryRequest categoryRequest
     ) {
-        return habitApplicationService.createHabit(userId, categoryId);
+        return habitApplicationService.createHabit(userId, categoryRequest.getCategoryId());
     }
 
     // TODO: JWT Authentication will give user information
@@ -40,15 +42,15 @@ public class HabitController {
     @ResponseStatus(value = HttpStatus.OK)
     public Response<Long> deleteHabit(
             @RequestParam Long userId,
-            @RequestBody Long habitId
+            @RequestBody HabitReqeust habitReqeust
     ) {
-        return habitApplicationService.deleteHabit(userId, habitId);
+        return habitApplicationService.deleteHabit(userId, habitReqeust.getHabitId());
     }
 
     // TODO: JWT Authentication will give user information
     @PutMapping("/record")
     @ResponseStatus(value = HttpStatus.OK)
-    public Response<HabitHistory> doneHabit(@RequestBody Long habitId) {
-        return habitApplicationService.doneHabit(habitId);
+    public Response<HabitHistory> doneHabit(@RequestBody HabitReqeust habitReqeust) {
+        return habitApplicationService.doneHabit(habitReqeust.getHabitId());
     }
 }

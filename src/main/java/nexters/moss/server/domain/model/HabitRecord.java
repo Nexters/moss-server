@@ -1,5 +1,6 @@
 package nexters.moss.server.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import nexters.moss.server.domain.value.HabitStatus;
@@ -33,6 +34,7 @@ public class HabitRecord {
     @Column(name = "habit_status")
     private HabitStatus habitStatus;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
     @Column(name = "date")
     private LocalDateTime date;
 

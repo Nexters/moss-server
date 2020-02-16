@@ -83,6 +83,7 @@ public class HabitApplicationService {
 
     public Response<Long> deleteHabit(Long userId, Long habitId) {
         habitRecordRepository.deleteAllByUser_IdAndHabit_Id(userId, habitId);
+        habitRepository.deleteById(habitId);
         return new Response<>(habitId);
     }
 
