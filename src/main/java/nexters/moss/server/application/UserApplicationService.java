@@ -2,7 +2,7 @@ package nexters.moss.server.application;
 
 import lombok.AllArgsConstructor;
 import nexters.moss.server.application.dto.Response;
-import nexters.moss.server.domain.model.exception.UserInfoException;
+import nexters.moss.server.config.exception.UserInfoException;
 import nexters.moss.server.domain.model.Token;
 import nexters.moss.server.domain.model.*;
 import nexters.moss.server.domain.repository.PieceOfCakeReceiveRepository;

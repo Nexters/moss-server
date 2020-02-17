@@ -3,6 +3,7 @@ package nexters.moss.server.application;
 import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.application.dto.cake.NewCakeDTO;
 import nexters.moss.server.application.dto.cake.CreateNewCakeRequest;
+import nexters.moss.server.config.exception.ResourceNotFoundException;
 import nexters.moss.server.domain.model.*;
 import nexters.moss.server.domain.repository.*;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class CakeApplicationService {
     @Transactional
     public Response<Long> createNewCake(CreateNewCakeRequest createNewCakeRequest) {
         User user = userRepository.findById(createNewCakeRequest.getUserId()).orElseThrow(() -> new IllegalArgumentException("No Matched User"));
-        Category category = categoryRepository.findById(createNewCakeRequest.getCategoryId()).orElseThrow(() -> new IllegalArgumentException("No Matched User"));
+        Category category = categoryRepository.findById(createNewCakeRequest.getCategoryId()).orElseThrow(() -> new IllegalArgumentException("No Matched Category"));
         return new Response<Long>(
                 pieceOfCakeSendRepository.save(
                         SentPieceOfCake.builder()
@@ -46,12 +47,14 @@ public class CakeApplicationService {
     @Transactional
     public Response<NewCakeDTO> getNewCake(Long userId, Long categoryId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("No Matched User"));
-        Category category = categoryRepository.findById(categoryId).get();
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new IllegalArgumentException("No Matched Category"));
+        SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findRandomByUser_IdAndCategory_Id(userId, categoryId).orElseThrow(() -> new ResourceNotFoundException("Has no remain cake message"));
+
         ReceivedPieceOfCake receivedPOC = pieceOfCakeReceiveRepository.save(
                 ReceivedPieceOfCake.builder()
                         .user(user)
                         .category(category)
-                        .sentPieceOfCake(pieceOfCakeSendRepository.findRandomByUser_IdAndCategory_Id(userId, categoryId))
+                        .sentPieceOfCake(sentPieceOfCake)
                         .build()
         );
 

@@ -46,7 +46,7 @@ public class HabitApplicationService {
 
     public Response<HabitHistory> createHabit(Long userId, Long categoryId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("No Matched User"));
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new IllegalArgumentException("No Matched User"));
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new IllegalArgumentException("No Matched Category"));
         Habit habit = habitRepository.save(
                 Habit.builder()
                         .user(user)
