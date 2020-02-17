@@ -12,6 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
+
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
 @SpringBootTest
@@ -46,7 +48,8 @@ public class AuthenticationServiceTest {
 
     @Test(expected = Test.None.class)
     public void authenticateTest() {
-        User testUser = userRepository.findAll().get(0);
+        List<User> userList = userRepository.findAll();
+        User testUser = userList.get(userList.size() - 1);
         authenticationService.authenticate(testUser.getHabikeryToken());
     }
 }
