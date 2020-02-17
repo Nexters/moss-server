@@ -1,16 +1,17 @@
-package nexters.moss.server.domain.value;
+package nexters.moss.server.application.value;
 
 import lombok.Getter;
 
 @Getter
-public enum  ImageEvent {
+public enum ImageEvent {
     NEW_CAKE("newCake"),
     PIECE_OF_CAKE_DIARY("piece"),
     WHOLE_CAKE_DIARY("whole"),
     HISTORY("history");
 
     String name;
-    ImageEvent(String name){
+
+    ImageEvent(String name) {
         this.name = name;
     }
 }

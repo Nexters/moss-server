@@ -8,7 +8,7 @@ import nexters.moss.server.domain.model.*;
 import nexters.moss.server.domain.repository.*;
 import nexters.moss.server.domain.value.CakeType;
 import nexters.moss.server.domain.value.HabitType;
-import nexters.moss.server.domain.value.ImageEvent;
+import nexters.moss.server.application.value.ImageEvent;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -60,7 +60,7 @@ public class DiaryApplicationServiceTest {
         category = categoryRepository.save(new Category(null, HabitType.BREAKFAST, CakeType.APPLE));
 
         habit = habitRepository.save(new Habit(null, category, receiver, null, false, false));
-        habitRecordRepository.save(new HabitRecord(null,receiver, habit, null, null));
+        habitRecordRepository.save(new HabitRecord(null, receiver, habit, null, null));
         descriptionRepository.save(new Description(null, category, "receivePieceOfCake", "diary"));
 
         sentPieceOfCake = pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, category, "note", null));
@@ -73,12 +73,12 @@ public class DiaryApplicationServiceTest {
     public void getPieceOfCakeDiaryTest() {
         Long userId = receiver.getId();
 
-        Response<List<DiaryDTO>> res =  diaryApplicationService.getPieceOfCakeDiary(userId);
+        Response<List<DiaryDTO>> res = diaryApplicationService.getPieceOfCakeDiary(userId);
         Assert.assertNotNull(res.getData());
         Assert.assertEquals(sentPieceOfCake.getCategory().getCakeType().getName(), res.getData().get(0).getCakeName());
 
-        String imagePath = "nexters-habikery-image.s3.ap-northeast-2.amazonaws.com/"+category.getHabitType().getKey()+"/"+ ImageEvent.PIECE_OF_CAKE_DIARY.getName()+"_"+res.getData().get(0).getCount()+".png";
-        Assert.assertEquals(imagePath,res.getData().get(0).getImagePath());
+        String imagePath = "nexters-habikery-image.s3.ap-northeast-2.amazonaws.com/" + category.getHabitType().getKey() + "/" + ImageEvent.PIECE_OF_CAKE_DIARY.getName() + "_" + res.getData().get(0).getCount() + ".png";
+        Assert.assertEquals(imagePath, res.getData().get(0).getImagePath());
 
     }
 
@@ -86,12 +86,12 @@ public class DiaryApplicationServiceTest {
     public void getWholeCakeDiaryTest() {
         Long userId = receiver.getId();
 
-        Response<List<DiaryDTO>> res =  diaryApplicationService.getWholeCakeDiary(userId);
+        Response<List<DiaryDTO>> res = diaryApplicationService.getWholeCakeDiary(userId);
         Assert.assertNotNull(res.getData());
         Assert.assertEquals(wholeCake.getCategory().getCakeType().getName(), res.getData().get(0).getCakeName());
 
-        String imagePath = "nexters-habikery-image.s3.ap-northeast-2.amazonaws.com/"+wholeCake.getCategory().getHabitType().getKey()+"/"+ ImageEvent.WHOLE_CAKE_DIARY.getName()+".png";
-        Assert.assertEquals(imagePath,res.getData().get(0).getImagePath());
+        String imagePath = "nexters-habikery-image.s3.ap-northeast-2.amazonaws.com/" + wholeCake.getCategory().getHabitType().getKey() + "/" + ImageEvent.WHOLE_CAKE_DIARY.getName() + ".png";
+        Assert.assertEquals(imagePath, res.getData().get(0).getImagePath());
 
     }
 
@@ -104,8 +104,8 @@ public class DiaryApplicationServiceTest {
         Assert.assertNotNull(res.getData());
         Assert.assertEquals(wholeCake.getCategory().getCakeType().getName(), res.getData().getCakeName());
 
-        String imagePath = "nexters-habikery-image.s3.ap-northeast-2.amazonaws.com/"+wholeCake.getCategory().getHabitType().getKey()+"/"+ ImageEvent.HISTORY.getName()+".gif";
-        Assert.assertEquals(imagePath,res.getData().getImagePath());
+        String imagePath = "nexters-habikery-image.s3.ap-northeast-2.amazonaws.com/" + wholeCake.getCategory().getHabitType().getKey() + "/" + ImageEvent.HISTORY.getName() + ".gif";
+        Assert.assertEquals(imagePath, res.getData().getImagePath());
 
     }
 }

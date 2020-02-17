@@ -14,7 +14,7 @@ import nexters.moss.server.domain.repository.PieceOfCakeSendRepository;
 import nexters.moss.server.domain.repository.UserRepository;
 import nexters.moss.server.domain.value.CakeType;
 import nexters.moss.server.domain.value.HabitType;
-import nexters.moss.server.domain.value.ImageEvent;
+import nexters.moss.server.application.value.ImageEvent;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,7 +56,7 @@ public class CakeApplicationServiceTest {
         List<HabitType> habitTypes = Arrays.asList(HabitType.values());
         List<CakeType> cakeTypes = Arrays.asList(CakeType.values());
 
-        for (int i=1; i<habitTypes.size(); i++){
+        for (int i = 1; i < habitTypes.size(); i++) {
             categoryRepository.save(new Category(null, habitTypes.get(i), cakeTypes.get(i)));
         }
         category = categoryRepository.save(new Category(null, habitTypes.get(0), cakeTypes.get(0)));
@@ -72,7 +72,7 @@ public class CakeApplicationServiceTest {
     }
 
     @Test
-    public void createNewCakeTest(){
+    public void createNewCakeTest() {
         CreateNewCakeRequest req = new CreateNewCakeRequest(sender.getId(), testHabit.getId(), "note~!!");
         Response<Long> res = cakeApplicationService.createNewCake(req);
         Assert.assertNotNull(res.getData());
@@ -83,12 +83,12 @@ public class CakeApplicationServiceTest {
     }
 
     @Test
-    public void getNewCakeTest(){
+    public void getNewCakeTest() {
         long userId = receiver.getId();
         long categoryId = category.getId();
 
         Response<NewCakeDTO> testResponse = cakeApplicationService.getNewCake(userId, categoryId);
-        String imagePath = "nexters-habikery-image.s3.ap-northeast-2.amazonaws.com/"+category.getHabitType().getKey()+"/"+ ImageEvent.NEW_CAKE.getName()+".gif";
+        String imagePath = "nexters-habikery-image.s3.ap-northeast-2.amazonaws.com/" + category.getHabitType().getKey() + "/" + ImageEvent.NEW_CAKE.getName() + ".gif";
         Assert.assertEquals(imagePath, testResponse.getData().getImagePath());
         Assert.assertNotNull(testResponse.getData());
     }
