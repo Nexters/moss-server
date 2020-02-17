@@ -83,7 +83,8 @@ public class UserApplicationServiceTest {
         assertThat(joinResponse).isNotNull();
         assertThat(joinResponse.getData()).isNull();
 
-        User resultUser = userRepository.findAll().get(0);
+        List<User> userList = userRepository.findAll();
+        User resultUser = userList.get(userList.size() - 1);
         assertThat(resultUser.getNickname()).isEqualTo(testUser.getNickname());
         assertThat(resultUser.getSocialId()).isEqualTo(testUser.getSocialId());
     }
@@ -100,7 +101,8 @@ public class UserApplicationServiceTest {
         assertThat(loginResponse).isNotNull();
         assertThat(loginResponse.getData()).isNotNull();
 
-        User resultUser = userRepository.findAll().get(0);
+        List<User> userList = userRepository.findAll();
+        User resultUser = userList.get(userList.size() - 1);
 
         assertThat(resultUser.getId()).isEqualTo(testUser.getId());
         assertThat(resultUser.getAccountToken()).isNotNull();
@@ -111,14 +113,16 @@ public class UserApplicationServiceTest {
         // given
         userApplicationService.join(testAccessToken, testUser.getNickname());
         userApplicationService.login(testAccessToken);
-        User savedUser = userRepository.findAll().get(0);
+        List<User> userList = userRepository.findAll();
+        int userCount = userList.size();
+        User savedUser = userList.get(userCount - 1);
 
         // when
         Response leaveResponse = userApplicationService.leave(savedUser.getAccountToken());
 
         // then
         assertThat(leaveResponse).isNotNull();
-        assertThat(userRepository.count()).isEqualTo(0);
+        assertThat(userRepository.count()).isEqualTo(userCount - 1);
     }
 
     @Test
@@ -126,7 +130,8 @@ public class UserApplicationServiceTest {
         // given
         userApplicationService.join(testAccessToken, testUser.getNickname());
         userApplicationService.login(testAccessToken);
-        User savedUser = userRepository.findAll().get(0);
+        List<User> userList = userRepository.findAll();
+        User savedUser = userList.get(userList.size() - 1);
 
         // when
         Response<String> getUserInfoResponse = userApplicationService.getUserInfo(savedUser.getAccountToken());
@@ -174,7 +179,7 @@ public class UserApplicationServiceTest {
         userApplicationService.login(accessToken);
 
         List<User> userList = userRepository.findAll();
-        return userList.get(userList.size()-1);
+        return userList.get(userList.size() - 1);
     }
 
     private Category setupCategory() {
