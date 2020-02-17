@@ -77,7 +77,7 @@ public class DiaryApplicationServiceTest {
         Assert.assertNotNull(res.getData());
         Assert.assertEquals(sentPieceOfCake.getCategory().getCakeType().getName(), res.getData().get(0).getCakeName());
 
-        String imagePath = "nexters-habikery-image.s3.ap-northeast-2.amazonaws.com/"+category.getHabitType().getKey()+"/"+ ImageEvent.PIECE_OF_CAKE_DIARY.getName()+"_"+res.getData().get(0).getImagePath()+".png";
+        String imagePath = "nexters-habikery-image.s3.ap-northeast-2.amazonaws.com/"+category.getHabitType().getKey()+"/"+ ImageEvent.PIECE_OF_CAKE_DIARY.getName()+"_"+res.getData().get(0).getCount()+".png";
         Assert.assertEquals(imagePath,res.getData().get(0).getImagePath());
 
     }
