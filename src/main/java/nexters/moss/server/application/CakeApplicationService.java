@@ -6,6 +6,7 @@ import nexters.moss.server.application.dto.cake.CreateNewCakeRequest;
 import nexters.moss.server.config.exception.ResourceNotFoundException;
 import nexters.moss.server.domain.model.*;
 import nexters.moss.server.domain.repository.*;
+import nexters.moss.server.application.value.ImageEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,17 +17,19 @@ public class CakeApplicationService {
     private CategoryRepository categoryRepository;
     private PieceOfCakeSendRepository pieceOfCakeSendRepository;
     private PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository;
+    private ImageApplicationService imageApplicationService;
 
     public CakeApplicationService(
             UserRepository userRepository,
             CategoryRepository categoryRepository,
             PieceOfCakeSendRepository pieceOfCakeSendRepository,
-            PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository
-    ) {
+            PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository,
+            ImageApplicationService imageApplicationService) {
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
         this.pieceOfCakeSendRepository = pieceOfCakeSendRepository;
         this.pieceOfCakeReceiveRepository = pieceOfCakeReceiveRepository;
+        this.imageApplicationService = imageApplicationService;
     }
 
     @Transactional
@@ -62,7 +65,8 @@ public class CakeApplicationService {
                 new NewCakeDTO(
                         receivedPOC.getUser().getNickname(),
                         receivedPOC.getSentPieceOfCake().getNote(),
-                        receivedPOC.getSentPieceOfCake().getCategory().getCakeType().getName())
+                        receivedPOC.getSentPieceOfCake().getCategory().getCakeType().getName(),
+                        imageApplicationService.getMoveImagePath(category.getHabitType(), ImageEvent.NEW_CAKE))
         );
     }
 

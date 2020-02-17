@@ -17,4 +17,5 @@ public class HistoryResponse {
     private String description;
     private String cakeName;
     private List<LocalDateTime> dates;
+    private String imagePath;
 }
