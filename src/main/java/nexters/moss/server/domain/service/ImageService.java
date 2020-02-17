@@ -17,7 +17,14 @@ public class ImageService {
                 ".gif";
     }
 
-    public String getDiaryImagePath(HabitType habitType, ImageEvent event, int count){
+    public String getWholeDiaryImagePath(HabitType habitType, ImageEvent event){
+        return url+
+                habitType.getKey()+
+                "/"+event.getName()+
+                ".png";
+    }
+
+    public String getPieceDiaryImagePath(HabitType habitType, ImageEvent event, int count){
         return url+
                 habitType.getKey()+
                 "/"+event.getName()+

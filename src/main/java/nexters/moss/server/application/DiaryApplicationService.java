@@ -49,7 +49,7 @@ public class DiaryApplicationService {
                                         habit.getCategory().getCakeType().getName(),
                                         descriptionRepository.findByCategory_Id(habit.getCategory().getId()).getDiary(),
                                         pieceOfCakeReceiveRepository.countAllByUser_IdAndCategory_Id(userId, habit.getCategory().getId()),
-                                        imageService.getDiaryImagePath(
+                                        imageService.getPieceDiaryImagePath(
                                                             habit.getCategory().getHabitType(),
                                                             ImageEvent.PIECE_OF_CAKE_DIARY ,
                                                             pieceOfCakeReceiveRepository.countAllByUser_IdAndCategory_Id(userId, habit.getCategory().getId())
@@ -71,10 +71,9 @@ public class DiaryApplicationService {
                                         habit.getCategory().getCakeType().getName(),
                                         descriptionRepository.findByCategory_Id(habit.getCategory().getId()).getDiary(),
                                         wholeCakeRepository.countAllByUser_IdAndCategory_Id(user.getId(), habit.getCategory().getId()),
-                                        imageService.getDiaryImagePath(
+                                        imageService.getWholeDiaryImagePath(
                                                 habit.getCategory().getHabitType(),
-                                                ImageEvent.WHOLE_CAKE_DIARY ,
-                                                wholeCakeRepository.countAllByUser_IdAndCategory_Id(userId,habit.getCategory().getId())
+                                                ImageEvent.WHOLE_CAKE_DIARY
                                         )
                                 )
                         )
@@ -95,7 +94,7 @@ public class DiaryApplicationService {
                                 .collect(Collectors.toList()),
                         imageService.getMoveImagePath(
                                 category.getHabitType(),
-                                ImageEvent.WHOLE_CAKE_DIARY
+                                ImageEvent.HISTORY
                         )
                 )
         );
