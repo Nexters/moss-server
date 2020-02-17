@@ -22,8 +22,8 @@ services:
       POSTGRES_PASSWORD: habikery
       POSTGRES_USER: moss
       POSTGRES_DB: habikery
-    #    ports:
-    #      - "3306:3306"
+    ports:
+      - "5432:5432"
     networks:
       - back
     restart: always

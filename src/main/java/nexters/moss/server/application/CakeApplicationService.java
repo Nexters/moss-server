@@ -34,8 +34,8 @@ public class CakeApplicationService {
     }
 
     @Transactional
-    public Response<Long> createNewCake(CreateNewCakeRequest createNewCakeRequest) {
-        User user = userRepository.findById(createNewCakeRequest.getUserId()).orElseThrow(() -> new HabikeryUserNotFoundException("No Matched User"));
+    public Response<Long> createNewCake(Long userId, CreateNewCakeRequest createNewCakeRequest) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new HabikeryUserNotFoundException("No Matched User"));
         Category category = categoryRepository.findById(createNewCakeRequest.getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("No Matched Category"));
         return new Response<Long>(
                 pieceOfCakeSendRepository.save(

@@ -1,4 +1,4 @@
-package nexters.moss.server.application.dto.cake;
+package nexters.moss.server.web.value;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateNewCakeRequest {
-    private Long categoryId;
-    private String note;
+public class ReceivedPieceOfCakeRequest {
+    private Long receivedPieceOfCakeId;
+    private String reason;
 }

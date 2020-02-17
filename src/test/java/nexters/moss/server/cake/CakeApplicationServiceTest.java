@@ -73,8 +73,8 @@ public class CakeApplicationServiceTest {
 
     @Test
     public void createNewCakeTest() {
-        CreateNewCakeRequest req = new CreateNewCakeRequest(sender.getId(), testHabit.getId(), "note~!!");
-        Response<Long> res = cakeApplicationService.createNewCake(req);
+        CreateNewCakeRequest req = new CreateNewCakeRequest(testHabit.getId(), "note~!!");
+        Response<Long> res = cakeApplicationService.createNewCake(sender.getId(), req);
         Assert.assertNotNull(res.getData());
 
         SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findById(res.getData()).get();

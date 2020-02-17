@@ -47,15 +47,8 @@ public class UserApplicationService {
         User user = userRepository.findBySocialId(socialId).orElseThrow(() -> new HabikeryUserNotFoundException("No Matched Habikery User with Social ID"));
 
         String habikeryToken = habikeryTokenService.createToken(user.getId(), accessToken);
-        User updatedUser = userRepository.save(
-                new User(
-                        user.getId(),
-                        user.getSocialId(),
-                        habikeryToken,
-                        user.getNickname(),
-                        user.getHabits()
-                )
-        );
+        user.setHabikeryToken(habikeryToken);
+        User updatedUser = userRepository.save(user);
 
         return new Response<>(updatedUser.getHabikeryToken());
     }

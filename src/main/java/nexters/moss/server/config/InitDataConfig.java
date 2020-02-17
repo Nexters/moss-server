@@ -53,10 +53,11 @@ public class InitDataConfig {
         habitApplicationService.createHabit(sender.getId(), category.getId());
         habitApplicationService.createHabit(receiver.getId(), category.getId());
 
-        cakeApplicationService.createNewCake(new CreateNewCakeRequest(
+        cakeApplicationService.createNewCake(
                 sender.getId(),
-                category.getId(),
-                "sender send message"
-        ));
+                new CreateNewCakeRequest(
+                        category.getId(),
+                        "sender send message"
+                ));
     }
 }

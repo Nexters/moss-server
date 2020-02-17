@@ -36,9 +36,9 @@ public class SentPieceOfCake extends TimeProvider {
     @OneToMany(mappedBy = "sentPieceOfCake")
     private List<ReceivedPieceOfCake> receivedPieceOfCakeList = new ArrayList<>();
 
-    public SentPieceOfCake(CreateNewCakeRequest createNewCakeRequest) {
+    public SentPieceOfCake(Long userId, CreateNewCakeRequest createNewCakeRequest) {
         this.user = User.builder()
-                .id(createNewCakeRequest.getUserId())
+                .id(userId)
                 .build();
         this.category = Category.builder()
                 .id(createNewCakeRequest.getCategoryId())

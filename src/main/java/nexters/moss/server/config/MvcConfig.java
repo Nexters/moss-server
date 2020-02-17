@@ -15,11 +15,11 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authenticationInterceptor)
-                .addPathPatterns("/user/report");
-//                .addPathPatterns("/habit")
-//                .addPathPatterns("/habit/history")
-//                .addPathPatterns("/habit/record")
-//                .addPathPatterns("/cake")
-//                .addPathPatterns("/diary/*")
+                .addPathPatterns("/user/report")
+                .addPathPatterns("/habit")
+                .addPathPatterns("/habit/history")
+                .addPathPatterns("/record")
+                .addPathPatterns("/cake")
+                .addPathPatterns("/diary/*");
     }
 }

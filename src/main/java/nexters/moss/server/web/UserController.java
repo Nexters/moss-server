@@ -2,6 +2,7 @@ package nexters.moss.server.web;
 
 import nexters.moss.server.application.UserApplicationService;
 import nexters.moss.server.application.dto.Response;
+import nexters.moss.server.web.value.ReceivedPieceOfCakeRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,10 +43,13 @@ public class UserController {
     @PostMapping("/report")
     @ResponseStatus(value = HttpStatus.OK)
     public Response report(
-            @RequestHeader String accountToken,
-            @RequestBody Long receivedPieceOfCakeId,
-            @RequestBody String reason
+            @RequestHeader String habikeryToken,
+            @RequestBody ReceivedPieceOfCakeRequest receivedPieceOfCakeRequest
     ) {
-        return userApplicationService.report(accountToken, receivedPieceOfCakeId, reason);
+        return userApplicationService.report(
+                habikeryToken,
+                receivedPieceOfCakeRequest.getReceivedPieceOfCakeId(),
+                receivedPieceOfCakeRequest.getReason()
+        );
     }
 }

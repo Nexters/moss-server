@@ -16,35 +16,45 @@ import java.util.List;
 @RequestMapping("habit")
 public class HabitController {
     private HabitApplicationService habitApplicationService;
+    private HttpServletRequest httpServletRequest;
 
-    public HabitController(HabitApplicationService habitApplicationService) {
+    public HabitController(
+            HabitApplicationService habitApplicationService,
+            HttpServletRequest httpServletRequest
+    ) {
         this.habitApplicationService = habitApplicationService;
+        this.httpServletRequest = httpServletRequest;
     }
 
     // TODO: JWT Authentication will give user information
     @GetMapping("/history")
     @ResponseStatus(value = HttpStatus.OK)
-    public Response<List<HabitHistory>> getHabitHistory(@RequestParam Long userId) {
-        return habitApplicationService.getHabitHistory(userId);
+    public Response<List<HabitHistory>> getHabitHistory() {
+        return habitApplicationService.getHabitHistory(
+                (Long) httpServletRequest.getAttribute("userId")
+        );
     }
 
     // TODO: JWT Authentication will give user information
     @PostMapping("")
     @ResponseStatus(value = HttpStatus.OK)
     public Response<HabitHistory> createHabit(
-            @RequestParam Long userId,
             @RequestBody CategoryRequest categoryRequest
     ) {
-        return habitApplicationService.createHabit(userId, categoryRequest.getCategoryId());
+        return habitApplicationService.createHabit(
+                (Long) httpServletRequest.getAttribute("userId"),
+                categoryRequest.getCategoryId()
+        );
     }
 
     // TODO: JWT Authentication will give user information
     @DeleteMapping("")
     @ResponseStatus(value = HttpStatus.OK)
     public Response<Long> deleteHabit(
-            @RequestParam Long userId,
-            @RequestBody HabitReqeust habitReqeust
+            @RequestBody HabitReqeust habitReqeust,
+            HttpServletRequest request
     ) {
+        Long userId = (Long) request.getAttribute("userId");
         return habitApplicationService.deleteHabit(userId, habitReqeust.getHabitId());
     }
 
@@ -52,9 +62,11 @@ public class HabitController {
     @PutMapping("/record")
     @ResponseStatus(value = HttpStatus.OK)
     public Response<HabitDoneResponse> doneHabit(
-            @RequestParam Long userId,
             @RequestBody HabitReqeust habitReqeust
     ) {
-        return habitApplicationService.doneHabit(userId, habitReqeust.getHabitId());
+        return habitApplicationService.doneHabit(
+                (Long) httpServletRequest.getAttribute("userId"),
+                habitReqeust.getHabitId()
+        );
     }
 }

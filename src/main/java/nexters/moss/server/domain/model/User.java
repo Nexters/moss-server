@@ -22,6 +22,7 @@ public class User extends TimeProvider {
     private Long socialId;
 
     @Column(name = "habikery_token")
+    @Setter
     private String habikeryToken;
 
     @Column(name = "nickname")
