@@ -1,4 +1,4 @@
-package nexters.moss.server.web;
+package nexters.moss.server.config.interceptor;
 
 import nexters.moss.server.domain.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,9 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String habikeryToken = request.getHeader("habikeryToken");
-        authenticationService.authenticate(habikeryToken);
+        Long userId = authenticationService.authenticate(habikeryToken);
+
+        request.setAttribute("userId", userId);
 
         return super.preHandle(request, response, handler);
     }

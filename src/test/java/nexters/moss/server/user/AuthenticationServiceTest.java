@@ -14,6 +14,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
 @SpringBootTest
@@ -50,6 +52,8 @@ public class AuthenticationServiceTest {
     public void authenticateTest() {
         List<User> userList = userRepository.findAll();
         User testUser = userList.get(userList.size() - 1);
-        authenticationService.authenticate(testUser.getHabikeryToken());
+        Long resultUserId = authenticationService.authenticate(testUser.getHabikeryToken());
+
+        assertThat(resultUserId).isEqualTo(testUser.getId());
     }
 }

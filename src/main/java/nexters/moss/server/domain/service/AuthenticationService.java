@@ -17,7 +17,7 @@ public class AuthenticationService {
     @Autowired
     private HabikeryTokenService habikeryTokenService;
 
-    public void authenticate(String habikeryToken) {
+    public Long authenticate(String habikeryToken) {
         Token token = habikeryTokenService.recoverToken(habikeryToken);
 
         User user = userRepository.findById(token.getUserId()).orElseThrow(() -> new UnauthorizedException("Not joined User"));
@@ -29,5 +29,7 @@ public class AuthenticationService {
         if(!token.getExpirationDate().isAfter(LocalDate.now())) {
             throw new UnauthorizedException("Habikery Token is expired");
         }
+
+        return user.getId();
     }
 }
