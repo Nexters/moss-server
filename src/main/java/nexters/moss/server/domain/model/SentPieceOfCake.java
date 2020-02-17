@@ -3,6 +3,7 @@ package nexters.moss.server.domain.model;
 import lombok.*;
 import nexters.moss.server.application.dto.cake.CreateNewCakeRequest;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,7 +16,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SentPieceOfCake {
+public class SentPieceOfCake extends TimeProvider {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sent_piece_of_cake_id")
@@ -31,10 +32,6 @@ public class SentPieceOfCake {
 
     @Column(name = "note")
     private String note;
-
-    @CreatedDate
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "sentPieceOfCake")
     private List<ReceivedPieceOfCake> receivedPieceOfCakeList = new ArrayList<>();

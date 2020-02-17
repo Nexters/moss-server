@@ -54,17 +54,17 @@ public class DiaryApplicationServiceTest {
 
     @Before
     public void setup() {
-        sender = userRepository.save(new User(null, null, "accounToken", "sender", null));
-        receiver = userRepository.save(new User(null, null, "accounToken", "reciever", null));
+        sender = userRepository.save(new User(null, null, "accountToken", "sender", null));
+        receiver = userRepository.save(new User(null, null, "accountToken", "receiver", null));
         category = categoryRepository.save(new Category(null, HabitType.BREAKFAST, CakeType.APPLE));
 
         habit = habitRepository.save(new Habit(null, category, receiver, null, false, false));
         habitRecordRepository.save(new HabitRecord(null,receiver, habit, null, null));
         descriptionRepository.save(new Description(null, category, "receivePieceOfCake", "diary"));
 
-        sentPieceOfCake = pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, category, "note~!!!", null, null));
-        pieceOfCakeReceiveRepository.save(new ReceivedPieceOfCake(null, receiver, sentPieceOfCake, category, null ));
-        wholeCake = wholeCakeRepository.save(new WholeCake(null, receiver, habit, category, null));
+        sentPieceOfCake = pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, category, "note", null));
+        pieceOfCakeReceiveRepository.save(new ReceivedPieceOfCake(null, receiver, sentPieceOfCake, category));
+        wholeCake = wholeCakeRepository.save(new WholeCake(null, receiver, habit, category));
 
     }
 

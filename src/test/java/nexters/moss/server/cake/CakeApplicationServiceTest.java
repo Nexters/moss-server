@@ -65,9 +65,9 @@ public class CakeApplicationServiceTest {
         habitRepository.save(new Habit(null, category, sender, null, false, false));
         testHabit = habitRepository.save(new Habit(null, category, receiver, null, false, false));
 
-        pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, category,"hello" , null, null));
-        pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, category, "hello123" , null, null));
-        pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, category, "hello123456" , null, null));
+        pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, category,"hello" , null));
+        pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, category, "hello123" , null));
+        pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, category, "hello123456" , null));
     }
 
     @Test
