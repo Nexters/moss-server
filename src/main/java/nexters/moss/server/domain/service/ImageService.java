@@ -2,14 +2,13 @@ package nexters.moss.server.domain.service;
 
 import nexters.moss.server.domain.value.HabitType;
 import nexters.moss.server.domain.value.ImageEvent;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ImageService {
+    @Value("${aws.s3.url}")
     private String url;
-    public ImageService() {
-        url = "nexters-habikery-image.s3.ap-northeast-2.amazonaws.com/";
-    }
 
     public String getMoveImagePath(HabitType habitType, ImageEvent event){
         return url+
