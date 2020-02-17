@@ -1,6 +1,7 @@
 package nexters.moss.server.web;
 
 import nexters.moss.server.application.HabitApplicationService;
+import nexters.moss.server.application.dto.HabitDoneResponse;
 import nexters.moss.server.application.dto.HabitHistory;
 import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.web.value.CategoryRequest;
@@ -50,7 +51,10 @@ public class HabitController {
     // TODO: JWT Authentication will give user information
     @PutMapping("/record")
     @ResponseStatus(value = HttpStatus.OK)
-    public Response<HabitHistory> doneHabit(@RequestBody HabitReqeust habitReqeust) {
-        return habitApplicationService.doneHabit(habitReqeust.getHabitId());
+    public Response<HabitDoneResponse> doneHabit(
+            @RequestParam Long userId,
+            @RequestBody HabitReqeust habitReqeust
+    ) {
+        return habitApplicationService.doneHabit(userId, habitReqeust.getHabitId());
     }
 }

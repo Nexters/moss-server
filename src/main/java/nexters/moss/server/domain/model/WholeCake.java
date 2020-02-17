@@ -29,4 +29,20 @@ public class WholeCake extends TimeProvider {
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
+    public WholeCake(
+            Long userId,
+            Long habitId,
+            Long categoryId
+    ) {
+        this.user = User.builder()
+                .id(userId)
+                .build();
+        this.habit = Habit.builder()
+                .id(habitId)
+                .build();
+        this.category = Category.builder()
+                .id(categoryId)
+                .build();
+    }
 }

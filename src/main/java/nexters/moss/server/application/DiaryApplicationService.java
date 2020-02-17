@@ -47,7 +47,7 @@ public class DiaryApplicationService {
                                         habit.getCategory().getHabitType().getName(),
                                         habit.getCategory().getCakeType().getName(),
                                         descriptionRepository.findByCategory_Id(habit.getCategory().getId()).getDiary(),
-                                        pieceOfCakeReceiveRepository.countAllByUser_IdAndCategory_Id(userId, habit.getCategory().getId()),
+                                        pieceOfCakeReceiveRepository.countAllByUser_IdAndCategory_Id(userId, habit.getCategory().getId()) % 8,
                                         imageApplicationService.getPieceDiaryImagePath(
                                                             habit.getCategory().getHabitType(),
                                                             ImageEvent.PIECE_OF_CAKE_DIARY ,
