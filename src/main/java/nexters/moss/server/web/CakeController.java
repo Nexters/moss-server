@@ -22,21 +22,12 @@ public class CakeController {
         this.httpServletRequest = httpServletRequest;
     }
 
-    @PostMapping
+    @PostMapping("")
     @ResponseStatus(value = HttpStatus.OK)
     public Response<Long> sendCake(@RequestBody CreateNewCakeRequest createNewCakeRequest) {
         return cakeApplicationService.sendCake(
                 (Long)httpServletRequest.getAttribute("userId"),
                 createNewCakeRequest
-        );
-    }
-
-    @GetMapping("")
-    @ResponseStatus(value = HttpStatus.OK)
-    public Response<NewCakeDTO> getCake(@RequestParam Long categoryId) {
-        return cakeApplicationService.getCake(
-                (Long)httpServletRequest.getAttribute("userId"),
-                categoryId
         );
     }
 }

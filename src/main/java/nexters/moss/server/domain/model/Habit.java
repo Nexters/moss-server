@@ -1,6 +1,7 @@
 package nexters.moss.server.domain.model;
 
 import lombok.*;
+import org.hibernate.annotations.OrderBy;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ public class Habit extends TimeProvider {
     private User user;
 
     @OneToMany(mappedBy = "habit")
+    @OrderBy(clause = "id ASC")
     private List<HabitRecord> habitRecords = new ArrayList<>();
 
     @Column(name = "isActivated", columnDefinition = "boolean default false")

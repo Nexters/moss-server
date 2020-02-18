@@ -5,6 +5,7 @@ import nexters.moss.server.application.dto.HabitHistory;
 import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.application.dto.cake.NewCakeDTO;
 import nexters.moss.server.application.value.ImageEvent;
+import nexters.moss.server.config.exception.AlreadyDoneHabitException;
 import nexters.moss.server.config.exception.ResourceNotFoundException;
 import nexters.moss.server.domain.model.*;
 import nexters.moss.server.domain.repository.*;
@@ -119,9 +120,14 @@ public class HabitApplicationService {
         return new Response<>(habitId);
     }
 
+    // TODO: separate done and receive logic
+    // TODO: separate jpa consistence context
     public Response<HabitDoneResponse> doneHabit(Long userId, Long habitId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new HabikeryUserNotFoundException("No Matched User"));
         Habit habit = habitRepository.findById(habitId).orElseThrow(() -> new ResourceNotFoundException("No Matched Habit"));
+        if(habitService.isDoneHabit(habit)) {
+            throw new AlreadyDoneHabitException("Already done habit");
+        }
         habitService.doDoneHabit(habit);
         habitRepository.save(habit);
 

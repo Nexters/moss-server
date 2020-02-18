@@ -42,4 +42,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity handleSocialUserNotFoundException(SocialUserNotFoundException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(AlreadyDoneHabitException.class)
+    public ResponseEntity handleAlreadyDoneHabitException(AlreadyDoneHabitException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }

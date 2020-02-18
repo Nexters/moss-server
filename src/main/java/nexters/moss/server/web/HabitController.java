@@ -27,7 +27,7 @@ public class HabitController {
     }
 
     // TODO: JWT Authentication will give user information
-    @GetMapping("/history")
+    @GetMapping("")
     @ResponseStatus(value = HttpStatus.OK)
     public Response<List<HabitHistory>> getHabit() {
         return habitApplicationService.getHabit(
@@ -59,13 +59,14 @@ public class HabitController {
     }
 
     // TODO: JWT Authentication will give user information
-    @PutMapping("/record")
+    @PutMapping("")
     @ResponseStatus(value = HttpStatus.OK)
     public Response<HabitDoneResponse> doneHabit(
             @RequestBody HabitReqeust habitReqeust
     ) {
         return habitApplicationService.doneHabit(
-                (Long) httpServletRequest.getAttribute("userId"),
+//                (Long) httpServletRequest.getAttribute("userId"),
+                2L,
                 habitReqeust.getHabitId()
         );
     }
