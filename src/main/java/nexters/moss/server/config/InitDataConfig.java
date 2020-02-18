@@ -58,5 +58,7 @@ public class InitDataConfig {
                         category.getId(),
                         "sender send message"
                 ));
+
+        habitApplicationService.doneHabit(receiver.getId(), category.getId());
     }
 }
