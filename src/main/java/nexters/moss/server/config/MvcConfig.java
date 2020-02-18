@@ -15,6 +15,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authenticationInterceptor)
+                .addPathPatterns("/user")
                 .addPathPatterns("/user/report")
                 .addPathPatterns("/habit")
                 .addPathPatterns("/habit/history")

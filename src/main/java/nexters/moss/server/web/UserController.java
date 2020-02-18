@@ -2,9 +2,12 @@ package nexters.moss.server.web;
 
 import nexters.moss.server.application.UserApplicationService;
 import nexters.moss.server.application.dto.Response;
+import nexters.moss.server.infra.auth.Http;
 import nexters.moss.server.web.value.ReceivedPieceOfCakeRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("user")
@@ -18,36 +21,37 @@ public class UserController {
     @PostMapping("")
     @ResponseStatus(value = HttpStatus.OK)
     public Response join(
-            @RequestHeader String accessToken,
+            HttpServletRequest request,
             @RequestBody String nickname
     ) {
-        return userApplicationService.join(accessToken, nickname);
+        return userApplicationService.join(
+                (String)request.getAttribute("accessToken"),
+                nickname
+        );
     }
 
     @DeleteMapping("")
     @ResponseStatus(value = HttpStatus.OK)
     public Response leave(
-            @RequestHeader String habikeryToken
+            HttpServletRequest request
     ) {
-        return userApplicationService.leave(habikeryToken);
+        return userApplicationService.leave((Long)request.getAttribute("userId"));
     }
 
     @GetMapping("")
     @ResponseStatus(value = HttpStatus.OK)
     public Response<String> getUserInfo(
-            @RequestHeader String habikeryToken
+            HttpServletRequest request
     ) {
-        return userApplicationService.getUserInfo(habikeryToken);
+        return userApplicationService.getUserInfo((Long)request.getAttribute("userId"));
     }
 
     @PostMapping("/report")
     @ResponseStatus(value = HttpStatus.OK)
     public Response report(
-            @RequestHeader String habikeryToken,
             @RequestBody ReceivedPieceOfCakeRequest receivedPieceOfCakeRequest
     ) {
         return userApplicationService.report(
-                habikeryToken,
                 receivedPieceOfCakeRequest.getReceivedPieceOfCakeId(),
                 receivedPieceOfCakeRequest.getReason()
         );

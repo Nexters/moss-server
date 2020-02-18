@@ -118,7 +118,7 @@ public class UserApplicationServiceTest {
         User savedUser = userList.get(userCount - 1);
 
         // when
-        Response leaveResponse = userApplicationService.leave(savedUser.getHabikeryToken());
+        Response leaveResponse = userApplicationService.leave(savedUser.getId());
 
         // then
         assertThat(leaveResponse).isNotNull();
@@ -134,7 +134,7 @@ public class UserApplicationServiceTest {
         User savedUser = userList.get(userList.size() - 1);
 
         // when
-        Response<String> getUserInfoResponse = userApplicationService.getUserInfo(savedUser.getHabikeryToken());
+        Response<String> getUserInfoResponse = userApplicationService.getUserInfo(savedUser.getId());
 
         // then
         assertThat(getUserInfoResponse).isNotNull();
@@ -163,7 +163,7 @@ public class UserApplicationServiceTest {
         String reportReason = "기타";
 
         // when
-        Response reportResponse = userApplicationService.report(receivingUser.getHabikeryToken(), receivedCake.getId(), reportReason);
+        Response reportResponse = userApplicationService.report(receivedCake.getId(), reportReason);
 
         // then
         assertThat(reportResponse).isNotNull();

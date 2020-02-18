@@ -53,25 +53,21 @@ public class UserApplicationService {
         return new Response<>(updatedUser.getHabikeryToken());
     }
 
-    public Response leave(String habikeryToken) {
-        Token token = habikeryTokenService.recoverToken(habikeryToken);
-        User user = userRepository.findById(token.getUserId()).orElseThrow(() -> new HabikeryUserNotFoundException("No Matched Habikery User with User ID"));
+    public Response leave(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new HabikeryUserNotFoundException("No Matched Habikery User with User ID"));
 
         userRepository.deleteById(user.getId());
 
         return new Response();
     }
 
-    public Response<String> getUserInfo(String habikeryToken) {
-        Token token = habikeryTokenService.recoverToken(habikeryToken);
-        User user = userRepository.findById(token.getUserId()).orElseThrow(() -> new HabikeryUserNotFoundException("No Matched Habikery User with User ID"));
+    public Response<String> getUserInfo(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new HabikeryUserNotFoundException("No Matched Habikery User with User ID"));
 
         return new Response<>(user.getNickname());
     }
 
-    public Response report(String habikeryToken, Long receivedPieceOfCakeId, String reason) {
-        Token token = habikeryTokenService.recoverToken(habikeryToken);
-
+    public Response report(Long receivedPieceOfCakeId, String reason) {
         ReceivedPieceOfCake receivedPieceOfCake = pieceOfCakeReceiveRepository.findById(receivedPieceOfCakeId).orElseThrow(() -> new HabikeryUserNotFoundException("No Matched ReceivedPieceOfCake"));
         User reportedUser = receivedPieceOfCake.getSentPieceOfCake().getUser();
 

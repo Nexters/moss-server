@@ -16,11 +16,14 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String accessToken = request.getHeader("accessToken");
-        String habikeryToken = request.getHeader("habikeryToken");
-
-        Long userId = authenticationService.authenticate(habikeryToken);
-
         request.setAttribute("accessToken", accessToken);
+
+        if(request.getRequestURI().equals("/api/user") && request.getMethod().equals("POST")) {
+            return super.preHandle(request, response, handler);
+        }
+
+        String habikeryToken = request.getHeader("habikeryToken");
+        Long userId = authenticationService.authenticate(habikeryToken);
         request.setAttribute("userId", userId);
 
         return super.preHandle(request, response, handler);

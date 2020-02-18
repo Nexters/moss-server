@@ -25,6 +25,10 @@ public class KakaoTokenService implements SocialTokenService {
 
     @Override
     public Long getSocialUserId(String accessToken) throws SocialUserNotFoundException {
+        if(accessToken == null) {
+            throw new SocialUserNotFoundException("Access Token is null");
+        }
+
         return httpTemplate(accessToken, (client, mapper) -> {
             HttpPost post = new HttpPost(requestUrl);
             post.addHeader("Authorization", "Bearer " + accessToken);

@@ -1,25 +1,30 @@
 package nexters.moss.server.user;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
+//import nexters.moss.server.domain.service.SocialTokenService;
+//import org.junit.Test;
+//import org.junit.runner.RunWith;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.boot.test.context.SpringBootTest;
+//import org.springframework.test.context.ActiveProfiles;
+//import org.springframework.test.context.junit4.SpringRunner;
+//
+//import static org.assertj.core.api.Assertions.assertThat;
+//
 //@RunWith(SpringRunner.class)
 //@ActiveProfiles("test")
+//@SpringBootTest
 //public class KakaoTokenServiceTest {
+//    @Autowired
 //    private SocialTokenService socialTokenService;
 //
-//    @Before
-//    public void setup() {
-//        this.socialTokenService = new KakaoTokenService();
-//    }
-//
 //    @Test
-//    public void querySocialUserIdTest() {
+//    public void getSocialUserIdTest() {
 //        // given
 //        Long validatedUserId = 1279527596L;
-//        String accessToken = "V4rk6DVJrpvH31wM-bXjVf0Uv3_cWKToZ6mbeQo9cpcAAAFwM0q3DQ";
+//        String accessToken = "";
 //
 //        // when
-//        Long socialUserId = socialTokenService.querySocialUserId(accessToken);
+//        Long socialUserId = socialTokenService.getSocialUserId(accessToken);
 //
 //        // then
 //        assertThat(socialUserId).isEqualTo(validatedUserId);
