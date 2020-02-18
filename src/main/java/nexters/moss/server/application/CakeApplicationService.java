@@ -34,7 +34,7 @@ public class CakeApplicationService {
     }
 
     @Transactional
-    public Response<Long> createNewCake(Long userId, CreateNewCakeRequest createNewCakeRequest) {
+    public Response<Long> sendCake(Long userId, CreateNewCakeRequest createNewCakeRequest) {
         User user = userRepository.findById(userId).orElseThrow(() -> new HabikeryUserNotFoundException("No Matched User"));
         Category category = categoryRepository.findById(createNewCakeRequest.getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("No Matched Category"));
         return new Response<Long>(
@@ -48,7 +48,7 @@ public class CakeApplicationService {
         );
     }
 
-    public Response<NewCakeDTO> getNewCake(Long userId, Long categoryId) {
+    public Response<NewCakeDTO> getCake(Long userId, Long categoryId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new HabikeryUserNotFoundException("No Matched User"));
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("No Matched Category"));
         SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findRandomByUser_IdAndCategory_Id(userId, categoryId).orElseThrow(() -> new ResourceNotFoundException("Has no remain cake message"));

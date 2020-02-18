@@ -74,7 +74,7 @@ public class CakeApplicationServiceTest {
     @Test
     public void createNewCakeTest() {
         CreateNewCakeRequest req = new CreateNewCakeRequest(testHabit.getId(), "note~!!");
-        Response<Long> res = cakeApplicationService.createNewCake(sender.getId(), req);
+        Response<Long> res = cakeApplicationService.sendCake(sender.getId(), req);
         Assert.assertNotNull(res.getData());
 
         SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findById(res.getData()).get();
@@ -87,7 +87,7 @@ public class CakeApplicationServiceTest {
         long userId = receiver.getId();
         long categoryId = category.getId();
 
-        Response<NewCakeDTO> testResponse = cakeApplicationService.getNewCake(userId, categoryId);
+        Response<NewCakeDTO> testResponse = cakeApplicationService.getCake(userId, categoryId);
         String imagePath = "nexters-habikery-image.s3.ap-northeast-2.amazonaws.com/" + category.getHabitType().getKey() + "/" + ImageEvent.NEW_CAKE.getName() + ".gif";
         Assert.assertEquals(imagePath, testResponse.getData().getImagePath());
         Assert.assertNotNull(testResponse.getData());

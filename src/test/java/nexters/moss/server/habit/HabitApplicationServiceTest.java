@@ -99,7 +99,7 @@ public class HabitApplicationServiceTest {
     // TODO
     public void getHabitHistoryTest() {
 //        Response<HabitHistory> createResponse = habitApplicationService.createHabit(testUser.getId(), testHabit.getId());
-//        Response<List<HabitHistory>> getResponse = habitApplicationService.getHabitHistory(testUser.getId());
+//        Response<List<HabitHistory>> getResponse = habitApplicationService.getHabit(testUser.getId());
 //        Assert.assertEquals(1, getResponse.getData().size());
 //
 //        for (HabitHistory habitHistory : getResponse.getData()) {

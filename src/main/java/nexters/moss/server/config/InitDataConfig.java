@@ -6,7 +6,6 @@ import nexters.moss.server.application.dto.cake.CreateNewCakeRequest;
 import nexters.moss.server.domain.model.*;
 import nexters.moss.server.domain.repository.*;
 import nexters.moss.server.domain.value.CakeType;
-import nexters.moss.server.domain.value.HabitStatus;
 import nexters.moss.server.domain.value.HabitType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -53,7 +52,7 @@ public class InitDataConfig {
         habitApplicationService.createHabit(sender.getId(), category.getId());
         habitApplicationService.createHabit(receiver.getId(), category.getId());
 
-        cakeApplicationService.createNewCake(
+        cakeApplicationService.sendCake(
                 sender.getId(),
                 new CreateNewCakeRequest(
                         category.getId(),

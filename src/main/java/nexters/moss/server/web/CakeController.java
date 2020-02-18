@@ -24,8 +24,8 @@ public class CakeController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.OK)
-    public Response<Long> createNewCake(@RequestBody CreateNewCakeRequest createNewCakeRequest) {
-        return cakeApplicationService.createNewCake(
+    public Response<Long> sendCake(@RequestBody CreateNewCakeRequest createNewCakeRequest) {
+        return cakeApplicationService.sendCake(
                 (Long)httpServletRequest.getAttribute("userId"),
                 createNewCakeRequest
         );
@@ -33,8 +33,8 @@ public class CakeController {
 
     @GetMapping("")
     @ResponseStatus(value = HttpStatus.OK)
-    public Response<NewCakeDTO> getNewCake(@RequestParam Long categoryId) {
-        return cakeApplicationService.getNewCake(
+    public Response<NewCakeDTO> getCake(@RequestParam Long categoryId) {
+        return cakeApplicationService.getCake(
                 (Long)httpServletRequest.getAttribute("userId"),
                 categoryId
         );

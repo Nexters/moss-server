@@ -90,7 +90,7 @@ public class HabitApplicationService {
         );
     }
 
-    public Response<List<HabitHistory>> getHabitHistory(Long userId) {
+    public Response<List<HabitHistory>> getHabit(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new HabikeryUserNotFoundException("No Matched User"));
 
         return new Response<>(
