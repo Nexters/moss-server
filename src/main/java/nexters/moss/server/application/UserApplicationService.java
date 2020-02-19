@@ -6,12 +6,10 @@ import nexters.moss.server.config.exception.HabikeryUserDuplicatedException;
 import nexters.moss.server.config.exception.HabikeryUserNotFoundException;
 import nexters.moss.server.domain.model.Token;
 import nexters.moss.server.domain.model.*;
-import nexters.moss.server.domain.repository.PieceOfCakeReceiveRepository;
-import nexters.moss.server.domain.repository.ReportRepository;
+import nexters.moss.server.domain.repository.*;
 import nexters.moss.server.domain.service.SocialTokenService;
 import nexters.moss.server.domain.service.HabikeryTokenService;
 import nexters.moss.server.domain.model.User;
-import nexters.moss.server.domain.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserApplicationService {
     private SocialTokenService socialTokenService;
     private HabikeryTokenService habikeryTokenService;
+    private HabitRecordRepository habitRecordRepository;
+    private HabitRepository habitRepository;
     private UserRepository userRepository;
     private ReportRepository reportRepository;
     private PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository;
@@ -56,6 +56,9 @@ public class UserApplicationService {
     public Response leave(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new HabikeryUserNotFoundException("No Matched Habikery User with User ID"));
 
+        habitRecordRepository.deleteByUser_Id(user.getId());
+        pieceOfCakeReceiveRepository.deleteByUser_Id(user.getId());
+        habitRepository.deleteByUser_Id(user.getId());
         userRepository.deleteById(user.getId());
 
         return new Response();

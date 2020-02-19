@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -44,8 +45,8 @@ public class InitDataConfig {
             descriptionRepository.save(new Description(null, category, "receive" + i, "diary" + i));
         }
 
-        User sender = userRepository.save(userRepository.save(new User(null, 1234L, "accountToken", "sender", null)));
-        User receiver = userRepository.save(userRepository.save(new User(null, 1235L, "accountToken", "receiver", null)));
+        User sender = userRepository.save(userRepository.save(new User(null, 1234L, "accountToken", "sender", new ArrayList<>())));
+        User receiver = userRepository.save(userRepository.save(new User(null, 1235L, "accountToken", "receiver", new ArrayList<>())));
 
         Category category = categoryRepository.findById(Integer.toUnsignedLong(1)).orElseThrow(() -> new IllegalArgumentException("No Matched Category"));
 
