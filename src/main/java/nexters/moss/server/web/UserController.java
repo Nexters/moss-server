@@ -1,5 +1,6 @@
 package nexters.moss.server.web;
 
+import lombok.AllArgsConstructor;
 import nexters.moss.server.application.UserApplicationService;
 import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.web.value.ReceivedPieceOfCakeRequest;
@@ -10,13 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("user")
+@AllArgsConstructor
 public class UserController {
     private UserApplicationService userApplicationService;
     private HttpServletRequest httpServletRequest;
-
-    public UserController(UserApplicationService userApplicationService) {
-        this.userApplicationService = userApplicationService;
-    }
 
     @PostMapping("")
     @ResponseStatus(value = HttpStatus.OK)

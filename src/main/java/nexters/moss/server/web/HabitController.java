@@ -65,8 +65,7 @@ public class HabitController {
             @RequestBody HabitReqeust habitReqeust
     ) {
         return habitApplicationService.doneHabit(
-//                (Long) httpServletRequest.getAttribute("userId"),
-                2L,
+                (Long) httpServletRequest.getAttribute("userId"),
                 habitReqeust.getHabitId()
         );
     }
