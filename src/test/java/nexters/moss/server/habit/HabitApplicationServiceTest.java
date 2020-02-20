@@ -75,6 +75,7 @@ public class HabitApplicationServiceTest {
                         category,
                         testUser,
                         null,
+                        0,
                         false,
                         false
                 )
@@ -89,6 +90,7 @@ public class HabitApplicationServiceTest {
                         testHabit.getCategory(),
                         testUser,
                         habitRecords,
+                        testHabit.getOrder(),
                         false,
                         false
                 )

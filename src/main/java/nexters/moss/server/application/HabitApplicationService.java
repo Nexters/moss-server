@@ -170,4 +170,22 @@ public class HabitApplicationService {
                 )
         );
     }
+
+    public Response<Long> changeHabitOrder(Long userId, Long habitId, int changedOrder) {
+        List<Habit> habits = habitRepository.findAllByUser_IdOrderByOrderAsc(userId);
+        if(habits.size() == 0) {
+            throw new IllegalArgumentException("User has no habits");
+        }
+
+        int habitOrder = 0;
+
+        for(Habit habit: habits) {
+            if(habit.getId().equals(habitId)) {
+                habitOrder = habit.getOrder();
+            }
+        }
+        habitService.changeHabitsOrder(habits, habitOrder, changedOrder);
+        habitRepository.saveAll(habits);
+        return new Response<>(habitId);
+    }
 }

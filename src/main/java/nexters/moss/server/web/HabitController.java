@@ -5,7 +5,8 @@ import nexters.moss.server.application.dto.HabitDoneResponse;
 import nexters.moss.server.application.dto.HabitHistory;
 import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.web.value.CategoryRequest;
-import nexters.moss.server.web.value.HabitReqeust;
+import nexters.moss.server.web.value.HabitOrderRequest;
+import nexters.moss.server.web.value.HabitRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +27,6 @@ public class HabitController {
         this.httpServletRequest = httpServletRequest;
     }
 
-    // TODO: JWT Authentication will give user information
     @GetMapping("")
     @ResponseStatus(value = HttpStatus.OK)
     public Response<List<HabitHistory>> getHabit() {
@@ -35,7 +35,6 @@ public class HabitController {
         );
     }
 
-    // TODO: JWT Authentication will give user information
     @PostMapping("")
     @ResponseStatus(value = HttpStatus.OK)
     public Response<HabitHistory> createHabit(
@@ -47,26 +46,36 @@ public class HabitController {
         );
     }
 
-    // TODO: JWT Authentication will give user information
     @DeleteMapping("")
     @ResponseStatus(value = HttpStatus.OK)
     public Response<Long> deleteHabit(
-            @RequestBody HabitReqeust habitReqeust,
+            @RequestBody HabitRequest habitRequest,
             HttpServletRequest request
     ) {
         Long userId = (Long) request.getAttribute("userId");
-        return habitApplicationService.deleteHabit(userId, habitReqeust.getHabitId());
+        return habitApplicationService.deleteHabit(userId, habitRequest.getHabitId());
     }
 
-    // TODO: JWT Authentication will give user information
     @PutMapping("")
     @ResponseStatus(value = HttpStatus.OK)
     public Response<HabitDoneResponse> doneHabit(
-            @RequestBody HabitReqeust habitReqeust
+            @RequestBody HabitRequest habitRequest
     ) {
         return habitApplicationService.doneHabit(
                 (Long) httpServletRequest.getAttribute("userId"),
-                habitReqeust.getHabitId()
+                habitRequest.getHabitId()
+        );
+    }
+
+    @PutMapping("/order")
+    @ResponseStatus(value = HttpStatus.OK)
+    public Response<Long> changeHabitOrder(
+            @RequestBody HabitOrderRequest habitOrderRequest
+    ) {
+        return habitApplicationService.changeHabitOrder(
+                (Long) httpServletRequest.getAttribute("userId"),
+                habitOrderRequest.getHabitId(),
+                habitOrderRequest.getOrder()
         );
     }
 }

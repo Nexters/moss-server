@@ -31,6 +31,9 @@ public class Habit extends TimeProvider {
     @OrderBy(clause = "id ASC")
     private List<HabitRecord> habitRecords = new ArrayList<>();
 
+    @Column(name = "habit_order")
+    private int order = 0;
+
     @Column(name = "isActivated", columnDefinition = "boolean default false")
     private Boolean isActivated = false;
 
@@ -55,5 +58,17 @@ public class Habit extends TimeProvider {
 
     public void onFirstCheck() {
         this.isFirstCheck = true;
+    }
+
+    public void increaseOneOrder() {
+        this.order++;
+    }
+
+    public void decreaseOneOrder() {
+        this.order--;
+    }
+
+    public void changeOrder(int order) {
+        this.order = order;
     }
 }

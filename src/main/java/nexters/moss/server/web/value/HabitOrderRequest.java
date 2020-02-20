@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class HabitReqeust {
+public class HabitOrderRequest {
     private Long habitId;
+    private int order;
 }
