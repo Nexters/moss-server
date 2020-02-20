@@ -16,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 public class HabitHistory {
     private Long habitId;
+    private Long categoryId;
     @JsonProperty("name")
     private HabitType habitTypeName;
     private boolean isFirstCheck;

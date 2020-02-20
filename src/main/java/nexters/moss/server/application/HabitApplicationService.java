@@ -84,6 +84,7 @@ public class HabitApplicationService {
         return new Response(
                 new HabitHistory(
                         habit.getId(),
+                        categoryId,
                         category.getHabitType(),
                         habit.getIsFirstCheck(),
                         habitRecords
@@ -104,6 +105,7 @@ public class HabitApplicationService {
                                     }
                                     return new HabitHistory(
                                             habit.getId(),
+                                            habit.getCategory().getId(),
                                             habit.getCategory().getHabitType(),
                                             habit.getIsFirstCheck(),
                                             habitRecords
