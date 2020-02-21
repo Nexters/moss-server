@@ -58,7 +58,7 @@ public class HabitController {
 
     @PutMapping("")
     @ResponseStatus(value = HttpStatus.OK)
-    public Response<HabitDoneResponse> doneHabit(
+    public HabitDoneResponse doneHabit(
             @RequestBody HabitRequest habitRequest
     ) {
         return habitApplicationService.doneHabit(

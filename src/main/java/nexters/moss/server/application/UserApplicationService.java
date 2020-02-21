@@ -22,6 +22,7 @@ public class UserApplicationService {
     private HabitRecordRepository habitRecordRepository;
     private HabitRepository habitRepository;
     private UserRepository userRepository;
+    private WholeCakeRepository wholeCakeRepository;
     private ReportRepository reportRepository;
     private PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository;
 
@@ -58,6 +59,7 @@ public class UserApplicationService {
 
         habitRecordRepository.deleteByUser_Id(user.getId());
         pieceOfCakeReceiveRepository.deleteByUser_Id(user.getId());
+        wholeCakeRepository.deleteByUser_Id(user.getId());
         habitRepository.deleteByUser_Id(user.getId());
         userRepository.deleteById(user.getId());
 

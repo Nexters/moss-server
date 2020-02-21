@@ -125,7 +125,7 @@ public class HabitApplicationService {
 
     // TODO: separate done and receive logic
     // TODO: separate jpa consistence context
-    public Response<HabitDoneResponse> doneHabit(Long userId, Long habitId) {
+    public HabitDoneResponse doneHabit(Long userId, Long habitId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new HabikeryUserNotFoundException("No Matched User"));
         Habit habit = habitRepository.findById(habitId).orElseThrow(() -> new ResourceNotFoundException("No Matched Habit"));
         if (habitService.isDoneHabit(habit)) {
@@ -140,16 +140,14 @@ public class HabitApplicationService {
         }
 
         if (!habitService.isReadyToReceiveCake(habit)) {
-            return new Response<>(
-                    new HabitDoneResponse(
-                            new HabitCheckResponse(
-                                    habit.getId(),
-                                    habit.getCategory().getHabitType(),
-                                    habit.getIsFirstCheck(),
-                                    habitRecords,
-                                    habit.getCategory().getId()
-                            ), null
-                    )
+            new HabitDoneResponse(
+                    new HabitCheckResponse(
+                            habit.getId(),
+                            habit.getCategory().getHabitType(),
+                            habit.getIsFirstCheck(),
+                            habitRecords,
+                            habit.getCategory().getId()
+                    ), null
             );
         }
         SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findRandomByUser_IdAndCategory_Id(userId, habit.getCategory().getId()).orElseThrow(() -> new ResourceNotFoundException("Has no remain cake message"));
@@ -172,21 +170,19 @@ public class HabitApplicationService {
             ));
         }
 
-        return new Response<>(
-                new HabitDoneResponse(
-                        new HabitCheckResponse(
-                                habit.getId(),
-                                habit.getCategory().getHabitType(),
-                                habit.getIsFirstCheck(),
-                                habitRecords,
-                                habit.getCategory().getId()
-                        ),
-                        new NewCakeDTO(
-                                user.getNickname(),
-                                sentPieceOfCake.getNote(),
-                                habit.getCategory().getCakeType().getName(),
-                                imageApplicationService.getMoveImagePath(habit.getCategory().getHabitType(), ImageEvent.NEW_CAKE))
-                )
+        return new HabitDoneResponse(
+                new HabitCheckResponse(
+                        habit.getId(),
+                        habit.getCategory().getHabitType(),
+                        habit.getIsFirstCheck(),
+                        habitRecords,
+                        habit.getCategory().getId()
+                ),
+                new NewCakeDTO(
+                        user.getNickname(),
+                        sentPieceOfCake.getNote(),
+                        habit.getCategory().getCakeType().getName(),
+                        imageApplicationService.getMoveImagePath(habit.getCategory().getHabitType(), ImageEvent.NEW_CAKE))
         );
     }
 
@@ -194,6 +190,10 @@ public class HabitApplicationService {
         List<Habit> habits = habitRepository.findAllByUser_IdOrderByOrderAsc(userId);
         if (habits.size() == 0) {
             throw new IllegalArgumentException("User has no habits");
+        }
+
+        if (habits.size() == 1) {
+            throw new IllegalArgumentException("Has no item to change order");
         }
 
         int habitOrder = 0;

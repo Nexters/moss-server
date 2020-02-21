@@ -10,4 +10,5 @@ import java.util.List;
 public interface WholeCakeRepository extends JpaRepository<WholeCake, Long> {
     List<WholeCake> findAllByUser_IdAndCategory_Id(Long userId, Long categoryId);
     int countAllByUser_IdAndCategory_Id(Long userId, Long categoryId);
+    void deleteByUser_Id(Long userId);
 }
