@@ -78,6 +78,13 @@ public class HabitRecordService {
         return false;
     }
 
+    public boolean isCakeDoneRecord(HabitRecord habitRecord) {
+        if(habitRecord.getHabitStatus() == HabitStatus.CAKE_DONE) {
+            return true;
+        }
+        return false;
+    }
+
     private void resetHabitRecords(List<HabitRecord> habitRecords) {
         for (int day = 0; day < 5; day++) {
             HabitStatus habitStatus = HabitStatus.NOT_DONE;

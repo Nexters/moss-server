@@ -2,6 +2,7 @@ package nexters.moss.server.domain.service;
 
 import nexters.moss.server.domain.model.Habit;
 import nexters.moss.server.domain.model.HabitRecord;
+import nexters.moss.server.domain.value.HabitStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,5 +36,9 @@ public class HabitService {
                 habits.get(index).increaseOneOrder();
             }
         }
+    }
+
+    public boolean isReadyToReceiveCake(Habit habit) {
+        return habitRecordService.isCakeDoneRecord(habit.getHabitRecords().get(1));
     }
 }

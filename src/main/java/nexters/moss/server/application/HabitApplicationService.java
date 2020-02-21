@@ -128,7 +128,7 @@ public class HabitApplicationService {
     public Response<HabitDoneResponse> doneHabit(Long userId, Long habitId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new HabikeryUserNotFoundException("No Matched User"));
         Habit habit = habitRepository.findById(habitId).orElseThrow(() -> new ResourceNotFoundException("No Matched Habit"));
-        if(habitService.isDoneHabit(habit)) {
+        if (habitService.isDoneHabit(habit)) {
             throw new AlreadyDoneHabitException("Already done habit");
         }
         habitService.doDoneHabit(habit);
@@ -139,6 +139,19 @@ public class HabitApplicationService {
             habitRecords = habitRecordRepository.saveAll(habitRecords);
         }
 
+        if (!habitService.isReadyToReceiveCake(habit)) {
+            return new Response<>(
+                    new HabitDoneResponse(
+                            new HabitCheckResponse(
+                                    habit.getId(),
+                                    habit.getCategory().getHabitType(),
+                                    habit.getIsFirstCheck(),
+                                    habitRecords,
+                                    habit.getCategory().getId()
+                            ), null
+                    )
+            );
+        }
         SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findRandomByUser_IdAndCategory_Id(userId, habit.getCategory().getId()).orElseThrow(() -> new ResourceNotFoundException("Has no remain cake message"));
 
         int pieceCount = pieceOfCakeReceiveRepository.countAllByUser_IdAndCategory_Id(userId, habit.getCategory().getId());
@@ -179,14 +192,14 @@ public class HabitApplicationService {
 
     public Response<Long> changeHabitOrder(Long userId, Long habitId, int changedOrder) {
         List<Habit> habits = habitRepository.findAllByUser_IdOrderByOrderAsc(userId);
-        if(habits.size() == 0) {
+        if (habits.size() == 0) {
             throw new IllegalArgumentException("User has no habits");
         }
 
         int habitOrder = 0;
 
-        for(Habit habit: habits) {
-            if(habit.getId().equals(habitId)) {
+        for (Habit habit : habits) {
+            if (habit.getId().equals(habitId)) {
                 habitOrder = habit.getOrder();
             }
         }
