@@ -1,5 +1,6 @@
 package nexters.moss.server.application;
 
+import nexters.moss.server.application.dto.HabitCheckResponse;
 import nexters.moss.server.application.dto.HabitDoneResponse;
 import nexters.moss.server.application.dto.HabitHistory;
 import nexters.moss.server.application.dto.Response;
@@ -160,10 +161,13 @@ public class HabitApplicationService {
 
         return new Response<>(
                 new HabitDoneResponse(
-                        habit.getId(),
-                        habit.getCategory().getHabitType(),
-                        habit.getIsFirstCheck(),
-                        habitRecords,
+                        new HabitCheckResponse(
+                                habit.getId(),
+                                habit.getCategory().getHabitType(),
+                                habit.getIsFirstCheck(),
+                                habitRecords,
+                                habit.getCategory().getId()
+                        ),
                         new NewCakeDTO(
                                 user.getNickname(),
                                 sentPieceOfCake.getNote(),

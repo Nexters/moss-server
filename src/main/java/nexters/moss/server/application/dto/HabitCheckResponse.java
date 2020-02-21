@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import nexters.moss.server.application.dto.cake.NewCakeDTO;
 import nexters.moss.server.domain.model.HabitRecord;
 import nexters.moss.server.domain.value.HabitType;
 
@@ -15,7 +14,12 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class HabitDoneResponse {
-    private HabitCheckResponse habitCheckResponse;
-    private NewCakeDTO newCakeDTO;
+public class HabitCheckResponse {
+    private Long habitId;
+    @JsonProperty("name")
+    private HabitType habitType;
+    private boolean isFirstCheck;
+    @JsonProperty("records")
+    private List<HabitRecord> habitRecords;
+    private Long categoryId;
 }
