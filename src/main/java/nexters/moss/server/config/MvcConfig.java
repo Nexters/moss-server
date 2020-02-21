@@ -19,6 +19,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
                 .addPathPatterns("/user/report")
                 .addPathPatterns("/habit")
                 .addPathPatterns("/habit/history")
+                .addPathPatterns("/habit/order")
                 .addPathPatterns("/record")
                 .addPathPatterns("/cake")
                 .addPathPatterns("/diary/*");

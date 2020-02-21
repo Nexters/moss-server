@@ -30,5 +30,6 @@ public class User extends TimeProvider {
     private String nickname;
 
     @OneToMany(mappedBy = "user")
+    @org.hibernate.annotations.OrderBy(clause = "habit_order ASC")
     private List<Habit> habits = new ArrayList<>();
 }

@@ -24,6 +24,7 @@ import nexters.moss.server.domain.service.HabitService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,10 +72,12 @@ public class HabitApplicationService {
         if (habitRepository.existsByUser_IdAndCategory_Id(userId, categoryId)) {
             throw new IllegalArgumentException("Already Has Habit");
         }
+        int habitCount = habitRepository.countAllByUser_Id(userId);
         Habit habit = habitRepository.save(
                 Habit.builder()
                         .user(user)
                         .category(category)
+                        .order(habitCount)
                         .isActivated(false)
                         .isFirstCheck(false)
                         .build()
@@ -140,7 +143,7 @@ public class HabitApplicationService {
         }
 
         if (!habitService.isReadyToReceiveCake(habit)) {
-            new HabitDoneResponse(
+            return new HabitDoneResponse(
                     new HabitCheckResponse(
                             habit.getId(),
                             habit.getCategory().getHabitType(),

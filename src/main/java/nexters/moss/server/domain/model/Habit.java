@@ -52,6 +52,10 @@ public class Habit extends TimeProvider {
                 .build();
     }
 
+    public int compareByOrder(Habit habit) {
+        return this.getOrder() - habit.getOrder();
+    }
+
     public void onActivation() {
         this.isActivated = true;
     }
