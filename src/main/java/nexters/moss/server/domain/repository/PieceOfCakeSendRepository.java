@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface PieceOfCakeSendRepository extends JpaRepository<SentPieceOfCake, Long> {
     @Query(nativeQuery=true, value="SELECT * FROM sent_piece_of_cakes p WHERE p.category_id = :categoryId AND p.user_id !=:userId ORDER BY random() LIMIT 1")
     Optional<SentPieceOfCake> findRandomByUser_IdAndCategory_Id(@Param("userId") Long userId, @Param("categoryId") Long categoryId );
+    void deleteByUser_Id(Long userId);
 }

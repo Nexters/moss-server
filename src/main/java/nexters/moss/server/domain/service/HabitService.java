@@ -38,6 +38,12 @@ public class HabitService {
         }
     }
 
+    public void refreshHabitsOrderWhenDelete (List<Habit> habits, int deletedHabitOrder) {
+        for(int index = deletedHabitOrder + 1; index < habits.size(); index++) {
+            habits.get(index).decreaseOneOrder();
+        }
+    }
+
     public boolean isReadyToReceiveCake(Habit habit) {
         return habitRecordService.isCakeDoneRecord(habit.getHabitRecords().get(1));
     }

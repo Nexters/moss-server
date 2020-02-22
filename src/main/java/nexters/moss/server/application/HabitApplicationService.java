@@ -121,8 +121,13 @@ public class HabitApplicationService {
     }
 
     public Response<Long> deleteHabit(Long userId, Long habitId) {
+        List<Habit> habits = habitRepository.findAllByUser_IdOrderByOrderAsc(userId);
         habitRecordRepository.deleteAllByUser_IdAndHabit_Id(userId, habitId);
         habitRepository.deleteById(habitId);
+        Habit habit = findById(habits, habitId);
+        habitService.refreshHabitsOrderWhenDelete(habits, habit.getOrder());
+        habits.remove(habit);
+        habitRepository.saveAll(habits);
         return new Response<>(habitId);
     }
 
@@ -209,5 +214,14 @@ public class HabitApplicationService {
         habitService.changeHabitsOrder(habits, habitOrder, changedOrder);
         habitRepository.saveAll(habits);
         return new Response<>(habitId);
+    }
+
+    private Habit findById(List<Habit> habits, Long habitId) {
+        for(Habit habit: habits) {
+            if(habit.getId().equals(habitId)) {
+                return habit;
+            }
+        }
+        return null;
     }
 }

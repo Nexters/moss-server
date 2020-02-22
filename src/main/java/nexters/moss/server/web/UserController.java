@@ -29,7 +29,7 @@ public class UserController {
 
     @DeleteMapping("")
     @ResponseStatus(value = HttpStatus.OK)
-    public Response leave() {
+    public Response<Long> leave() {
         return userApplicationService.leave((Long) httpServletRequest.getAttribute("userId"));
     }
 

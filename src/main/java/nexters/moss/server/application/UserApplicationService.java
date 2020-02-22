@@ -1,6 +1,7 @@
 package nexters.moss.server.application;
 
 import lombok.AllArgsConstructor;
+import nexters.moss.server.DeleteApplicationService;
 import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.config.exception.HabikeryUserDuplicatedException;
 import nexters.moss.server.config.exception.HabikeryUserNotFoundException;
@@ -19,12 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserApplicationService {
     private SocialTokenService socialTokenService;
     private HabikeryTokenService habikeryTokenService;
-    private HabitRecordRepository habitRecordRepository;
-    private HabitRepository habitRepository;
     private UserRepository userRepository;
-    private WholeCakeRepository wholeCakeRepository;
     private ReportRepository reportRepository;
     private PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository;
+    private DeleteApplicationService deleteApplicationService;
 
     public Response join(String accessToken, String nickname) {
         Long socialId = socialTokenService.getSocialUserId(accessToken);
@@ -54,16 +53,13 @@ public class UserApplicationService {
         return new Response<>(updatedUser.getHabikeryToken());
     }
 
-    public Response leave(Long userId) {
+    public Response<Long> leave(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new HabikeryUserNotFoundException("No Matched Habikery User with User ID"));
 
-        habitRecordRepository.deleteByUser_Id(user.getId());
-        pieceOfCakeReceiveRepository.deleteByUser_Id(user.getId());
-        wholeCakeRepository.deleteByUser_Id(user.getId());
-        habitRepository.deleteByUser_Id(user.getId());
-        userRepository.deleteById(user.getId());
+        deleteApplicationService.deleteAllRelationByUserId(userId);
+        userRepository.deleteById(userId);
 
-        return new Response();
+        return new Response(userId);
     }
 
     public Response<String> getUserInfo(Long userId) {
