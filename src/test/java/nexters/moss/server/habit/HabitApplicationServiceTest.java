@@ -66,6 +66,8 @@ public class HabitApplicationServiceTest {
                         12345678L,
                         "accountToken",
                         "nickname",
+                        null,
+                        null,
                         null
                 )
         );

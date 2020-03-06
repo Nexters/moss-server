@@ -55,8 +55,8 @@ public class DiaryApplicationServiceTest {
 
     @Before
     public void setup() {
-        sender = userRepository.save(new User(null, null, "accountToken", "sender", null));
-        receiver = userRepository.save(new User(null, null, "accountToken", "receiver", null));
+        sender = userRepository.save(new User(null, null, "accountToken", "sender", null, null, null));
+        receiver = userRepository.save(new User(null, null, "accountToken", "receiver", null, null, null));
         category = categoryRepository.save(new Category(null, HabitType.BREAKFAST, CakeType.APPLE));
 
         habit = habitRepository.save(new Habit(null, category, receiver, null, 0, false, false));

@@ -27,7 +27,7 @@ public class Habit extends TimeProvider {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "habit")
+    @OneToMany(mappedBy = "habit", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy(clause = "id ASC")
     private List<HabitRecord> habitRecords = new ArrayList<>();
 

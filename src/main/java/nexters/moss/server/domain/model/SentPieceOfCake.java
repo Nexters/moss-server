@@ -33,7 +33,7 @@ public class SentPieceOfCake extends TimeProvider {
     @Column(name = "note")
     private String note;
 
-    @OneToMany(mappedBy = "sentPieceOfCake")
+    @OneToMany(mappedBy = "sentPieceOfCake", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReceivedPieceOfCake> receivedPieceOfCakeList = new ArrayList<>();
 
     public SentPieceOfCake(Long userId, CreateNewCakeRequest createNewCakeRequest) {

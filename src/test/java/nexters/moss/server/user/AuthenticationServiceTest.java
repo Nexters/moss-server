@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,13 +40,8 @@ public class AuthenticationServiceTest {
         );
 
         String testHabikeryToken = habikeryTokenService.createToken(user.getId(), "accessToken");
-        userRepository.save(new User(
-                user.getId(),
-                user.getSocialId(),
-                testHabikeryToken,
-                user.getNickname(),
-                user.getHabits()
-        ));
+        user.setHabikeryToken(testHabikeryToken);
+        userRepository.save(user);
     }
 
     @Test(expected = Test.None.class)

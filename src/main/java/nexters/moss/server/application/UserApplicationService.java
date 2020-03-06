@@ -1,11 +1,9 @@
 package nexters.moss.server.application;
 
 import lombok.AllArgsConstructor;
-import nexters.moss.server.DeleteApplicationService;
 import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.config.exception.HabikeryUserDuplicatedException;
 import nexters.moss.server.config.exception.HabikeryUserNotFoundException;
-import nexters.moss.server.domain.model.Token;
 import nexters.moss.server.domain.model.*;
 import nexters.moss.server.domain.repository.*;
 import nexters.moss.server.domain.service.SocialTokenService;
@@ -23,7 +21,6 @@ public class UserApplicationService {
     private UserRepository userRepository;
     private ReportRepository reportRepository;
     private PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository;
-    private DeleteApplicationService deleteApplicationService;
 
     public Response join(String accessToken, String nickname) {
         Long socialId = socialTokenService.getSocialUserId(accessToken);
@@ -56,7 +53,6 @@ public class UserApplicationService {
     public Response<Long> leave(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new HabikeryUserNotFoundException("No Matched Habikery User with User ID"));
 
-        deleteApplicationService.deleteAllRelationByUserId(userId);
         userRepository.deleteById(userId);
 
         return new Response(userId);

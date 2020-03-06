@@ -1,20 +1,20 @@
 package nexters.moss.server.config;
 
-import nexters.moss.server.application.CakeApplicationService;
-import nexters.moss.server.application.HabitApplicationService;
-import nexters.moss.server.application.dto.cake.CreateNewCakeRequest;
-import nexters.moss.server.domain.model.*;
-import nexters.moss.server.domain.repository.*;
-import nexters.moss.server.domain.value.CakeType;
-import nexters.moss.server.domain.value.HabitType;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
+        import nexters.moss.server.application.CakeApplicationService;
+        import nexters.moss.server.application.HabitApplicationService;
+        import nexters.moss.server.application.dto.cake.CreateNewCakeRequest;
+        import nexters.moss.server.domain.model.*;
+        import nexters.moss.server.domain.repository.*;
+        import nexters.moss.server.domain.value.CakeType;
+        import nexters.moss.server.domain.value.HabitType;
+        import org.springframework.beans.factory.annotation.Autowired;
+        import org.springframework.context.annotation.Configuration;
+        import org.springframework.context.annotation.Profile;
 
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+        import javax.annotation.PostConstruct;
+        import java.util.ArrayList;
+        import java.util.Arrays;
+        import java.util.List;
 
 @Configuration
 @Profile("init")
@@ -47,8 +47,8 @@ public class InitDataConfig {
             descriptionRepository.save(new Description(null, category, "receive" + i, "diary" + i));
         }
 
-        User sender = userRepository.save(userRepository.save(new User(null, 1234L, "accountToken", "sender", new ArrayList<>())));
-        User receiver = userRepository.save(userRepository.save(new User(null, 1235L, "accountToken", "receiver", new ArrayList<>())));
+        User sender = userRepository.save(userRepository.save(new User(null, 1234L, "accountToken", "sender", new ArrayList<>(), new ArrayList<>(), new ArrayList<>())));
+        User receiver = userRepository.save(userRepository.save(new User(null, 1235L, "accountToken", "receiver", new ArrayList<>(), new ArrayList<>(), new ArrayList<>())));
 
         Category category = categoryRepository.findById(Integer.toUnsignedLong(1)).orElseThrow(() -> new IllegalArgumentException("No Matched Category"));
 

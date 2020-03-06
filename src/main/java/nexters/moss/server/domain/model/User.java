@@ -29,7 +29,16 @@ public class User extends TimeProvider {
     @Column(name = "nickname")
     private String nickname;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @org.hibernate.annotations.OrderBy(clause = "habit_order ASC")
+    @Builder.Default
     private List<Habit> habits = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<SentPieceOfCake> sentPieceOfCakes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<WholeCake> wholeCakes = new ArrayList<>();
 }
