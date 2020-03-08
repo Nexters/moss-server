@@ -100,7 +100,7 @@ public class HabitApplicationServiceTest {
         Response<HabitHistory> createResponse = habitApplicationService.createHabit(testUser.getId(), testCategory.getId());
         long habitId = createResponse.getData().getHabitId();
         habitApplicationService.deleteHabit(testUser.getId(), habitId);
-        Assert.assertEquals(0, habitRecordRepository.findAllByUser_IdAndHabit_Id(testUser.getId(), habitId ).size());
+        Assert.assertEquals(0, habitRecordRepository.findAllByUser_IdAndHabit_Id(testUser.getId(), habitId).size());
     }
 
     @Test

@@ -29,7 +29,7 @@ public class UserApplicationService {
             throw new HabikeryUserDuplicatedException("Duplicated Habikery User with Social ID");
         }
 
-        User newUser = userRepository.save(
+        userRepository.save(
                 User.builder()
                         .socialId(socialId)
                         .nickname(nickname)
@@ -51,10 +51,10 @@ public class UserApplicationService {
     }
 
     public Response<Long> leave(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new HabikeryUserNotFoundException("No Matched Habikery User with User ID"));
-
+        if(!userRepository.existsById(userId)) {
+            throw  new HabikeryUserNotFoundException("No Matched Habikery User with User ID");
+        }
         userRepository.deleteById(userId);
-
         return new Response(userId);
     }
 

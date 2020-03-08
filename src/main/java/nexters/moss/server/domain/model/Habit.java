@@ -35,9 +35,11 @@ public class Habit extends TimeProvider {
     private int order = 0;
 
     @Column(name = "isActivated", columnDefinition = "boolean default false")
+    @Builder.Default
     private Boolean isActivated = false;
 
     @Column(name = "isFirstCheck", columnDefinition = "boolean default false")
+    @Builder.Default
     private Boolean isFirstCheck = false;
 
     public Habit(

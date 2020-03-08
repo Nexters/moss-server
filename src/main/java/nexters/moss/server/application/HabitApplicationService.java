@@ -24,7 +24,6 @@ import nexters.moss.server.domain.service.HabitService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,8 +66,9 @@ public class HabitApplicationService {
     }
 
     public Response<HabitHistory> createHabit(Long userId, Long categoryId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new HabikeryUserNotFoundException("No Matched User"));
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("No Matched Category"));
+        User user = this.findUserById(userId);
+        Category category = this.findCategoryById(categoryId);
+
         if (habitRepository.existsByUser_IdAndCategory_Id(userId, categoryId)) {
             throw new IllegalArgumentException("Already Has Habit");
         }
@@ -78,8 +78,6 @@ public class HabitApplicationService {
                         .user(user)
                         .category(category)
                         .order(habitCount)
-                        .isActivated(false)
-                        .isFirstCheck(false)
                         .build()
         );
         List<HabitRecord> habitRecords = habitRecordService.createHabitRecords(user, habit);
@@ -122,11 +120,10 @@ public class HabitApplicationService {
 
     public Response<Long> deleteHabit(Long userId, Long habitId) {
         List<Habit> habits = habitRepository.findAllByUser_IdOrderByOrderAsc(userId);
-        habitRecordRepository.deleteAllByUser_IdAndHabit_Id(userId, habitId);
-        habitRepository.deleteById(habitId);
-        Habit habit = findById(habits, habitId);
+        Habit habit = findHabitById(habits, habitId);
         habitService.refreshHabitsOrderWhenDelete(habits, habit.getOrder());
         habits.remove(habit);
+        habitRepository.deleteById(habitId);
         habitRepository.saveAll(habits);
         return new Response<>(habitId);
     }
@@ -216,7 +213,22 @@ public class HabitApplicationService {
         return new Response<>(habitId);
     }
 
-    private Habit findById(List<Habit> habits, Long habitId) {
+    @Transactional(readOnly = true)
+    public User findUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new HabikeryUserNotFoundException("No Matched User"));
+    }
+
+    @Transactional(readOnly = true)
+    public Category findCategoryById(Long categoryId) {
+        return categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("No Matched Category"));
+    }
+
+    @Transactional(readOnly = true)
+    public Habit findHabitById(Long habitId) {
+        return habitRepository.findById(habitId).orElseThrow(() -> new ResourceNotFoundException("No Matched Habit"));
+    }
+
+    private Habit findHabitById(List<Habit> habits, Long habitId) {
         for(Habit habit: habits) {
             if(habit.getId().equals(habitId)) {
                 return habit;
