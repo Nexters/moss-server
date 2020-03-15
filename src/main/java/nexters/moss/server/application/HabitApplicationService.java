@@ -6,11 +6,11 @@ import nexters.moss.server.application.dto.HabitHistory;
 import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.application.dto.cake.NewCakeDTO;
 import nexters.moss.server.application.value.ImageEvent;
-import nexters.moss.server.config.exception.AlreadyDoneHabitException;
-import nexters.moss.server.config.exception.ResourceNotFoundException;
+import nexters.moss.server.config.exception.AlreadyExistException;
+import nexters.moss.server.config.exception.NotFoundException;
+import nexters.moss.server.config.exception.UnauthorizedException;
 import nexters.moss.server.domain.model.*;
 import nexters.moss.server.domain.repository.*;
-import nexters.moss.server.config.exception.HabikeryUserNotFoundException;
 import nexters.moss.server.domain.model.Category;
 import nexters.moss.server.domain.model.Habit;
 import nexters.moss.server.domain.model.HabitRecord;
@@ -95,7 +95,7 @@ public class HabitApplicationService {
     }
 
     public Response<List<HabitHistory>> getHabit(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new HabikeryUserNotFoundException("No Matched User"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException(0, "No Matched User"));
 
         return new Response<>(
                 user.getHabits()
@@ -131,10 +131,10 @@ public class HabitApplicationService {
     // TODO: separate done and receive logic
     // TODO: separate jpa consistence context
     public HabitDoneResponse doneHabit(Long userId, Long habitId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new HabikeryUserNotFoundException("No Matched User"));
-        Habit habit = habitRepository.findById(habitId).orElseThrow(() -> new ResourceNotFoundException("No Matched Habit"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException(0, "No Matched User"));
+        Habit habit = habitRepository.findById(habitId).orElseThrow(() -> new NotFoundException(0, "No Matched Habit"));
         if (habitService.isDoneHabit(habit)) {
-            throw new AlreadyDoneHabitException("Already done habit");
+            throw new AlreadyExistException(0, "Already done habit");
         }
         habitService.doDoneHabit(habit);
         habitRepository.save(habit);
@@ -155,7 +155,8 @@ public class HabitApplicationService {
                     ), null
             );
         }
-        SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findRandomByUser_IdAndCategory_Id(userId, habit.getCategory().getId()).orElseThrow(() -> new ResourceNotFoundException("Has no remain cake message"));
+        SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findRandomByUser_IdAndCategory_Id(userId, habit.getCategory().getId())
+                .orElseThrow(() -> new NotFoundException(0, "Has no remain cake message"));
 
         int pieceCount = pieceOfCakeReceiveRepository.countAllByUser_IdAndCategory_Id(userId, habit.getCategory().getId());
 
@@ -215,17 +216,17 @@ public class HabitApplicationService {
 
     @Transactional(readOnly = true)
     public User findUserById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new HabikeryUserNotFoundException("No Matched User"));
+        return userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException(0, "No Matched User"));
     }
 
     @Transactional(readOnly = true)
     public Category findCategoryById(Long categoryId) {
-        return categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("No Matched Category"));
+        return categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException(0, "No Matched Category"));
     }
 
     @Transactional(readOnly = true)
     public Habit findHabitById(Long habitId) {
-        return habitRepository.findById(habitId).orElseThrow(() -> new ResourceNotFoundException("No Matched Habit"));
+        return habitRepository.findById(habitId).orElseThrow(() -> new NotFoundException(0, "No Matched Habit"));
     }
 
     private Habit findHabitById(List<Habit> habits, Long habitId) {

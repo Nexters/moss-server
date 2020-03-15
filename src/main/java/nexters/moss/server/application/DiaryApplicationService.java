@@ -3,8 +3,8 @@ package nexters.moss.server.application;
 import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.application.dto.diary.DiaryDTO;
 import nexters.moss.server.application.dto.diary.HistoryResponse;
-import nexters.moss.server.config.exception.HabikeryUserNotFoundException;
-import nexters.moss.server.config.exception.ResourceNotFoundException;
+import nexters.moss.server.config.exception.NotFoundException;
+import nexters.moss.server.config.exception.UnauthorizedException;
 import nexters.moss.server.domain.model.*;
 import nexters.moss.server.domain.repository.*;
 import nexters.moss.server.application.value.ImageEvent;
@@ -40,7 +40,7 @@ public class DiaryApplicationService {
     }
 
     public Response<List<DiaryDTO>> getPieceOfCakeDiary(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new HabikeryUserNotFoundException("No Matched User Id"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException(0, "No Matched User Id"));
         return new Response<>(
                 user.getHabits()
                         .stream()
@@ -62,7 +62,7 @@ public class DiaryApplicationService {
     }
 
     public Response<List<DiaryDTO>> getWholeCakeDiary(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new HabikeryUserNotFoundException("No Matched User Id"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException(0, "No Matched User Id"));
         return new Response<>(
                 user.getHabits()
                         .stream()
@@ -80,7 +80,7 @@ public class DiaryApplicationService {
     }
 
     public Response<HistoryResponse> getCakeHistory(Long userId, Long categoryId) {
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("No Matched Category Id"));
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException(0, "No Matched Category Id"));
         return new Response<HistoryResponse>(
                 new HistoryResponse(
                         category.getHabitType().getName(),

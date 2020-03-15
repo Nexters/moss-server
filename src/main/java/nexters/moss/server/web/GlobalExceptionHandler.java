@@ -1,5 +1,6 @@
 package nexters.moss.server.web;
 
+import nexters.moss.server.application.dto.ErrorResponse;
 import nexters.moss.server.config.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,43 +9,18 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(HabikeryTokenAuthenticatedException.class)
-    public ResponseEntity handleHabikeryTokenAuthenticatedException(HabikeryTokenAuthenticatedException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+    @ExceptionHandler(AlreadyExistException.class)
+    public ResponseEntity handleAlreadyExistException(AlreadyExistException e) {
+        return new ResponseEntity<>(new ErrorResponse(e), HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(HabikeryTokenExpiredException.class)
-    public ResponseEntity handleHabikeryTokenExpiredException(HabikeryTokenExpiredException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity handleNotFoundException(NotFoundException e) {
+        return new ResponseEntity<>(new ErrorResponse(e), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(HabikeryUserDuplicatedException.class)
-    public ResponseEntity handleHabikeryUserDuplicatedException(HabikeryUserDuplicatedException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(HabikeryUserNotFoundException.class)
-    public ResponseEntity handleHabikeryUserNotFoundException(HabikeryUserNotFoundException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity handleResourceNotFoundException(ResourceNotFoundException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(SocialTokenExpiredException.class)
-    public ResponseEntity handleSocialTokenExpiredException(SocialTokenExpiredException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
-    }
-
-    @ExceptionHandler(SocialUserNotFoundException.class)
-    public ResponseEntity handleSocialUserNotFoundException(SocialUserNotFoundException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(AlreadyDoneHabitException.class)
-    public ResponseEntity handleAlreadyDoneHabitException(AlreadyDoneHabitException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity handleUnauthorizedException(UnauthorizedException e) {
+        return new ResponseEntity<>(new ErrorResponse(e), HttpStatus.UNAUTHORIZED);
     }
 }
