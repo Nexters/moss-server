@@ -28,6 +28,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
@@ -38,16 +39,12 @@ public class UserApplicationServiceTest {
 
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private ReportRepository reportRepository;
-
     @Autowired
     private HabitRepository habitRepository;
-
     @Autowired
     private SentPieceOfCakeRepository sentPieceOfCakeRepository;
-
     @Autowired
     private ReceivedPieceOfCakeRepository receivedPieceOfCakeRepository;
 
@@ -64,12 +61,11 @@ public class UserApplicationServiceTest {
     public void setup() {
         testAccessToken = "accessToken";
         testUser = User.builder()
-                .socialId(12345678L)
-                .nickname("nickname")
+                .socialId(99999999L)
+                .nickname("testNickname")
                 .build();
 
-        given(socialTokenService.getSocialUserId(testAccessToken))
-                .willReturn(testUser.getSocialId());
+        when(socialTokenService.getSocialUserId(testAccessToken)).thenReturn(testUser.getSocialId());
     }
 
     @After
