@@ -117,43 +117,26 @@ public class DiaryApplicationControllerTest {
 
     @Test
     public void getPieceOfCakeDiaryTest() throws URISyntaxException {
-        URI uri = new URI("/diary/piece");
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("habikeryToken", receiverHabikeryToken);
+        ResponseEntity<Response<Object>> res = getTestResponse("/diary/piece", new ParameterizedTypeReference<Response<List<DiaryDTO>>>(){});
+        List<DiaryDTO> diaries = (List<DiaryDTO>) res.getBody().getData();
 
-        HttpEntity<Map<String,Object>> req = new HttpEntity<>(httpHeaders);
-
-        ResponseEntity<Response<List<DiaryDTO>>> res= this.testRestTemplate.exchange(uri
-                                                                                    ,HttpMethod.GET
-                                                                                    ,req
-                                                                                    ,new ParameterizedTypeReference<Response<List<DiaryDTO>>>(){});
-        DiaryDTO diary = res.getBody().getData().get(0);
-
-        assertThat(diary).isNotNull();
-        assertThat(diary.getCakeName())
-                        .isEqualTo(sentPieceOfCake.getCategory()
-                                                  .getCakeType()
-                                                  .getName());
-    }
+        assertThat(res.getBody().getData()).isNotNull();
+        assertThat(diaries.get(0).getCakeName())
+                                .isEqualTo(sentPieceOfCake.getCategory()
+                                                          .getCakeType()
+                                                          .getName());
+            }
 
     @Test
     public void getWholeCakeDiaryTest() throws URISyntaxException {
-        URI uri = new URI("/diary/whole");
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("habikeryToken", receiverHabikeryToken);
+        ResponseEntity<Response<Object>> res = getTestResponse("/diary/whole", new ParameterizedTypeReference<Response<List<DiaryDTO>>>(){});
 
-        HttpEntity<Map<String,Object>> req = new HttpEntity<>(httpHeaders);
-
-        ResponseEntity<Response<List<DiaryDTO>>> res= this.testRestTemplate.exchange(uri
-                                                                                    ,HttpMethod.GET
-                                                                                    ,req
-                                                                                    ,new ParameterizedTypeReference<Response<List<DiaryDTO>>>(){});
-        DiaryDTO diary = res.getBody().getData().get(0);
+        List<DiaryDTO> diaries = (List<DiaryDTO>) res.getBody().getData();
 
         assertThat(res.getBody().getData()).isNotNull();
-        assertThat(diary.getCakeName())
+        assertThat(diaries.get(0).getCakeName())
                         .isEqualTo(wholeCake.getCategory()
                                             .getCakeType()
                                             .getName());
@@ -161,16 +144,8 @@ public class DiaryApplicationControllerTest {
 
     @Test
     public void getCakeHistoryTest() throws URISyntaxException {
-        URI uri = new URI("/diary/history");
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("habikeryToken", receiverHabikeryToken);
-        HttpEntity<Map<String,Object>> req = new HttpEntity<>(httpHeaders);
-
-        ResponseEntity<Response<HistoryResponse>> res = this.testRestTemplate.exchange(uri + "?categoryId=" + category.getId()
-                                                                                        ,HttpMethod.GET
-                                                                                        ,req
-                                                                                        ,new ParameterizedTypeReference<Response<HistoryResponse>>(){});
+        ResponseEntity<Response<Object>> res = getTestResponse("/diary/history", new ParameterizedTypeReference<Response<HistoryResponse>>(){});
 
         HistoryResponse historyResponse = (HistoryResponse) res.getBody().getData();
 
@@ -180,5 +155,18 @@ public class DiaryApplicationControllerTest {
                                                       .getCakeType()
                                                       .getName());
 
+    }
+
+    private ResponseEntity<Response<Object>> getTestResponse(String uri, ParameterizedTypeReference parameterizedTypeReference) throws URISyntaxException {
+        URI req_uri = new URI(uri);
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("habikeryToken", receiverHabikeryToken);
+        HttpEntity<Map<String,Object>> req = new HttpEntity<>(httpHeaders);
+
+        return this.testRestTemplate.exchange(uri + "?categoryId=" + category.getId()
+                ,HttpMethod.GET
+                ,req
+                ,parameterizedTypeReference);
     }
 }
