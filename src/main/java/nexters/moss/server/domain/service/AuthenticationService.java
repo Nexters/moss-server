@@ -26,10 +26,6 @@ public class AuthenticationService {
             throw new UnauthorizedException("Unauthorized Token");
         }
 
-        if(!token.getExpirationDate().isAfter(LocalDate.now())) {
-            throw new UnauthorizedException("Habikery Token is expired");
-        }
-
         return user.getId();
     }
 }

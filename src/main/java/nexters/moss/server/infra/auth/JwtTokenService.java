@@ -14,22 +14,16 @@ import java.util.Date;
 @Service
 public class JwtTokenService implements HabikeryTokenService {
     private String key;
-    private int expirationPeriod;
 
     // TODO: export to config file
     public JwtTokenService() {
         this.key = "secret";
-        this.expirationPeriod = 7;
     }
 
     @Override
     public String createToken(Long userId, String accessToken) {
-        LocalDate expirationLocalDate = LocalDate.now().plus(Period.ofDays(expirationPeriod));
-        Date expirationDate = Date.from(expirationLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-
-        return Jwts.builder()
+       return Jwts.builder()
                 .setSubject(userId.toString())
-                .setExpiration(expirationDate)
                 .claim("accessToken", accessToken)
                 .signWith(SignatureAlgorithm.HS256, key)
                 .compact();
@@ -46,8 +40,7 @@ public class JwtTokenService implements HabikeryTokenService {
         return new Token(
                 Long.parseLong(body.getSubject()),
                 body.get("accessToken", String.class),
-                habikeryToken,
-                body.getExpiration().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+                habikeryToken
         );
     }
 }
