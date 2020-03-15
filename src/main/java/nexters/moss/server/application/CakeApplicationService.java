@@ -47,28 +47,4 @@ public class CakeApplicationService {
                 ).getId()
         );
     }
-
-    public Response<NewCakeDTO> getCake(Long userId, Long categoryId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new HabikeryUserNotFoundException("No Matched User"));
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("No Matched Category"));
-        SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findRandomByUser_IdAndCategory_Id(userId, categoryId).orElseThrow(() -> new ResourceNotFoundException("Has no remain cake message"));
-
-        ReceivedPieceOfCake receivedPOC = pieceOfCakeReceiveRepository.save(
-                ReceivedPieceOfCake.builder()
-                        .user(user)
-                        .category(category)
-                        .sentPieceOfCake(sentPieceOfCake)
-                        .build()
-        );
-
-        return new Response<NewCakeDTO>(
-                new NewCakeDTO(
-                        receivedPOC.getUser().getNickname(),
-                        receivedPOC.getSentPieceOfCake().getNote(),
-                        receivedPOC.getSentPieceOfCake().getCategory().getCakeType().getName(),
-                        imageApplicationService.getMoveImagePath(category.getHabitType(), ImageEvent.NEW_CAKE))
-        );
-    }
-
-
 }

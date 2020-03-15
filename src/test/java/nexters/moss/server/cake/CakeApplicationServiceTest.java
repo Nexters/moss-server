@@ -3,7 +3,6 @@ package nexters.moss.server.cake;
 import nexters.moss.server.application.CakeApplicationService;
 import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.application.dto.cake.CreateNewCakeRequest;
-import nexters.moss.server.application.dto.cake.NewCakeDTO;
 import nexters.moss.server.domain.model.Category;
 import nexters.moss.server.domain.model.Habit;
 import nexters.moss.server.domain.model.SentPieceOfCake;
@@ -14,7 +13,6 @@ import nexters.moss.server.domain.repository.PieceOfCakeSendRepository;
 import nexters.moss.server.domain.repository.UserRepository;
 import nexters.moss.server.domain.value.CakeType;
 import nexters.moss.server.domain.value.HabitType;
-import nexters.moss.server.application.value.ImageEvent;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +31,6 @@ import java.util.List;
 public class CakeApplicationServiceTest {
     private Habit testHabit;
     private User sender;
-    private User receiver;
     private Category category;
 
     @Autowired
@@ -61,36 +58,20 @@ public class CakeApplicationServiceTest {
         }
         category = categoryRepository.save(new Category(null, habitTypes.get(0), cakeTypes.get(0)));
         sender = userRepository.save(new User(null, null, "accounToken", "nickName", null, null, null));
-        receiver = userRepository.save(new User(null, null, "accounToken2", "nickName2", null, null, null));
 
-        habitRepository.save(new Habit(null, category, sender, null, 0, false, false));
-        testHabit = habitRepository.save(new Habit(null, category, receiver, null, 0, false, false));
-
-        pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, category,"hello" , null));
-        pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, category, "hello123" , null));
-        pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, category, "hello123456" , null));
-    }
+        testHabit = habitRepository.save(new Habit(null, category, sender, null, 0, false, false));
+        }
 
     @Test
     public void createNewCakeTest() {
         CreateNewCakeRequest req = new CreateNewCakeRequest(testHabit.getCategory().getId(), "note~!!");
         Response<Long> res = cakeApplicationService.sendCake(sender.getId(), req);
+
         Assert.assertNotNull(res.getData());
 
         SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findById(res.getData()).get();
         Assert.assertEquals(req.getNote(), sentPieceOfCake.getNote());
 
-    }
-
-    @Test
-    public void getNewCakeTest() {
-        long userId = receiver.getId();
-        long categoryId = category.getId();
-
-        Response<NewCakeDTO> testResponse = cakeApplicationService.getCake(userId, categoryId);
-        String imagePath = "nexters-habikery-image.s3.ap-northeast-2.amazonaws.com/" + category.getHabitType().getKey() + "/" + ImageEvent.NEW_CAKE.getName() + ".gif";
-        Assert.assertEquals(imagePath, testResponse.getData().getImagePath());
-        Assert.assertNotNull(testResponse.getData());
     }
 }
 
