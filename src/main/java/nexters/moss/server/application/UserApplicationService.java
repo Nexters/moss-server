@@ -27,7 +27,7 @@ public class UserApplicationService {
         Long socialId = socialTokenService.getSocialUserId(accessToken);
 
         if (userRepository.existsBySocialId(socialId)) {
-            throw new AlreadyExistException(0, "Duplicated Habikery User with Social ID");
+            throw new AlreadyExistException("Duplicated Habikery User with Social ID");
         }
 
         userRepository.save(
@@ -43,7 +43,7 @@ public class UserApplicationService {
     public Response<String> login(String accessToken) {
         Long socialId = socialTokenService.getSocialUserId(accessToken);
         User user = userRepository.findBySocialId(socialId)
-                .orElseThrow(() -> new UnauthorizedException(0, "No Matched Habikery User with Social ID"));
+                .orElseThrow(() -> new UnauthorizedException("No Matched Habikery User with Social ID"));
 
         String habikeryToken = habikeryTokenService.createToken(user.getId(), accessToken);
         user.setHabikeryToken(habikeryToken);
@@ -54,7 +54,7 @@ public class UserApplicationService {
 
     public Response<Long> leave(Long userId) {
         if(!userRepository.existsById(userId)) {
-            throw  new NotFoundException(0, "No Matched Habikery User with User ID");
+            throw  new NotFoundException("No Matched Habikery User with User ID");
         }
         userRepository.deleteById(userId);
         return new Response(userId);
@@ -62,14 +62,14 @@ public class UserApplicationService {
 
     public Response<String> getUserInfo(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException(0, "No Matched Habikery User with User ID"));
+                .orElseThrow(() -> new NotFoundException("No Matched Habikery User with User ID"));
 
         return new Response<>(user.getNickname());
     }
 
     public Response report(Long receivedPieceOfCakeId, String reason) {
         ReceivedPieceOfCake receivedPieceOfCake = pieceOfCakeReceiveRepository.findById(receivedPieceOfCakeId)
-                .orElseThrow(() -> new NotFoundException(0, "No Matched ReceivedPieceOfCake"));
+                .orElseThrow(() -> new NotFoundException("No Matched ReceivedPieceOfCake"));
         User reportedUser = receivedPieceOfCake.getSentPieceOfCake().getUser();
 
         reportRepository.save(

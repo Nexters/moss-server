@@ -95,7 +95,7 @@ public class HabitApplicationService {
     }
 
     public Response<List<HabitHistory>> getHabit(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException(0, "No Matched User"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException("No Matched User"));
 
         return new Response<>(
                 user.getHabits()
@@ -131,10 +131,10 @@ public class HabitApplicationService {
     // TODO: separate done and receive logic
     // TODO: separate jpa consistence context
     public HabitDoneResponse doneHabit(Long userId, Long habitId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException(0, "No Matched User"));
-        Habit habit = habitRepository.findById(habitId).orElseThrow(() -> new NotFoundException(0, "No Matched Habit"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException("No Matched User"));
+        Habit habit = habitRepository.findById(habitId).orElseThrow(() -> new NotFoundException("No Matched Habit"));
         if (habitService.isDoneHabit(habit)) {
-            throw new AlreadyExistException(0, "Already done habit");
+            throw new AlreadyExistException("Already done habit");
         }
         habitService.doDoneHabit(habit);
         habitRepository.save(habit);
@@ -156,7 +156,7 @@ public class HabitApplicationService {
             );
         }
         SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findRandomByUser_IdAndCategory_Id(userId, habit.getCategory().getId())
-                .orElseThrow(() -> new NotFoundException(0, "Has no remain cake message"));
+                .orElseThrow(() -> new NotFoundException("Has no remain cake message"));
 
         int pieceCount = pieceOfCakeReceiveRepository.countAllByUser_IdAndCategory_Id(userId, habit.getCategory().getId());
 
@@ -216,17 +216,17 @@ public class HabitApplicationService {
 
     @Transactional(readOnly = true)
     public User findUserById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException(0, "No Matched User"));
+        return userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException("No Matched User"));
     }
 
     @Transactional(readOnly = true)
     public Category findCategoryById(Long categoryId) {
-        return categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException(0, "No Matched Category"));
+        return categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException("No Matched Category"));
     }
 
     @Transactional(readOnly = true)
     public Habit findHabitById(Long habitId) {
-        return habitRepository.findById(habitId).orElseThrow(() -> new NotFoundException(0, "No Matched Habit"));
+        return habitRepository.findById(habitId).orElseThrow(() -> new NotFoundException("No Matched Habit"));
     }
 
     private Habit findHabitById(List<Habit> habits, Long habitId) {

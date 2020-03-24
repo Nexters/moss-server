@@ -26,7 +26,7 @@ public class KakaoTokenService implements SocialTokenService {
     @Override
     public Long getSocialUserId(String accessToken) throws UnauthorizedException {
         if(accessToken == null) {
-            throw new UnauthorizedException(0, "Access Token is null");
+            throw new UnauthorizedException("Access Token is null");
         }
 
         return httpTemplate(accessToken, (client, mapper) -> {
@@ -46,7 +46,7 @@ public class KakaoTokenService implements SocialTokenService {
         try {
             return http.get(client, objectMapper);
         } catch (IOException e) {
-            throw new UnauthorizedException(0, "No Matched Social User");
+            throw new UnauthorizedException("No Matched Social User");
         }
     }
 }

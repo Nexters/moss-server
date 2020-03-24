@@ -40,7 +40,7 @@ public class DiaryApplicationService {
     }
 
     public Response<List<DiaryDTO>> getPieceOfCakeDiary(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException(0, "No Matched User Id"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException("No Matched User Id"));
         return new Response<>(
                 user.getHabits()
                         .stream()
@@ -62,7 +62,7 @@ public class DiaryApplicationService {
     }
 
     public Response<List<DiaryDTO>> getWholeCakeDiary(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException(0, "No Matched User Id"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException("No Matched User Id"));
         return new Response<>(
                 user.getHabits()
                         .stream()
@@ -80,7 +80,7 @@ public class DiaryApplicationService {
     }
 
     public Response<HistoryResponse> getCakeHistory(Long userId, Long categoryId) {
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException(0, "No Matched Category Id"));
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException("No Matched Category Id"));
         return new Response<HistoryResponse>(
                 new HistoryResponse(
                         category.getHabitType().getName(),

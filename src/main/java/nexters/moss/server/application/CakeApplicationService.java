@@ -35,8 +35,8 @@ public class CakeApplicationService {
 
     @Transactional
     public Response<Long> sendCake(Long userId, CreateNewCakeRequest createNewCakeRequest) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException(0, "No Matched User"));
-        Category category = categoryRepository.findById(createNewCakeRequest.getCategoryId()).orElseThrow(() -> new NotFoundException(0, "No Matched Category"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException("No Matched User"));
+        Category category = categoryRepository.findById(createNewCakeRequest.getCategoryId()).orElseThrow(() -> new NotFoundException("No Matched Category"));
         return new Response<Long>(
                 pieceOfCakeSendRepository.save(
                         SentPieceOfCake.builder()
@@ -49,9 +49,9 @@ public class CakeApplicationService {
     }
 
     public Response<NewCakeDTO> getCake(Long userId, Long categoryId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException(0, "No Matched User"));
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException(0, "No Matched Category"));
-        SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findRandomByUser_IdAndCategory_Id(userId, categoryId).orElseThrow(() -> new NotFoundException(0, "Has no remain cake message"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException("No Matched User"));
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException("No Matched Category"));
+        SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findRandomByUser_IdAndCategory_Id(userId, categoryId).orElseThrow(() -> new NotFoundException("Has no remain cake message"));
 
         ReceivedPieceOfCake receivedPOC = pieceOfCakeReceiveRepository.save(
                 ReceivedPieceOfCake.builder()
