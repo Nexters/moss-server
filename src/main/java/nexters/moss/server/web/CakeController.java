@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/cake")
+@RequestMapping("/api/cake")
 public class CakeController {
     private CakeApplicationService cakeApplicationService;
     private HttpServletRequest httpServletRequest;
@@ -22,7 +22,7 @@ public class CakeController {
         this.httpServletRequest = httpServletRequest;
     }
 
-    @PostMapping("")
+    @PostMapping
     @ResponseStatus(value = HttpStatus.OK)
     public Response<Long> sendCake(@RequestBody CreateNewCakeRequest createNewCakeRequest) {
         return cakeApplicationService.sendCake(

@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
-@RequestMapping("/diary")
+@RequestMapping("/api/diary")
 public class DiaryController {
     private DiaryApplicationService diaryApplicationService;
     private HttpServletRequest httpServletRequest;

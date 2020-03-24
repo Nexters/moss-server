@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("user")
+@RequestMapping("/api/user")
 @AllArgsConstructor
 public class UserController {
     private UserApplicationService userApplicationService;
@@ -31,7 +31,7 @@ public class UserController {
             @ApiResponse(code = 404, message = "찾을 수 없는 리소스 요청"),
             @ApiResponse(code = 409, message = "중복된 리소스 오류")
     })
-    @PostMapping("")
+    @PostMapping
     @ResponseStatus(value = HttpStatus.OK)
     public Response join(
             @ApiParam(value = "신규 회원이 입력한 닉네임", required = true) @RequestBody String nickname
@@ -55,7 +55,7 @@ public class UserController {
             @ApiResponse(code = 404, message = "찾을 수 없는 리소스 요청"),
             @ApiResponse(code = 409, message = "중복된 리소스 오류")
     })
-    @DeleteMapping("")
+    @DeleteMapping
     @ResponseStatus(value = HttpStatus.OK)
     public Response<Long> leave() {
         return userApplicationService.leave((Long) httpServletRequest.getAttribute("userId"));
@@ -73,7 +73,7 @@ public class UserController {
             @ApiResponse(code = 404, message = "찾을 수 없는 리소스 요청"),
             @ApiResponse(code = 409, message = "중복된 리소스 오류")
     })
-    @GetMapping("")
+    @GetMapping
     @ResponseStatus(value = HttpStatus.OK)
     public Response<String> getUserInfo() {
         return userApplicationService.getUserInfo((Long) httpServletRequest.getAttribute("userId"));

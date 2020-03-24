@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
-@RequestMapping("habit")
+@RequestMapping("/api/habit")
 public class HabitController {
     private HabitApplicationService habitApplicationService;
     private HttpServletRequest httpServletRequest;

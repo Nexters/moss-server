@@ -3,6 +3,8 @@ package nexters.moss.server.cake;
 import nexters.moss.server.application.CakeApplicationService;
 import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.application.dto.cake.CreateNewCakeRequest;
+import nexters.moss.server.application.dto.cake.NewCakeDTO;
+import nexters.moss.server.application.value.ImageEvent;
 import nexters.moss.server.domain.model.Category;
 import nexters.moss.server.domain.model.Habit;
 import nexters.moss.server.domain.model.SentPieceOfCake;

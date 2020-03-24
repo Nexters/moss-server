@@ -42,6 +42,7 @@ public class SwaggerConfig {
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 // error.* 제외. 스프링에서 기본 설정된것.
+                .paths(PathSelectors.ant("/api/**"))
                 .paths(Predicates.not(PathSelectors.regex("/error.*")))
                 .build();
     }

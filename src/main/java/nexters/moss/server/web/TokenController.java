@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("token")
+@RequestMapping("/api/token")
 public class TokenController {
     private UserApplicationService userApplicationService;
 
@@ -28,7 +28,7 @@ public class TokenController {
             @ApiResponse(code = 404, message = "찾을 수 없는 리소스 요청"),
             @ApiResponse(code = 409, message = "중복된 리소스 오류")
     })
-    @PostMapping("")
+    @PostMapping
     @ResponseStatus(value = HttpStatus.OK)
     public Response<String> login(
             @ApiParam(value = "로그인 하려는 회원의 카카오 access token", required = true) @RequestHeader String accessToken

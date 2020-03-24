@@ -31,6 +31,8 @@ services:
   app:
     container_name: habikery-jar
     image: habikery/moss:latest
+    volumes:
+      - /home/habikery/resources:/home/habikery/resources
     #    build:
     #      context: .
     #      dockerfile: ./Dockerfile

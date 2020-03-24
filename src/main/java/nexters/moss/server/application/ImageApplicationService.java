@@ -1,6 +1,6 @@
 package nexters.moss.server.application;
 
-import nexters.moss.server.application.dto.S3;
+import nexters.moss.server.application.dto.Image;
 import nexters.moss.server.domain.value.HabitType;
 import nexters.moss.server.application.value.ImageEvent;
 import org.springframework.stereotype.Service;
@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 public class ImageApplicationService {
     private final String GIF = "gif";
     private final String PNG = "png";
-    private S3 s3;
+    private Image image;
 
-    public ImageApplicationService(S3 s3) {
-        this.s3 = s3;
+    public ImageApplicationService(Image image) {
+        this.image = image;
     }
 
     public String getMoveImagePath(HabitType habitType, ImageEvent event) {
@@ -28,8 +28,8 @@ public class ImageApplicationService {
     }
 
     private String imageBaseUrlBuilder(HabitType habitType, ImageEvent event) {
-        StringBuilder stringBuilder = new StringBuilder(s3.getUrl());
-        return stringBuilder
+        StringBuilder url = new StringBuilder(image.getUrl());
+        return url
                 .append("/")
                 .append(habitType.getKey())
                 .append("/")
