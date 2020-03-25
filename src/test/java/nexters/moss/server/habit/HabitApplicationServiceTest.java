@@ -1,5 +1,6 @@
 package nexters.moss.server.habit;
 
+import nexters.moss.server.TestConfiguration;
 import nexters.moss.server.application.HabitApplicationService;
 import nexters.moss.server.application.dto.HabitHistory;
 import nexters.moss.server.application.dto.Response;
@@ -11,6 +12,7 @@ import nexters.moss.server.domain.repository.*;
 import nexters.moss.server.domain.service.HabitRecordService;
 import nexters.moss.server.domain.value.CakeType;
 import nexters.moss.server.domain.value.HabitType;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,6 +35,9 @@ public class HabitApplicationServiceTest {
     private Category testCategory;
 
     private User testUser;
+
+    @Autowired
+    private TestConfiguration testConfiguration;
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -67,6 +72,11 @@ public class HabitApplicationServiceTest {
                         null
                 )
         );
+    }
+
+    @After
+    public void tearDown() {
+        testConfiguration.tearDown();
     }
 
     @Test

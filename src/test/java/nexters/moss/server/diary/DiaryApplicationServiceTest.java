@@ -1,6 +1,8 @@
 package nexters.moss.server.diary;
 
+import nexters.moss.server.TestConfiguration;
 import nexters.moss.server.application.DiaryApplicationService;
+import nexters.moss.server.application.dto.Image;
 import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.application.dto.diary.DiaryDTO;
 import nexters.moss.server.application.dto.diary.HistoryResponse;
@@ -9,6 +11,7 @@ import nexters.moss.server.domain.repository.*;
 import nexters.moss.server.domain.value.CakeType;
 import nexters.moss.server.domain.value.HabitType;
 import nexters.moss.server.application.value.ImageEvent;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,6 +36,10 @@ public class DiaryApplicationServiceTest {
     private SentPieceOfCake sentPieceOfCake;
     private WholeCake wholeCake;
 
+    @Autowired
+    private TestConfiguration testConfiguration;
+    @Autowired
+    private Image image;
     @Autowired
     private DiaryApplicationService diaryApplicationService;
     @Autowired
@@ -69,6 +76,11 @@ public class DiaryApplicationServiceTest {
 
     }
 
+    @After
+    public void tearDown() {
+        testConfiguration.tearDown();
+    }
+
     @Test
     public void getPieceOfCakeDiaryTest() {
         Long userId = receiver.getId();
@@ -77,7 +89,7 @@ public class DiaryApplicationServiceTest {
         Assert.assertNotNull(res.getData());
         Assert.assertEquals(sentPieceOfCake.getCategory().getCakeType().getName(), res.getData().get(0).getCakeName());
 
-        String imagePath = "49.50.167.14/" + category.getHabitType().getKey() + "/" + ImageEvent.PIECE_OF_CAKE_DIARY.getName() + "_" + res.getData().get(0).getCount() + ".png";
+        String imagePath = image.getUrl() + "/" + category.getHabitType().getKey() + "/" + ImageEvent.PIECE_OF_CAKE_DIARY.getName() + "_" + res.getData().get(0).getCount() + ".png";
         Assert.assertEquals(imagePath, res.getData().get(0).getImagePath());
 
     }
@@ -90,7 +102,7 @@ public class DiaryApplicationServiceTest {
         Assert.assertNotNull(res.getData());
         Assert.assertEquals(wholeCake.getCategory().getCakeType().getName(), res.getData().get(0).getCakeName());
 
-        String imagePath = "49.50.167.14/" + wholeCake.getCategory().getHabitType().getKey() + "/" + ImageEvent.WHOLE_CAKE_DIARY.getName() + ".png";
+        String imagePath = image.getUrl() + "/" + wholeCake.getCategory().getHabitType().getKey() + "/" + ImageEvent.WHOLE_CAKE_DIARY.getName() + ".png";
         Assert.assertEquals(imagePath, res.getData().get(0).getImagePath());
 
     }
@@ -104,7 +116,7 @@ public class DiaryApplicationServiceTest {
         Assert.assertNotNull(res.getData());
         Assert.assertEquals(wholeCake.getCategory().getCakeType().getName(), res.getData().getCakeName());
 
-        String imagePath = "49.50.167.14/" + wholeCake.getCategory().getHabitType().getKey() + "/" + ImageEvent.HISTORY.getName() + ".gif";
+        String imagePath = image.getUrl() + "/" + wholeCake.getCategory().getHabitType().getKey() + "/" + ImageEvent.HISTORY.getName() + ".gif";
         Assert.assertEquals(imagePath, res.getData().getImagePath());
 
     }

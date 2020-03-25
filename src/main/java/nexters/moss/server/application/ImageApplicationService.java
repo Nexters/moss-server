@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class ImageApplicationService {
     private final String GIF = "gif";
     private final String PNG = "png";
-    private Image image;
+    private final Image image;
 
     public ImageApplicationService(Image image) {
         this.image = image;

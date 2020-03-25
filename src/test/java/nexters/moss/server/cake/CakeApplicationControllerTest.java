@@ -1,5 +1,6 @@
 package nexters.moss.server.cake;
 
+import nexters.moss.server.TestConfiguration;
 import nexters.moss.server.application.UserApplicationService;
 import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.domain.model.Category;
@@ -11,6 +12,7 @@ import nexters.moss.server.domain.repository.UserRepository;
 import nexters.moss.server.domain.service.SocialTokenService;
 import nexters.moss.server.domain.value.CakeType;
 import nexters.moss.server.domain.value.HabitType;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,70 +35,79 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 public class CakeApplicationControllerTest {
-        @Autowired
-        TestRestTemplate testRestTemplate;
+    @Autowired
+    TestRestTemplate testRestTemplate;
 
-        @LocalServerPort
-        int randomServerPort;
+    @LocalServerPort
+    int randomServerPort;
 
-        @Autowired
-        private UserRepository userRepository;
-        @Autowired
-        private UserApplicationService userApplicationService;
-        @Autowired
-        private CategoryRepository categoryRepository;
-        @Autowired
-        private PieceOfCakeSendRepository pieceOfCakeSendRepository;
+    @Autowired
+    private TestConfiguration testConfiguration;
 
-        @MockBean(name = "socialTokenService")
-        private SocialTokenService socialTokenService;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private UserApplicationService userApplicationService;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private PieceOfCakeSendRepository pieceOfCakeSendRepository;
 
-        private String testAccessToken;
-        private String habikeryToken;
-        private User testUser;
-        private Category category;
+    @MockBean(name = "socialTokenService")
+    private SocialTokenService socialTokenService;
 
-        @Before
-        public void setup() {
-            testAccessToken = "accessToken";
-            testUser = User.builder()
-                    .socialId(12345678L)
-                    .nickname("nickname")
-                    .build();
+    private String testAccessToken;
+    private String habikeryToken;
+    private User testUser;
+    private Category category;
 
-            given(socialTokenService.getSocialUserId(testAccessToken))
-                    .willReturn(testUser.getSocialId());
+    @Before
+    public void setup() {
+        testAccessToken = "accessToken";
+        testUser = User.builder()
+                .socialId(12345678L)
+                .nickname("nickname")
+                .build();
 
-            userRepository.save(testUser);
-            habikeryToken = userApplicationService.login(testAccessToken).getData();
+        given(socialTokenService.getSocialUserId(testAccessToken))
+                .willReturn(testUser.getSocialId());
 
-            List<HabitType> habitTypes = Arrays.asList(HabitType.values());
-            List<CakeType> cakeTypes = Arrays.asList(CakeType.values());
-            category = categoryRepository.save(new Category(null, habitTypes.get(0), cakeTypes.get(0)));
-        }
+        userRepository.save(testUser);
+        habikeryToken = userApplicationService.login(testAccessToken).getData();
 
-        @Test
-        public void sendCakeTest() throws URISyntaxException {
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.add("habikeryToken", habikeryToken);
+        List<HabitType> habitTypes = Arrays.asList(HabitType.values());
+        List<CakeType> cakeTypes = Arrays.asList(CakeType.values());
+        category = categoryRepository.save(new Category(null, habitTypes.get(0), cakeTypes.get(0)));
+    }
 
-            URI uri = new URI("/cake");
+    @After
+    public void tearDown() {
+        testConfiguration.tearDown();
+    }
 
-            Map<String,Object> data = new HashMap<>();
-            data.put("note", "test~!!");
-            data.put("categoryId",category.getId());
+    @Test
+    public void sendCakeTest() throws URISyntaxException {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("habikeryToken", habikeryToken);
 
-            HttpEntity<Map<String,Object>> req = new HttpEntity<>(data, httpHeaders);
+        URI uri = new URI("/api/cake");
 
-            Response<Integer> res = this.testRestTemplate.postForObject(uri, req, Response.class);
-            assertThat(res).isNotNull();
+        Map<String, Object> data = new HashMap<>();
+        data.put("note", "test~!!");
+        data.put("categoryId", category.getId());
 
-            long pieceOfCakeId = res.getData().longValue();
-            SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findById(pieceOfCakeId).get();
-            assertThat(data.get("note")).isEqualTo(sentPieceOfCake.getNote());
-        }
+        HttpEntity<Map<String, Object>> req = new HttpEntity<>(data, httpHeaders);
+
+        Response<Integer> res = this.testRestTemplate.postForObject(uri, req, Response.class);
+        assertThat(res).isNotNull();
+
+        long pieceOfCakeId = res.getData().longValue();
+        SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findById(pieceOfCakeId).get();
+        assertThat(data.get("note")).isEqualTo(sentPieceOfCake.getNote());
+    }
 }

@@ -1,10 +1,9 @@
 package nexters.moss.server.cake;
 
+import nexters.moss.server.TestConfiguration;
 import nexters.moss.server.application.CakeApplicationService;
 import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.application.dto.cake.CreateNewCakeRequest;
-import nexters.moss.server.application.dto.cake.NewCakeDTO;
-import nexters.moss.server.application.value.ImageEvent;
 import nexters.moss.server.domain.model.Category;
 import nexters.moss.server.domain.model.Habit;
 import nexters.moss.server.domain.model.SentPieceOfCake;
@@ -15,6 +14,7 @@ import nexters.moss.server.domain.repository.PieceOfCakeSendRepository;
 import nexters.moss.server.domain.repository.UserRepository;
 import nexters.moss.server.domain.value.CakeType;
 import nexters.moss.server.domain.value.HabitType;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,6 +34,9 @@ public class CakeApplicationServiceTest {
     private Habit testHabit;
     private User sender;
     private Category category;
+
+    @Autowired
+    private TestConfiguration testConfiguration;
 
     @Autowired
     private CakeApplicationService cakeApplicationService;
@@ -62,7 +65,12 @@ public class CakeApplicationServiceTest {
         sender = userRepository.save(new User(null, null, "accounToken", "nickName", null, null, null));
 
         testHabit = habitRepository.save(new Habit(null, category, sender, null, 0, false, false));
-        }
+    }
+
+    @After
+    public void tearDown() {
+        testConfiguration.tearDown();
+    }
 
     @Test
     public void createNewCakeTest() {

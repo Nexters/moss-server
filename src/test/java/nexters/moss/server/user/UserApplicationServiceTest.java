@@ -1,5 +1,6 @@
 package nexters.moss.server.user;
 
+import nexters.moss.server.TestConfiguration;
 import nexters.moss.server.application.UserApplicationService;
 import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.domain.model.*;
@@ -10,6 +11,7 @@ import nexters.moss.server.domain.repository.UserRepository;
 import nexters.moss.server.domain.value.CakeType;
 import nexters.moss.server.domain.value.HabitType;
 import nexters.moss.server.domain.service.HabikeryTokenService;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,6 +32,9 @@ import static org.mockito.BDDMockito.given;
 @SpringBootTest
 @Transactional
 public class UserApplicationServiceTest {
+    @Autowired
+    private TestConfiguration testConfiguration;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -70,6 +75,11 @@ public class UserApplicationServiceTest {
 
         given(socialTokenService.getSocialUserId(testAccessToken))
                 .willReturn(testUser.getSocialId());
+    }
+
+    @After
+    public void tearDown() {
+        testConfiguration.tearDown();
     }
 
     @Test

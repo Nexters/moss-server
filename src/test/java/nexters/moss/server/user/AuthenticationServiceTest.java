@@ -1,9 +1,11 @@
 package nexters.moss.server.user;
 
+import nexters.moss.server.TestConfiguration;
 import nexters.moss.server.domain.model.User;
 import nexters.moss.server.domain.repository.UserRepository;
 import nexters.moss.server.domain.service.AuthenticationService;
 import nexters.moss.server.domain.service.HabikeryTokenService;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +23,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 @SpringBootTest
 public class AuthenticationServiceTest {
+    @Autowired
+    private TestConfiguration testConfiguration;
+
     @Autowired
     private AuthenticationService authenticationService;
 
@@ -42,6 +47,11 @@ public class AuthenticationServiceTest {
         String testHabikeryToken = habikeryTokenService.createToken(user.getId(), "accessToken");
         user.setHabikeryToken(testHabikeryToken);
         userRepository.save(user);
+    }
+
+    @After
+    public void tearDown() {
+        testConfiguration.tearDown();
     }
 
     @Test(expected = Test.None.class)

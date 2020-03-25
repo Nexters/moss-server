@@ -1,5 +1,6 @@
 package nexters.moss.server.diary;
 
+import nexters.moss.server.TestConfiguration;
 import nexters.moss.server.application.UserApplicationService;
 import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.application.dto.diary.DiaryDTO;
@@ -9,6 +10,7 @@ import nexters.moss.server.domain.repository.*;
 import nexters.moss.server.domain.service.SocialTokenService;
 import nexters.moss.server.domain.value.CakeType;
 import nexters.moss.server.domain.value.HabitType;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,6 +46,8 @@ public class DiaryApplicationControllerTest {
     @LocalServerPort
     int randomServerPort;
 
+    @Autowired
+    private TestConfiguration testConfiguration;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -115,10 +119,15 @@ public class DiaryApplicationControllerTest {
         wholeCake = wholeCakeRepository.save(new WholeCake(null, receiver, habit, category));
     }
 
+    @After
+    public void tearDown() {
+        testConfiguration.tearDown();
+    }
+
     @Test
     public void getPieceOfCakeDiaryTest() throws URISyntaxException {
 
-        ResponseEntity<Response<Object>> res = getTestResponse("/diary/piece", new ParameterizedTypeReference<Response<List<DiaryDTO>>>(){});
+        ResponseEntity<Response<Object>> res = getTestResponse("/api/diary/piece", new ParameterizedTypeReference<Response<List<DiaryDTO>>>(){});
         List<DiaryDTO> diaries = (List<DiaryDTO>) res.getBody().getData();
 
         assertThat(res.getBody().getData()).isNotNull();
@@ -131,7 +140,7 @@ public class DiaryApplicationControllerTest {
     @Test
     public void getWholeCakeDiaryTest() throws URISyntaxException {
 
-        ResponseEntity<Response<Object>> res = getTestResponse("/diary/whole", new ParameterizedTypeReference<Response<List<DiaryDTO>>>(){});
+        ResponseEntity<Response<Object>> res = getTestResponse("/api/diary/whole", new ParameterizedTypeReference<Response<List<DiaryDTO>>>(){});
 
         List<DiaryDTO> diaries = (List<DiaryDTO>) res.getBody().getData();
 
@@ -145,7 +154,7 @@ public class DiaryApplicationControllerTest {
     @Test
     public void getCakeHistoryTest() throws URISyntaxException {
 
-        ResponseEntity<Response<Object>> res = getTestResponse("/diary/history?categoryId=" + category.getId(), new ParameterizedTypeReference<Response<HistoryResponse>>(){});
+        ResponseEntity<Response<Object>> res = getTestResponse("/api/diary/history?categoryId=" + category.getId(), new ParameterizedTypeReference<Response<HistoryResponse>>(){});
 
         HistoryResponse historyResponse = (HistoryResponse) res.getBody().getData();
 
