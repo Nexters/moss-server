@@ -12,7 +12,7 @@ services:
     networks:
       - back
     depends_on:
-      - app
+      - habikery-api
   postgresql:
     container_name: habikery-postgres
     image: postgres:11.2-alpine
@@ -28,16 +28,18 @@ services:
       - back
     restart: always
 
-  app:
-    container_name: habikery-jar
+  habikery-api:
+    container_name: habikery-api
     image: habikery/moss:latest
     volumes:
-      - /home/habikery/resources:/home/habikery/resources
-    #    build:
-    #      context: .
-    #      dockerfile: ./Dockerfile
-    #    ports:
-    #      - "8080:8080"
+      - /home/habikery/resources:/home/habikery/resources # image path
+      - ./config:/config # config path
+    entrypoint:
+      - java
+      - -jar
+      - -Dspring.config.location=./config/application.yaml
+      - -Dspring.profiles.active=default
+      - dodream-api.jar
     depends_on:
       - postgresql
     networks:
