@@ -21,7 +21,7 @@ package nexters.moss.server.user;
 //    public void getSocialUserIdTest() {
 //        // given
 //        Long validatedUserId = 1279527596L;
-//        String accessToken = "";
+//        String accessToken = "JYvVEG9wWFNqkkqEgLZoea1Bv7C9wuY69AvCZgo9dGgAAAFxT2cOxQ";
 //
 //        // when
 //        Long socialUserId = socialTokenService.getSocialUserId(accessToken);

@@ -43,7 +43,7 @@ public class UserApplicationService {
     public Response<String> login(String accessToken) {
         Long socialId = socialTokenService.getSocialUserId(accessToken);
         User user = userRepository.findBySocialId(socialId)
-                .orElseThrow(() -> new UnauthorizedException("No Matched Habikery User with Social ID"));
+                .orElseThrow(() -> new UnauthorizedException("No Matched Habikery User with Social ID: " + socialId.toString()));
 
         String habikeryToken = habikeryTokenService.createToken(user.getId(), accessToken);
         user.setHabikeryToken(habikeryToken);

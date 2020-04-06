@@ -6,6 +6,7 @@ import nexters.moss.server.config.exception.UnauthorizedException;
 import nexters.moss.server.domain.service.SocialTokenService;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ public class KakaoTokenService implements SocialTokenService {
 
     // TODO: export to config file
     public KakaoTokenService(ObjectMapper objectMapper) {
-        this.requestUrl = "https://kapi.kakao.com/v2/user/me";
+        this.requestUrl = "https://kapi.kakao.com/v1/user";
         this.objectMapper = objectMapper;
     }
 
@@ -30,10 +31,10 @@ public class KakaoTokenService implements SocialTokenService {
         }
 
         return httpTemplate(accessToken, (client, mapper) -> {
-            HttpPost post = new HttpPost(requestUrl);
-            post.addHeader("Authorization", "Bearer " + accessToken);
+            HttpGet get = new HttpGet(requestUrl + "/access_token_info");
+            get.addHeader("Authorization", "Bearer " + accessToken);
 
-            HttpResponse response = client.execute(post);
+            HttpResponse response = client.execute(get);
             JsonNode jsonNode = mapper.readTree(response.getEntity().getContent());
 
             return jsonNode.path("id").asLong();
