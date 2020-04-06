@@ -6,8 +6,8 @@ import lombok.Getter;
 public enum HabitType {
     WATER("water", "물마시기"),
     STRETCHING("stretching", "스트레칭"),
-    MEDITATION("meditation", "명상"),
-    WALK("walk", "산책"),
+    MEDITATION("meditation", "명상하기"),
+    WALK("walk", "산책하기"),
     NEWS("news", "뉴스보기"),
     BREAKFAST("breakfast", "아침식사"),
     DIARY("diary", "일기쓰기"),

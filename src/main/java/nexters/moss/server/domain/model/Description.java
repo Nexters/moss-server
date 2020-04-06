@@ -26,3 +26,13 @@ public class Description {
     @Column(name = "diary")
     private String diary;
 }
+/*
+        0. 물마시기
+        1. 스트레칭
+        2. 명상하기
+        3. 산책하기
+        4. 뉴스보기
+        5. 아침식
+        6. 일기쓰기
+        7. 독서하기
+         */

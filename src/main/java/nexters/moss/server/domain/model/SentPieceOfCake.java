@@ -2,6 +2,7 @@ package nexters.moss.server.domain.model;
 
 import lombok.*;
 import nexters.moss.server.application.dto.cake.CreateNewCakeRequest;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -31,6 +32,7 @@ public class SentPieceOfCake extends TimeProvider {
     private Category category;
 
     @Column(name = "note")
+    @Length(min = 3, max = 14)
     private String note;
 
     @OneToMany(mappedBy = "sentPieceOfCake", cascade = CascadeType.ALL, orphanRemoval = true)

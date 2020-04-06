@@ -10,12 +10,12 @@ resources:
 
 spring:
   profiles:
-    active: test
+    active: develop
 ---
 spring:
   profiles: develop
   datasource:
-    url: jdbc:postgresql://postgresql:5432/habikery
+    url: jdbc:postgresql://localhost:5432/habikery
     username: moss
     password: habikery
     platform: postgres

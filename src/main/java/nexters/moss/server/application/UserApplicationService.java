@@ -27,7 +27,7 @@ public class UserApplicationService {
         Long socialId = socialTokenService.getSocialUserId(accessToken);
 
         if (userRepository.existsBySocialId(socialId)) {
-            throw new AlreadyExistException("Duplicated Habikery User with Social ID");
+            throw new AlreadyExistException("Duplicated Habikery User with Social ID: " + socialId.toString());
         }
 
         userRepository.save(

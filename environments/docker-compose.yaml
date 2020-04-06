@@ -38,8 +38,8 @@ services:
       - java
       - -jar
       - -Dspring.config.location=./config/application.yaml
-      - -Dspring.profiles.active=default
-      - dodream-api.jar
+      - -Dspring.profiles.active=develop
+      - habikery-api.jar
     depends_on:
       - postgresql
     networks:

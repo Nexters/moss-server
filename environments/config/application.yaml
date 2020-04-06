@@ -8,7 +8,7 @@ resources:
 
 spring:
   profiles:
-    active: develop,init
+    active: develop
 ---
 spring:
   profiles: develop
