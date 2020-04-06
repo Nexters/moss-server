@@ -136,6 +136,11 @@ public class HabitApplicationService {
         if (habitService.isDoneHabit(habit)) {
             throw new AlreadyExistException("Already done habit");
         }
+        habit.count();
+        habit.offFirstCheck();
+        if(habit.isFirstCheck()) {
+            habit.onFirstCheck();
+        }
         habitService.doDoneHabit(habit);
         habitRepository.save(habit);
 

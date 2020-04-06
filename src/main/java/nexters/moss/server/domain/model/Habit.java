@@ -42,6 +42,10 @@ public class Habit extends TimeProvider {
     @Builder.Default
     private Boolean isFirstCheck = false;
 
+    @Column(name = "checkCount", columnDefinition = "integer default 0")
+    @Builder.Default
+    private int checkCount = 0;
+
     public Habit(
             Long categoryId,
             Long userId
@@ -64,6 +68,21 @@ public class Habit extends TimeProvider {
 
     public void onFirstCheck() {
         this.isFirstCheck = true;
+    }
+
+    public void offFirstCheck() {
+        this.isFirstCheck = false;
+    }
+
+    public void count() {
+        this.checkCount++;
+    }
+
+    public boolean isFirstCheck() {
+        if(this.checkCount == 1) {
+            return true;
+        }
+        return false;
     }
 
     public void increaseOneOrder() {

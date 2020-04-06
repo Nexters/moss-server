@@ -16,7 +16,6 @@ public class HabitService {
     }
 
     public void doDoneHabit(Habit habit) {
-        habit.onFirstCheck();
         habitRecordService.doneHabitRecord(habit.getHabitRecords().get(1));
     }
 
