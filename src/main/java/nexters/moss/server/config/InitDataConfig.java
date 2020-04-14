@@ -26,8 +26,6 @@ public class InitDataConfig {
     @Autowired
     HabitRepository habitRepository;
     @Autowired
-    HabitRecordRepository habitRecordRepository;
-    @Autowired
     PieceOfCakeSendRepository pieceOfCakeSendRepository;
 
     @Autowired

@@ -25,9 +25,6 @@ public class TestConfiguration {
     private HabitRepository habitRepository;
 
     @Autowired
-    private HabitRecordRepository habitRecordRepository;
-
-    @Autowired
     private PieceOfCakeSendRepository pieceOfCakeSendRepository;
 
     @Autowired
@@ -40,7 +37,6 @@ public class TestConfiguration {
     private WholeCakeRepository wholeCakeRepository;
 
     public void tearDown() {
-        habitRecordRepository.deleteAll();
         pieceOfCakeReceiveRepository.deleteAll();
         pieceOfCakeSendRepository.deleteAll();
         wholeCakeRepository.deleteAll();

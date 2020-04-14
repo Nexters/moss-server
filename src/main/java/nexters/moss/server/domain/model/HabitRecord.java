@@ -20,15 +20,8 @@ public class HabitRecord extends TimeProvider {
     @Column(name = "habit_record_id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "habit_id", nullable = false)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private Habit habit;
+    @Column(name = "user_id")
+    private Long userId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "habit_status")
@@ -40,20 +33,18 @@ public class HabitRecord extends TimeProvider {
     @Setter
     private LocalDateTime date;
 
-    public HabitRecord(
-            Long userId,
-            Long habitId,
-            HabitStatus habitStatus,
-            LocalDateTime date
-    ) {
-        this.user = User.builder()
-                .id(userId)
-                .build();
-        this.habit = Habit.builder()
-                .id(habitId)
-                .build();
-        this.habitStatus = habitStatus;
-        this.date = date;
+    public boolean isDone() {
+        if(this.habitStatus == HabitStatus.DONE || this.habitStatus == HabitStatus.CAKE_DONE) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isCakeDoneRecord() {
+        if(this.habitStatus == HabitStatus.CAKE_DONE) {
+            return true;
+        }
+        return false;
     }
 
     public void switchHabitStatus(HabitStatus habitStatus) {

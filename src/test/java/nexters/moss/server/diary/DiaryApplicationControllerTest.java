@@ -64,8 +64,6 @@ public class DiaryApplicationControllerTest {
     private WholeCakeRepository wholeCakeRepository;
     @Autowired
     private HabitRepository habitRepository;
-    @Autowired
-    private HabitRecordRepository habitRecordRepository;
 
 
     @MockBean(name = "socialTokenService")
@@ -111,8 +109,7 @@ public class DiaryApplicationControllerTest {
         category = categoryRepository.save(new Category(null, habitTypes.get(0), cakeTypes.get(0)));
         descriptionRepository.save(new Description(null, category, "receivePieceOfCake", "diary"));
 
-        habit = habitRepository.save(new Habit(null, category, receiver, null, 0, false, false));
-        habitRecordRepository.save(new HabitRecord(null, receiver, habit, null, null));
+        habit = habitRepository.save(new Habit(null, category, receiver.getId(), null, 0, false, false, 0));
 
         sentPieceOfCake = pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, category, "note", null));
         pieceOfCakeReceiveRepository.save(new ReceivedPieceOfCake(null, receiver, sentPieceOfCake, category));

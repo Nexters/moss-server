@@ -7,7 +7,7 @@ import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.application.dto.cake.NewCakeDTO;
 import nexters.moss.server.application.value.ImageEvent;
 import nexters.moss.server.config.exception.AlreadyExistException;
-import nexters.moss.server.config.exception.NotFoundException;
+import nexters.moss.server.config.exception.ResourceNotFoundException;
 import nexters.moss.server.config.exception.UnauthorizedException;
 import nexters.moss.server.domain.model.*;
 import nexters.moss.server.domain.repository.*;
@@ -16,10 +16,8 @@ import nexters.moss.server.domain.model.Habit;
 import nexters.moss.server.domain.model.HabitRecord;
 import nexters.moss.server.domain.model.User;
 import nexters.moss.server.domain.repository.CategoryRepository;
-import nexters.moss.server.domain.repository.HabitRecordRepository;
 import nexters.moss.server.domain.repository.HabitRepository;
 import nexters.moss.server.domain.repository.UserRepository;
-import nexters.moss.server.domain.service.HabitRecordService;
 import nexters.moss.server.domain.service.HabitService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,8 +30,6 @@ import java.util.stream.Collectors;
 public class HabitApplicationService {
     private CategoryRepository categoryRepository;
     private HabitRepository habitRepository;
-    private HabitRecordRepository habitRecordRepository;
-    private HabitRecordService habitRecordService;
     private HabitService habitService;
     private UserRepository userRepository;
     private PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository;
@@ -44,8 +40,6 @@ public class HabitApplicationService {
     public HabitApplicationService(
             CategoryRepository categoryRepository,
             HabitRepository habitRepository,
-            HabitRecordRepository habitRecordRepository,
-            HabitRecordService habitRecordService,
             HabitService habitService,
             UserRepository userRepository,
             PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository,
@@ -55,8 +49,6 @@ public class HabitApplicationService {
     ) {
         this.categoryRepository = categoryRepository;
         this.habitRepository = habitRepository;
-        this.habitRecordRepository = habitRecordRepository;
-        this.habitRecordService = habitRecordService;
         this.habitService = habitService;
         this.userRepository = userRepository;
         this.pieceOfCakeReceiveRepository = pieceOfCakeReceiveRepository;
@@ -66,22 +58,20 @@ public class HabitApplicationService {
     }
 
     public Response<HabitHistory> createHabit(Long userId, Long categoryId) {
-        User user = this.findUserById(userId);
+        // TODO: user exist validation
         Category category = this.findCategoryById(categoryId);
 
-        if (habitRepository.existsByUser_IdAndCategory_Id(userId, categoryId)) {
+        if (habitRepository.existsByUserIdAndCategory_Id(userId, categoryId)) {
             throw new IllegalArgumentException("Already Has Habit");
         }
-        int habitCount = habitRepository.countAllByUser_Id(userId);
+        int habitCount = habitRepository.countAllByUserId(userId);
         Habit habit = habitRepository.save(
                 Habit.builder()
-                        .user(user)
+                        .userId(userId)
                         .category(category)
                         .order(habitCount)
                         .build()
         );
-        List<HabitRecord> habitRecords = habitRecordService.createHabitRecords(user, habit);
-        habitRecords = habitRecordRepository.saveAll(habitRecords);
         habit.onActivation();
         return new Response(
                 new HabitHistory(
@@ -89,21 +79,21 @@ public class HabitApplicationService {
                         categoryId,
                         category.getHabitType(),
                         habit.getIsFirstCheck(),
-                        habitRecords
+                        habit.getHabitRecords()
                 )
         );
     }
 
     public Response<List<HabitHistory>> getHabit(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException("No Matched User"));
+        List<Habit> habits = habitRepository.findAllByUserId(userId);
 
         return new Response<>(
-                user.getHabits()
+                habits
                         .stream()
                         .map(habit -> {
                                     List<HabitRecord> habitRecords = habit.getHabitRecords();
-                                    if (habitRecordService.refreshHabitHistoryAndReturnIsChanged(habitRecords)) {
-                                        habitRecords = habitRecordRepository.saveAll(habitRecords);
+                                    if (habit.refreshHabitHistory()) {
+                                        habit.changeHabitRecords(habitRecords);
                                     }
                                     return new HabitHistory(
                                             habit.getId(),
@@ -119,7 +109,7 @@ public class HabitApplicationService {
     }
 
     public Response<Long> deleteHabit(Long userId, Long habitId) {
-        List<Habit> habits = habitRepository.findAllByUser_IdOrderByOrderAsc(userId);
+        List<Habit> habits = habitRepository.findAllByUserIdOrderByOrderAsc(userId);
         Habit habit = findHabitById(habits, habitId);
         habitService.refreshHabitsOrderWhenDelete(habits, habit.getOrder());
         habits.remove(habit);
@@ -132,8 +122,8 @@ public class HabitApplicationService {
     // TODO: separate jpa consistence context
     public HabitDoneResponse doneHabit(Long userId, Long habitId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException("No Matched User"));
-        Habit habit = habitRepository.findById(habitId).orElseThrow(() -> new NotFoundException("No Matched Habit"));
-        if (habitService.isDoneHabit(habit)) {
+        Habit habit = habitRepository.findById(habitId).orElseThrow(() -> new ResourceNotFoundException("No Matched Habit"));
+        if (habit.isDone()) {
             throw new AlreadyExistException("Already done habit");
         }
         habit.count();
@@ -141,27 +131,24 @@ public class HabitApplicationService {
         if(habit.isFirstCheck()) {
             habit.onFirstCheck();
         }
-        habitService.doDoneHabit(habit);
+        habit.done();
         habitRepository.save(habit);
 
-        List<HabitRecord> habitRecords = habit.getHabitRecords();
-        if (habitRecordService.refreshHabitHistoryAndReturnIsChanged(habitRecords)) {
-            habitRecords = habitRecordRepository.saveAll(habitRecords);
-        }
+        habit.refreshHabitHistory();
 
-        if (!habitService.isReadyToReceiveCake(habit)) {
+        if (!habit.isReadyToReceiveCake()) {
             return new HabitDoneResponse(
                     new HabitCheckResponse(
                             habit.getId(),
                             habit.getCategory().getHabitType(),
                             habit.getIsFirstCheck(),
-                            habitRecords,
+                            habit.getHabitRecords(),
                             habit.getCategory().getId()
                     ), null
             );
         }
         SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findRandomByUser_IdAndCategory_Id(userId, habit.getCategory().getId())
-                .orElseThrow(() -> new NotFoundException("Has no remain cake message"));
+                .orElseThrow(() -> new ResourceNotFoundException("Has no remain cake message"));
 
         int pieceCount = pieceOfCakeReceiveRepository.countAllByUser_IdAndCategory_Id(userId, habit.getCategory().getId());
 
@@ -186,7 +173,7 @@ public class HabitApplicationService {
                         habit.getId(),
                         habit.getCategory().getHabitType(),
                         habit.getIsFirstCheck(),
-                        habitRecords,
+                        habit.getHabitRecords(),
                         habit.getCategory().getId()
                 ),
                 new NewCakeDTO(
@@ -198,7 +185,7 @@ public class HabitApplicationService {
     }
 
     public Response<Long> changeHabitOrder(Long userId, Long habitId, int changedOrder) {
-        List<Habit> habits = habitRepository.findAllByUser_IdOrderByOrderAsc(userId);
+        List<Habit> habits = habitRepository.findAllByUserIdOrderByOrderAsc(userId);
         if (habits.size() == 0) {
             throw new IllegalArgumentException("User has no habits");
         }
@@ -226,12 +213,12 @@ public class HabitApplicationService {
 
     @Transactional(readOnly = true)
     public Category findCategoryById(Long categoryId) {
-        return categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException("No Matched Category"));
+        return categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("No Matched Category"));
     }
 
     @Transactional(readOnly = true)
     public Habit findHabitById(Long habitId) {
-        return habitRepository.findById(habitId).orElseThrow(() -> new NotFoundException("No Matched Habit"));
+        return habitRepository.findById(habitId).orElseThrow(() -> new ResourceNotFoundException("No Matched Habit"));
     }
 
     private Habit findHabitById(List<Habit> habits, Long habitId) {

@@ -62,9 +62,9 @@ public class CakeApplicationServiceTest {
             categoryRepository.save(new Category(null, habitTypes.get(i), cakeTypes.get(i)));
         }
         category = categoryRepository.save(new Category(null, habitTypes.get(0), cakeTypes.get(0)));
-        sender = userRepository.save(new User(null, null, "accounToken", "nickName", null, null, null));
+        sender = userRepository.save(new User(null, null, "accounToken", "nickName", null, null));
 
-        testHabit = habitRepository.save(new Habit(null, category, sender, null, 0, false, false));
+        testHabit = habitRepository.save(new Habit(null, category, sender.getId(), null, 0, false, false, 0));
     }
 
     @After

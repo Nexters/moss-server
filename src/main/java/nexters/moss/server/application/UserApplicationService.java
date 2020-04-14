@@ -3,7 +3,7 @@ package nexters.moss.server.application;
 import lombok.AllArgsConstructor;
 import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.config.exception.AlreadyExistException;
-import nexters.moss.server.config.exception.NotFoundException;
+import nexters.moss.server.config.exception.ResourceNotFoundException;
 import nexters.moss.server.config.exception.UnauthorizedException;
 import nexters.moss.server.domain.model.*;
 import nexters.moss.server.domain.repository.*;
@@ -54,7 +54,7 @@ public class UserApplicationService {
 
     public Response<Long> leave(Long userId) {
         if(!userRepository.existsById(userId)) {
-            throw  new NotFoundException("No Matched Habikery User with User ID");
+            throw  new ResourceNotFoundException("No Matched Habikery User with User ID");
         }
         userRepository.deleteById(userId);
         return new Response(userId);
@@ -62,14 +62,14 @@ public class UserApplicationService {
 
     public Response<String> getUserInfo(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("No Matched Habikery User with User ID"));
+                .orElseThrow(() -> new ResourceNotFoundException("No Matched Habikery User with User ID"));
 
         return new Response<>(user.getNickname());
     }
 
     public Response report(Long receivedPieceOfCakeId, String reason) {
         ReceivedPieceOfCake receivedPieceOfCake = pieceOfCakeReceiveRepository.findById(receivedPieceOfCakeId)
-                .orElseThrow(() -> new NotFoundException("No Matched ReceivedPieceOfCake"));
+                .orElseThrow(() -> new ResourceNotFoundException("No Matched ReceivedPieceOfCake"));
         User reportedUser = receivedPieceOfCake.getSentPieceOfCake().getUser();
 
         reportRepository.save(

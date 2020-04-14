@@ -13,8 +13,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(e, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity handleNotFoundException(NotFoundException e) {
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity handleNotFoundException(ResourceNotFoundException e) {
         return new ResponseEntity<>(e, HttpStatus.NOT_FOUND);
     }
 

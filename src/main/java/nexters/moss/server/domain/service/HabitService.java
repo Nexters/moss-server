@@ -9,20 +9,6 @@ import java.util.List;
 
 @Service
 public class HabitService {
-    private HabitRecordService habitRecordService;
-
-    public HabitService(HabitRecordService habitRecordService) {
-        this.habitRecordService = habitRecordService;
-    }
-
-    public void doDoneHabit(Habit habit) {
-        habitRecordService.doneHabitRecord(habit.getHabitRecords().get(1));
-    }
-
-    public boolean isDoneHabit(Habit habit) {
-        return habitRecordService.isDoneRecord(habit.getHabitRecords().get(1));
-    }
-
     public void changeHabitsOrder (List<Habit> habits, int habitOrder, int changedOrder) {
         habits.get(habitOrder).changeOrder(changedOrder);
 
@@ -41,9 +27,5 @@ public class HabitService {
         for(int index = deletedHabitOrder + 1; index < habits.size(); index++) {
             habits.get(index).decreaseOneOrder();
         }
-    }
-
-    public boolean isReadyToReceiveCake(Habit habit) {
-        return habitRecordService.isCakeDoneRecord(habit.getHabitRecords().get(1));
     }
 }

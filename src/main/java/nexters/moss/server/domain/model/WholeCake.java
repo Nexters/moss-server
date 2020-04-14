@@ -38,9 +38,7 @@ public class WholeCake extends TimeProvider {
         this.user = User.builder()
                 .id(userId)
                 .build();
-        this.habit = Habit.builder()
-                .id(habitId)
-                .build();
+        this.habit = new Habit(habitId);
         this.category = Category.builder()
                 .id(categoryId)
                 .build();

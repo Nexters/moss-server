@@ -203,7 +203,7 @@ public class UserApplicationServiceTest {
     private Habit setupHabit(Category category, User user) {
         Habit habit = Habit.builder()
                 .category(category)
-                .user(user)
+                .userId(user.getId())
                 .build();
         return habitRepository.save(habit);
     }

@@ -46,8 +46,6 @@ public class DiaryApplicationServiceTest {
     private UserRepository userRepository;
     @Autowired
     private HabitRepository habitRepository;
-    @Autowired
-    private HabitRecordRepository habitRecordRepository;
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -62,12 +60,11 @@ public class DiaryApplicationServiceTest {
 
     @Before
     public void setup() {
-        sender = userRepository.save(new User(null, null, "accountToken", "sender", null, null, null));
-        receiver = userRepository.save(new User(null, null, "accountToken", "receiver", null, null, null));
+        sender = userRepository.save(new User(null, null, "accountToken", "sender", null, null));
+        receiver = userRepository.save(new User(null, null, "accountToken", "receiver", null, null));
         category = categoryRepository.save(new Category(null, HabitType.BREAKFAST, CakeType.APPLE));
 
-        habit = habitRepository.save(new Habit(null, category, receiver, null, 0, false, false));
-        habitRecordRepository.save(new HabitRecord(null, receiver, habit, null, null));
+        habit = habitRepository.save(new Habit(null, category, receiver.getId(), null, 0, false, false, 0));
         descriptionRepository.save(new Description(null, category, "receivePieceOfCake", "diary"));
 
         sentPieceOfCake = pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, category, "note", null));

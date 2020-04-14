@@ -35,7 +35,8 @@ public class HabitServiceTest {
                     null,
                     index,
                     false,
-                    false
+                    false,
+                    0
             );
             testHabits.add(habit);
         }

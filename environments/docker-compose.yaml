@@ -9,10 +9,13 @@ services:
 #      - 443:443
     volumes:
       - /home/habikery/nginx:/etc/nginx
+    environment:
+      TZ: "Asia/Seoul"
     networks:
       - back
     depends_on:
       - habikery-api
+
   postgresql:
     container_name: habikery-postgres
     image: postgres:11.2-alpine
@@ -22,6 +25,7 @@ services:
       POSTGRES_PASSWORD: habikery
       POSTGRES_USER: moss
       POSTGRES_DB: habikery
+      TZ: "Asia/Seoul"
     ports:
       - "5432:5432"
     networks:
@@ -34,10 +38,13 @@ services:
     volumes:
       - /home/habikery/resources:/home/habikery/resources # image path
       - ./config:/config # config path
+    environment:
+      TZ: "Asia/Seoul"
     entrypoint:
       - java
       - -jar
       - -Dspring.config.location=./config/application.yaml
+      - -Duser.timezone=Asia/Seoul
       - -Dspring.profiles.active=develop
       - habikery-api.jar
     depends_on:

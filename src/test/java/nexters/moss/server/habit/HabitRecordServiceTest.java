@@ -1,12 +1,11 @@
 package nexters.moss.server.habit;
 
+import nexters.moss.server.domain.model.Habit;
 import nexters.moss.server.domain.model.HabitRecord;
-import nexters.moss.server.domain.service.HabitRecordService;
 import nexters.moss.server.domain.value.HabitStatus;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -22,9 +21,6 @@ import static nexters.moss.server.domain.value.HabitStatus.*;
 @SpringBootTest
 @ActiveProfiles("test")
 public class HabitRecordServiceTest {
-    @Autowired
-    HabitRecordService habitRecordService;
-
     // start  : NOT_DONE / NOT_DONE / NOT_DONE / CAKE_NOT_DONE / NOT_DONE
     // changed: NOT_DONE / NOT_DONE / NOT_DONE / CAKE_NOT_DONE / NOT_DONE
     // end    : NOT_DONE / NOT_DONE / NOT_DONE / CAKE_NOT_DONE / NOT_DONE
@@ -32,13 +28,14 @@ public class HabitRecordServiceTest {
     public void yesterdayIsNotDoneAndTodayIsNotDoneAndNotChangedAndTodayTest() {
         // given
         LocalDateTime date = LocalDate.now().atTime(0, 0, 0);
-        List<HabitRecord> habitRecords = setupDefaultHabitRecordsWithStartDate(date);
+        Habit habit = Habit.builder().category(null).userId(null).order(0).build();
+        habit.changeHabitRecords(setupDefaultHabitRecordsWithStartDate(date));
+        List<HabitRecord> habitRecords = habit.getHabitRecords();
 
         // when
-        boolean isChanged = habitRecordService.refreshHabitHistoryAndReturnIsChanged(habitRecords);
+        habit.refreshHabitHistory();
 
         // then
-        Assert.assertFalse(isChanged);
         for(int day = 0 ; day < 5 ; day++) {
             if(day == 3) {
                 Assert.assertEquals(CAKE_NOT_DONE, habitRecords.get(day).getHabitStatus());
@@ -55,13 +52,14 @@ public class HabitRecordServiceTest {
     public void yesterdayIsNotDoneAndTodayIsNotDoneAndNotChangedAndNextDayTest() {
         // given
         LocalDateTime date = LocalDate.now().minusDays(1).atTime(0, 0, 0);
-        List<HabitRecord> habitRecords = setupDefaultHabitRecordsWithStartDate(date);
+        Habit habit = Habit.builder().category(null).userId(null).order(0).build();
+        habit.changeHabitRecords(setupDefaultHabitRecordsWithStartDate(date));
+        List<HabitRecord> habitRecords = habit.getHabitRecords();
 
         // when
-        boolean isChanged = habitRecordService.refreshHabitHistoryAndReturnIsChanged(habitRecords);
+        habit.refreshHabitHistory();
 
         // then
-        Assert.assertTrue(isChanged);
         for(int day = 0 ; day < 5 ; day++) {
             if(day == 3) {
                 Assert.assertEquals(CAKE_NOT_DONE, habitRecords.get(day).getHabitStatus());
@@ -78,14 +76,15 @@ public class HabitRecordServiceTest {
     public void yesterdayIsNotDoneAndTodayIsDoneAndChangedAndNextDayTest() {
         // given
         LocalDateTime date = LocalDate.now().minusDays(1).atTime(0, 0, 0);
-        List<HabitRecord> habitRecords = setupDefaultHabitRecordsWithStartDate(date);
+        Habit habit = Habit.builder().category(null).userId(null).order(0).build();
+        habit.changeHabitRecords(setupDefaultHabitRecordsWithStartDate(date));
+        List<HabitRecord> habitRecords = habit.getHabitRecords();
 
         // when
         habitRecords.get(1).setHabitStatus(DONE);
-        boolean isChanged = habitRecordService.refreshHabitHistoryAndReturnIsChanged(habitRecords);
+        habit.refreshHabitHistory();
 
         // then
-        Assert.assertTrue(isChanged);
         for(int day = 0 ; day < 5 ; day++) {
             if(day == 0) {
                 Assert.assertEquals(DONE, habitRecords.get(day).getHabitStatus());
@@ -106,7 +105,9 @@ public class HabitRecordServiceTest {
     public void yesterdayIsDoneAndTodayIsCakeNotDoneAndChangedAndNextDayTest() {
         // given
         LocalDateTime date = LocalDate.now().minusDays(1).atTime(0, 0, 0);
-        List<HabitRecord> habitRecords = setupDefaultHabitRecordsWithStartDate(date);
+        Habit habit = Habit.builder().category(null).userId(null).order(0).build();
+        habit.changeHabitRecords(setupDefaultHabitRecordsWithStartDate(date));
+        List<HabitRecord> habitRecords = habit.getHabitRecords();
         habitRecords.get(0).setHabitStatus(DONE);
         habitRecords.get(1).setHabitStatus(CAKE_NOT_DONE);
         habitRecords.get(2).setHabitStatus(NOT_DONE);
@@ -115,10 +116,10 @@ public class HabitRecordServiceTest {
 
         // when
         habitRecords.get(1).setHabitStatus(CAKE_DONE);
-        boolean isChanged = habitRecordService.refreshHabitHistoryAndReturnIsChanged(habitRecords);
+        habit.refreshHabitHistory();
+        habitRecords = habit.getHabitRecords();
 
         // then
-        Assert.assertTrue(isChanged);
         for(int day = 0 ; day < 5 ; day++) {
             if(day == 0) {
                 Assert.assertEquals(CAKE_DONE, habitRecords.get(day).getHabitStatus());
@@ -139,7 +140,9 @@ public class HabitRecordServiceTest {
     public void yesterdayIsDoneAndTodayIsNotDoneAndChangedAndNextDayTest() {
         // given
         LocalDateTime date = LocalDate.now().minusDays(1).atTime(0, 0, 0);
-        List<HabitRecord> habitRecords = setupDefaultHabitRecordsWithStartDate(date);
+        Habit habit = Habit.builder().category(null).userId(null).order(0).build();
+        habit.changeHabitRecords(setupDefaultHabitRecordsWithStartDate(date));
+        List<HabitRecord> habitRecords = habit.getHabitRecords();
         habitRecords.get(0).setHabitStatus(DONE);
         habitRecords.get(1).setHabitStatus(NOT_DONE);
         habitRecords.get(2).setHabitStatus(CAKE_NOT_DONE);
@@ -148,10 +151,9 @@ public class HabitRecordServiceTest {
 
         // when
         habitRecords.get(1).setHabitStatus(DONE);
-        boolean isChanged = habitRecordService.refreshHabitHistoryAndReturnIsChanged(habitRecords);
+        habit.refreshHabitHistory();
 
         // then
-        Assert.assertTrue(isChanged);
         for(int day = 0 ; day < 5 ; day++) {
             if(day == 0) {
                 Assert.assertEquals(DONE, habitRecords.get(day).getHabitStatus());

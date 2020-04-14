@@ -29,11 +29,6 @@ public class User extends TimeProvider {
     private String nickname;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @org.hibernate.annotations.OrderBy(clause = "habit_order ASC")
-    @Builder.Default
-    private List<Habit> habits = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<SentPieceOfCake> sentPieceOfCakes = new ArrayList<>();
 
