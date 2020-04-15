@@ -7,6 +7,31 @@ resources:
   image:
     location: /home/habikery/resources/images/
     url: 49.50.167.14/resources/images
+  categories:
+    - id: 1
+      habit-type: WATER
+      cake-type: WATERMELON
+    - id: 2
+      habit-type: STRETCHING
+      cake-type: CHEESE
+    - id: 3
+      habit-type: MEDITATION
+      cake-type: WHIPPING_CREAM
+    - id: 4
+      habit-type: WALK
+      cake-type: GREEN_TEA
+    - id: 5
+      habit-type: NEWS
+      cake-type: COFFEE
+    - id: 6
+      habit-type: BREAKFAST
+      cake-type: APPLE
+    - id: 7
+      habit-type: DIARY
+      cake-type: CHESTNUT
+    - id: 8
+      habit-type: READING
+      cake-type: WALNUT
 
 spring:
   profiles:
