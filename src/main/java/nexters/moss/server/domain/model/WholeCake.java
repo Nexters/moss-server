@@ -22,9 +22,8 @@ public class WholeCake extends TimeProvider {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "habit_id", nullable = false)
-    private Habit habit;
+    @Column(name = "habit_id")
+    private Long habitId;
 
     @Column(name = "category_id")
     private Long categoryId;
@@ -37,7 +36,7 @@ public class WholeCake extends TimeProvider {
         this.user = User.builder()
                 .id(userId)
                 .build();
-        this.habit = new Habit(habitId);
+        this.habitId = habitId;
         this.categoryId = categoryId;
     }
 }
