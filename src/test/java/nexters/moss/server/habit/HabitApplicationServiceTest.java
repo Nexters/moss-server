@@ -55,7 +55,7 @@ public class HabitApplicationServiceTest {
 
     @Before
     public void setup() {
-        testCategory = new Category(1L, HabitType.WATER, CakeType.WATERMELON);
+        testCategory = new Category(1L, HabitType.WATER, CakeType.WATERMELON, null, null);
 
         testUser = userRepository.save(
                 new User(

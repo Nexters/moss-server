@@ -9,6 +9,7 @@ import nexters.moss.server.domain.model.*;
 import nexters.moss.server.domain.repository.*;
 import nexters.moss.server.domain.service.SocialTokenService;
 import nexters.moss.server.domain.value.CakeType;
+import nexters.moss.server.domain.value.Description;
 import nexters.moss.server.domain.value.HabitType;
 import org.junit.After;
 import org.junit.Before;
@@ -52,8 +53,6 @@ public class DiaryApplicationControllerTest {
     private UserRepository userRepository;
     @Autowired
     private UserApplicationService userApplicationService;
-    @Autowired
-    private DescriptionRepository descriptionRepository;
     @Autowired
     private PieceOfCakeSendRepository pieceOfCakeSendRepository;
     @Autowired
@@ -104,8 +103,7 @@ public class DiaryApplicationControllerTest {
         List<HabitType> habitTypes = Arrays.asList(HabitType.values());
         List<CakeType> cakeTypes = Arrays.asList(CakeType.values());
 
-        category = new Category(null, habitTypes.get(0), cakeTypes.get(0));
-        descriptionRepository.save(new Description(null, category.getId(), "receivePieceOfCake", "diary"));
+        category = new Category(null, habitTypes.get(0), cakeTypes.get(0), new Description("receivePieceOfCake"), new Description("diary"));
 
         habit = habitRepository.save(new Habit(null, category.getId(), receiver.getId(), null, 0, false, false, 0));
 

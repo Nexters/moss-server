@@ -81,7 +81,7 @@ public class CakeApplicationControllerTest {
 
         List<HabitType> habitTypes = Arrays.asList(HabitType.values());
         List<CakeType> cakeTypes = Arrays.asList(CakeType.values());
-        category = new Category(1L, habitTypes.get(0), cakeTypes.get(0));
+        category = new Category(1L, habitTypes.get(0), cakeTypes.get(0), null, null);
     }
 
     @After

@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 @Transactional
 public class DiaryApplicationService {
     private WholeCakeRepository wholeCakeRepository;
-    private DescriptionRepository descriptionRepository;
     private PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository;
     private HabitRepository habitRepository;
     private ImageApplicationService imageApplicationService;
@@ -24,14 +23,12 @@ public class DiaryApplicationService {
 
     public DiaryApplicationService(
             WholeCakeRepository wholeCakeRepository,
-            DescriptionRepository descriptionRepository,
             PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository,
             HabitRepository habitRepository,
             ImageApplicationService imageApplicationService,
             CategoryApplicationService categoryApplicationService
     ) {
         this.wholeCakeRepository = wholeCakeRepository;
-        this.descriptionRepository = descriptionRepository;
         this.pieceOfCakeReceiveRepository = pieceOfCakeReceiveRepository;
         this.habitRepository = habitRepository;
         this.imageApplicationService = imageApplicationService;
@@ -48,7 +45,7 @@ public class DiaryApplicationService {
                                     return new DiaryDTO(
                                             category.getHabitType().getName(),
                                             category.getCakeType().getName(),
-                                            descriptionRepository.findByCategoryId(category.getId()).getDiary(),
+                                            category.getDiaryDescription().getMessage(),
                                             pieceOfCakeReceiveRepository.countAllByUser_IdAndCategoryId(userId, category.getId()) % 8,
                                             imageApplicationService.getPieceDiaryImagePath(
                                                     category.getHabitType(),
@@ -72,7 +69,7 @@ public class DiaryApplicationService {
                                     return new DiaryDTO(
                                             category.getHabitType().getName(),
                                             category.getCakeType().getName(),
-                                            descriptionRepository.findByCategoryId(category.getId()).getDiary(),
+                                            category.getDiaryDescription().getMessage(),
                                             wholeCakeRepository.countAllByUser_IdAndCategoryId(userId, category.getId()),
                                             imageApplicationService.getWholeDiaryImagePath(category.getHabitType(), ImageEvent.WHOLE_CAKE_DIARY)
                                     );
@@ -87,7 +84,7 @@ public class DiaryApplicationService {
         return new Response<HistoryResponse>(
                 new HistoryResponse(
                         category.getHabitType().getName(),
-                        descriptionRepository.findByCategoryId(categoryId).getDiary(),
+                        category.getDiaryDescription().getMessage(),
                         category.getCakeType().getName(),
                         wholeCakeRepository.findAllByUser_IdAndCategoryId(userId, categoryId)
                                 .stream()

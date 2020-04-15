@@ -16,12 +16,6 @@ public class TestConfiguration {
     private UserRepository userRepository;
 
     @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    private DescriptionRepository descriptionRepository;
-
-    @Autowired
     private HabitRepository habitRepository;
 
     @Autowired
@@ -43,7 +37,5 @@ public class TestConfiguration {
         habitRepository.deleteAll();
         reportRepository.deleteAll();
         userRepository.deleteAll();
-        descriptionRepository.deleteAll();
-        categoryRepository.deleteAll();
     }
 }

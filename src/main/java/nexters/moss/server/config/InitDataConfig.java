@@ -4,8 +4,7 @@ import nexters.moss.server.application.CakeApplicationService;
 import nexters.moss.server.application.HabitApplicationService;
 import nexters.moss.server.domain.model.*;
 import nexters.moss.server.domain.repository.*;
-import nexters.moss.server.domain.value.CakeType;
-import nexters.moss.server.domain.value.HabitType;
+import nexters.moss.server.domain.value.Description;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -22,34 +21,21 @@ public class InitDataConfig {
 
     @Autowired
     UserRepository userRepository;
-    @Autowired
-    DescriptionRepository descriptionRepository;
+
     @Autowired
     HabitRepository habitRepository;
+
     @Autowired
     PieceOfCakeSendRepository pieceOfCakeSendRepository;
 
     @Autowired
     HabitApplicationService habitApplicationService;
+
     @Autowired
     CakeApplicationService cakeApplicationService;
 
     @PostConstruct
     public void init() {
-        descriptionRepository.saveAll(
-                Arrays.asList(
-                        Description.builder().categoryId(categories.get(0).getId()).receivePieceOfCake("물 마시는 나에게").diary("수분충전").build(),
-                        Description.builder().categoryId(categories.get(1).getId()).receivePieceOfCake("스트레칭하는 나에게").diary("쭉쭉 늘어나는").build(),
-                        Description.builder().categoryId(categories.get(2).getId()).receivePieceOfCake("명상하는 나에게").diary("부드러운 마음").build(),
-                        Description.builder().categoryId(categories.get(3).getId()).receivePieceOfCake("산책하는 나에게").diary("싱그러운").build(),
-                        Description.builder().categoryId(categories.get(4).getId()).receivePieceOfCake("뉴스보는 나에게").diary("아침을 깨우는").build(),
-                        Description.builder().categoryId(categories.get(5).getId()).receivePieceOfCake("아침먹는 나에게").diary("하루의 시작").build(),
-                        Description.builder().categoryId(categories.get(6).getId()).receivePieceOfCake("책읽는 나에게").diary("나를 위한 시간").build(),
-                        Description.builder().categoryId(categories.get(7).getId()).receivePieceOfCake("일기쓰는 나에게").diary("마음의 양").build()
-
-                )
-        );
-
         // init user
         List<User> users = userRepository.saveAll(
                 Arrays.asList(

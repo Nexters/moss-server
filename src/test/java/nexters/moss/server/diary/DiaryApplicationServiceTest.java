@@ -9,6 +9,7 @@ import nexters.moss.server.application.dto.diary.HistoryResponse;
 import nexters.moss.server.domain.model.*;
 import nexters.moss.server.domain.repository.*;
 import nexters.moss.server.domain.value.CakeType;
+import nexters.moss.server.domain.value.Description;
 import nexters.moss.server.domain.value.HabitType;
 import nexters.moss.server.application.value.ImageEvent;
 import org.junit.After;
@@ -46,9 +47,6 @@ public class DiaryApplicationServiceTest {
     private UserRepository userRepository;
     @Autowired
     private HabitRepository habitRepository;
-
-    @Autowired
-    private DescriptionRepository descriptionRepository;
     @Autowired
     private PieceOfCakeSendRepository pieceOfCakeSendRepository;
     @Autowired
@@ -60,10 +58,9 @@ public class DiaryApplicationServiceTest {
     public void setup() {
         sender = userRepository.save(new User(null, null, "accountToken", "sender", null, null));
         receiver = userRepository.save(new User(null, null, "accountToken", "receiver", null, null));
-        category = new Category(1L, HabitType.WATER, CakeType.WATERMELON);
+        category = new Category(1L, HabitType.WATER, CakeType.WATERMELON,  new Description("receivePieceOfCake"), new Description("diary"));
 
         habit = habitRepository.save(new Habit(null, category.getId(), receiver.getId(), null, 0, false, false, 0));
-        descriptionRepository.save(new Description(null, category.getId(), "receivePieceOfCake", "diary"));
 
         sentPieceOfCake = pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, category.getId(), "note", null));
         pieceOfCakeReceiveRepository.save(new ReceivedPieceOfCake(null, receiver, sentPieceOfCake, category.getId()));
