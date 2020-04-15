@@ -6,7 +6,6 @@ import nexters.moss.server.application.dto.diary.HistoryResponse;
 import nexters.moss.server.domain.model.*;
 import nexters.moss.server.domain.repository.*;
 import nexters.moss.server.application.value.ImageEvent;
-import nexters.moss.server.domain.value.CategoryType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,7 +44,7 @@ public class DiaryApplicationService {
                 habits
                         .stream()
                         .map(habit -> {
-                                    CategoryType category = categoryApplicationService.findById(habit.getCategoryId());
+                                    Category category = categoryApplicationService.findById(habit.getCategoryId());
                                     return new DiaryDTO(
                                             category.getHabitType().getName(),
                                             category.getCakeType().getName(),
@@ -69,7 +68,7 @@ public class DiaryApplicationService {
                 habits
                         .stream()
                         .map(habit -> {
-                                    CategoryType category = categoryApplicationService.findById(habit.getCategoryId());
+                                    Category category = categoryApplicationService.findById(habit.getCategoryId());
                                     return new DiaryDTO(
                                             category.getHabitType().getName(),
                                             category.getCakeType().getName(),
@@ -84,7 +83,7 @@ public class DiaryApplicationService {
     }
 
     public Response<HistoryResponse> getCakeHistory(Long userId, Long categoryId) {
-        CategoryType category = categoryApplicationService.findById(categoryId);
+        Category category = categoryApplicationService.findById(categoryId);
         return new Response<HistoryResponse>(
                 new HistoryResponse(
                         category.getHabitType().getName(),

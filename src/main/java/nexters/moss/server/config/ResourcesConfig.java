@@ -1,7 +1,7 @@
 package nexters.moss.server.config;
 
 import nexters.moss.server.application.dto.Image;
-import nexters.moss.server.domain.value.CategoryType;
+import nexters.moss.server.domain.model.Category;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +25,7 @@ public class ResourcesConfig {
 
     @Bean
     @Qualifier("categories")
-    public List<CategoryType> categories() {
+    public List<Category> categories() {
         return resourcesProperties().getCategories();
     }
 }

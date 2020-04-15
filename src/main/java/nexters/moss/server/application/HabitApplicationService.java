@@ -11,7 +11,6 @@ import nexters.moss.server.config.exception.ResourceNotFoundException;
 import nexters.moss.server.config.exception.UnauthorizedException;
 import nexters.moss.server.domain.model.*;
 import nexters.moss.server.domain.repository.*;
-import nexters.moss.server.domain.value.CategoryType;
 import nexters.moss.server.domain.model.Habit;
 import nexters.moss.server.domain.model.User;
 import nexters.moss.server.domain.repository.HabitRepository;
@@ -57,7 +56,7 @@ public class HabitApplicationService {
 
     public Response<HabitHistory> createHabit(Long userId, Long categoryId) {
         // TODO: user exist validation
-        CategoryType category = categoryApplicationService.findById(categoryId);
+        Category category = categoryApplicationService.findById(categoryId);
 
         if (habitRepository.existsByUserIdAndCategoryId(userId, categoryId)) {
             throw new IllegalArgumentException("Already Has Habit");
@@ -90,7 +89,7 @@ public class HabitApplicationService {
                         .stream()
                         .map(habit -> {
                                     habit.refreshHabitHistory();
-                                    CategoryType category = categoryApplicationService.findById(habit.getCategoryId());
+                                    Category category = categoryApplicationService.findById(habit.getCategoryId());
                                     return new HabitHistory(
                                             habit.getId(),
                                             habit.getCategoryId(),
@@ -119,7 +118,7 @@ public class HabitApplicationService {
     public HabitDoneResponse doneHabit(Long userId, Long habitId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException("No Matched User"));
         Habit habit = habitRepository.findById(habitId).orElseThrow(() -> new ResourceNotFoundException("No Matched Habit"));
-        CategoryType category = categoryApplicationService.findById(habit.getCategoryId());
+        Category category = categoryApplicationService.findById(habit.getCategoryId());
         if (habit.isDone()) {
             throw new AlreadyExistException("Already done habit");
         }

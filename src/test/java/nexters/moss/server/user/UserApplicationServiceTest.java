@@ -9,7 +9,6 @@ import nexters.moss.server.domain.service.SocialTokenService;
 import nexters.moss.server.domain.model.User;
 import nexters.moss.server.domain.repository.UserRepository;
 import nexters.moss.server.domain.value.CakeType;
-import nexters.moss.server.domain.value.CategoryType;
 import nexters.moss.server.domain.value.HabitType;
 import nexters.moss.server.domain.service.HabikeryTokenService;
 import org.junit.After;
@@ -163,10 +162,10 @@ public class UserApplicationServiceTest {
                 .willReturn(sendingUser.getSocialId());
         sendingUser = setupJoinAndLogin(senderAccessToken, sendingUser);
 
-        CategoryType categoryType = setupCategory();
-        Habit habit = setupHabit(categoryType, receivingUser);
-        SentPieceOfCake sentCake = setupSentPieceOfCake(sendingUser, habit, categoryType);
-        ReceivedPieceOfCake receivedCake = setupReceivedPieceOfCake(receivingUser, categoryType, sentCake);
+        Category category = setupCategory();
+        Habit habit = setupHabit(category, receivingUser);
+        SentPieceOfCake sentCake = setupSentPieceOfCake(sendingUser, habit, category);
+        ReceivedPieceOfCake receivedCake = setupReceivedPieceOfCake(receivingUser, category, sentCake);
 
         String reportReason = "기타";
 
@@ -190,34 +189,34 @@ public class UserApplicationServiceTest {
         return userList.get(userList.size() - 1);
     }
 
-    private CategoryType setupCategory() {
-        return CategoryType.builder()
+    private Category setupCategory() {
+        return Category.builder()
                 .habitType(HabitType.WATER)
                 .cakeType(CakeType.WATERMELON)
                 .build();
     }
 
-    private Habit setupHabit(CategoryType categoryType, User user) {
+    private Habit setupHabit(Category category, User user) {
         Habit habit = Habit.builder()
-                .categoryId(categoryType.getId())
+                .categoryId(category.getId())
                 .userId(user.getId())
                 .build();
         return habitRepository.save(habit);
     }
 
-    private SentPieceOfCake setupSentPieceOfCake(User sendingUser, Habit habit, CategoryType categoryType) {
+    private SentPieceOfCake setupSentPieceOfCake(User sendingUser, Habit habit, Category category) {
         SentPieceOfCake sentCake = SentPieceOfCake.builder()
                 .user(sendingUser)
-                .categoryId(categoryType.getId())
+                .categoryId(category.getId())
                 .build();
         return pieceOfCakeSendRepository.save(sentCake);
     }
 
-    private ReceivedPieceOfCake setupReceivedPieceOfCake(User receivingUser, CategoryType categoryType, SentPieceOfCake sentCake) {
+    private ReceivedPieceOfCake setupReceivedPieceOfCake(User receivingUser, Category category, SentPieceOfCake sentCake) {
         ReceivedPieceOfCake receivedCake = ReceivedPieceOfCake.builder()
                 .user(receivingUser)
                 .sentPieceOfCake(sentCake)
-                .categoryId(categoryType.getId())
+                .categoryId(category.getId())
                 .build();
         return pieceOfCakeReceiveRepository.save(receivedCake);
     }

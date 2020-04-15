@@ -4,11 +4,10 @@ import nexters.moss.server.TestConfiguration;
 import nexters.moss.server.application.CakeApplicationService;
 import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.application.dto.cake.CreateNewCakeRequest;
-import nexters.moss.server.domain.value.CategoryType;
+import nexters.moss.server.domain.model.Category;
 import nexters.moss.server.domain.model.Habit;
 import nexters.moss.server.domain.model.SentPieceOfCake;
 import nexters.moss.server.domain.model.User;
-import nexters.moss.server.domain.repository.CategoryRepository;
 import nexters.moss.server.domain.repository.HabitRepository;
 import nexters.moss.server.domain.repository.PieceOfCakeSendRepository;
 import nexters.moss.server.domain.repository.UserRepository;
@@ -33,7 +32,7 @@ import java.util.List;
 public class CakeApplicationServiceTest {
     private Habit testHabit;
     private User sender;
-    private CategoryType categoryType;
+    private Category category;
 
     @Autowired
     private TestConfiguration testConfiguration;
@@ -55,10 +54,10 @@ public class CakeApplicationServiceTest {
         List<HabitType> habitTypes = Arrays.asList(HabitType.values());
         List<CakeType> cakeTypes = Arrays.asList(CakeType.values());
 
-        categoryType = new CategoryType(1L, habitTypes.get(0), cakeTypes.get(0));
+        category = new Category(1L, habitTypes.get(0), cakeTypes.get(0));
         sender = userRepository.save(new User(null, null, "accounToken", "nickName", null, null));
 
-        testHabit = habitRepository.save(new Habit(null, categoryType.getId(), sender.getId(), null, 0, false, false, 0));
+        testHabit = habitRepository.save(new Habit(null, category.getId(), sender.getId(), null, 0, false, false, 0));
     }
 
     @After

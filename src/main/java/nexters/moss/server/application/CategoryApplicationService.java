@@ -1,7 +1,7 @@
 package nexters.moss.server.application;
 
 import nexters.moss.server.config.exception.ResourceNotFoundException;
-import nexters.moss.server.domain.value.CategoryType;
+import nexters.moss.server.domain.model.Category;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -10,13 +10,13 @@ import static com.google.common.collect.MoreCollectors.onlyElement;
 
 @Service
 public class CategoryApplicationService {
-    private final List<CategoryType> categories;
+    private final List<Category> categories;
 
-    public CategoryApplicationService(@Qualifier("categories") List<CategoryType> categories) {
+    public CategoryApplicationService(@Qualifier("categories") List<Category> categories) {
         this.categories = categories;
     }
 
-    public CategoryType findById(Long categoryId) {
+    public Category findById(Long categoryId) {
         try {
             return this.categories.stream()
                     .filter(categoryType -> categoryType.getId().equals(categoryId))

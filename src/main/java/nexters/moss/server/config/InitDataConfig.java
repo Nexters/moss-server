@@ -18,7 +18,8 @@ import java.util.List;
 @Profile("init")
 public class InitDataConfig {
     @Autowired
-    CategoryRepository categoryRepository;
+    List<Category> categories;
+
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -35,20 +36,6 @@ public class InitDataConfig {
 
     @PostConstruct
     public void init() {
-        // init category
-        List<Category> categories = categoryRepository.saveAll(
-                Arrays.asList(
-                        Category.builder().habitType(HabitType.WATER).cakeType(CakeType.WATERMELON).build(),
-                        Category.builder().habitType(HabitType.STRETCHING).cakeType(CakeType.CHEESE).build(),
-                        Category.builder().habitType(HabitType.MEDITATION).cakeType(CakeType.WHIPPING_CREAM).build(),
-                        Category.builder().habitType(HabitType.WALK).cakeType(CakeType.GREEN_TEA).build(),
-                        Category.builder().habitType(HabitType.NEWS).cakeType(CakeType.COFFEE).build(),
-                        Category.builder().habitType(HabitType.BREAKFAST).cakeType(CakeType.APPLE).build(),
-                        Category.builder().habitType(HabitType.DIARY).cakeType(CakeType.CHESTNUT).build(),
-                        Category.builder().habitType(HabitType.READING).cakeType(CakeType.WALNUT).build()
-                )
-        );
-
         descriptionRepository.saveAll(
                 Arrays.asList(
                         Description.builder().categoryId(categories.get(0).getId()).receivePieceOfCake("물 마시는 나에게").diary("수분충전").build(),

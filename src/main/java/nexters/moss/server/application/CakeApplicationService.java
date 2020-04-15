@@ -8,7 +8,6 @@ import nexters.moss.server.config.exception.UnauthorizedException;
 import nexters.moss.server.domain.model.*;
 import nexters.moss.server.domain.repository.*;
 import nexters.moss.server.application.value.ImageEvent;
-import nexters.moss.server.domain.value.CategoryType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,7 +51,7 @@ public class CakeApplicationService {
 
     public Response<NewCakeDTO> getCake(Long userId, Long categoryId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException("No Matched User"));
-        CategoryType category = categoryApplicationService.findById(categoryId);
+        Category category = categoryApplicationService.findById(categoryId);
         SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findRandomByUser_IdAndCategoryId(userId, categoryId).orElseThrow(() -> new ResourceNotFoundException("Has no remain cake message"));
 
         ReceivedPieceOfCake receivedPOC = pieceOfCakeReceiveRepository.save(
