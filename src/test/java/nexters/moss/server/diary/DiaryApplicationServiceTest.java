@@ -64,7 +64,7 @@ public class DiaryApplicationServiceTest {
 
         sentPieceOfCake = sentPieceOfCakeRepository.save(new SentPieceOfCake(null, sender.getId(), category.getId(), "note", null));
         receivedPieceOfCakeRepository.save(new ReceivedPieceOfCake(null, receiver.getId(), sentPieceOfCake.getId(), category.getId()));
-        wholeCake = wholeCakeRepository.save(new WholeCake(null, receiver, habit.getId(), category.getId()));
+        wholeCake = wholeCakeRepository.save(new WholeCake(null, receiver.getId(), habit.getId(), category.getId()));
 
     }
 

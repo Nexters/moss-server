@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -28,8 +27,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -43,10 +40,6 @@ import static org.mockito.BDDMockito.given;
 public class DiaryApplicationControllerTest {
     @Autowired
     TestRestTemplate testRestTemplate;
-
-    @LocalServerPort
-    int randomServerPort;
-
     @Autowired
     private TestConfiguration testConfiguration;
     @Autowired
@@ -103,13 +96,13 @@ public class DiaryApplicationControllerTest {
         List<HabitType> habitTypes = Arrays.asList(HabitType.values());
         List<CakeType> cakeTypes = Arrays.asList(CakeType.values());
 
-        category = new Category(null, habitTypes.get(0), cakeTypes.get(0), new Description("receivePieceOfCake"), new Description("diary"));
+        category = new Category(1L, habitTypes.get(0), cakeTypes.get(0), new Description("receivePieceOfCake"), new Description("diary"));
 
         habit = habitRepository.save(new Habit(null, category.getId(), receiver.getId(), null, 0, false, false, 0));
 
         sentPieceOfCake = sentPieceOfCakeRepository.save(new SentPieceOfCake(null, sender.getId(), category.getId(), "note", null));
         receivedPieceOfCakeRepository.save(new ReceivedPieceOfCake(null, receiver.getId(), sentPieceOfCake.getId(), category.getId()));
-        wholeCake = wholeCakeRepository.save(new WholeCake(null, receiver, habit.getId(), category.getId()));
+        wholeCake = wholeCakeRepository.save(new WholeCake(null, receiver.getId(), habit.getId(), category.getId()));
     }
 
     @After
@@ -118,8 +111,7 @@ public class DiaryApplicationControllerTest {
     }
 
     @Test
-    public void getPieceOfCakeDiaryTest() throws URISyntaxException {
-
+    public void getPieceOfCakeDiaryTest() {
         ResponseEntity<Response<Object>> res = getTestResponse("/api/diary/piece", new ParameterizedTypeReference<Response<List<DiaryDTO>>>() {
         });
         List<DiaryDTO> diaries = (List<DiaryDTO>) res.getBody().getData();
@@ -134,8 +126,7 @@ public class DiaryApplicationControllerTest {
     }
 
     @Test
-    public void getWholeCakeDiaryTest() throws URISyntaxException {
-
+    public void getWholeCakeDiaryTest() {
         ResponseEntity<Response<Object>> res = getTestResponse("/api/diary/whole", new ParameterizedTypeReference<Response<List<DiaryDTO>>>() {
         });
 
@@ -151,8 +142,7 @@ public class DiaryApplicationControllerTest {
     }
 
     @Test
-    public void getCakeHistoryTest() throws URISyntaxException {
-
+    public void getCakeHistoryTest() {
         ResponseEntity<Response<Object>> res = getTestResponse("/api/diary/history?categoryId=" + category.getId(), new ParameterizedTypeReference<Response<HistoryResponse>>() {
         });
 
@@ -167,9 +157,7 @@ public class DiaryApplicationControllerTest {
                 );
     }
 
-    private ResponseEntity<Response<Object>> getTestResponse(String uri, ParameterizedTypeReference parameterizedTypeReference) throws URISyntaxException {
-        URI req_uri = new URI(uri);
-
+    private ResponseEntity<Response<Object>> getTestResponse(String uri, ParameterizedTypeReference parameterizedTypeReference) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("habikeryToken", receiverHabikeryToken);
         HttpEntity<Map<String, Object>> req = new HttpEntity<>(httpHeaders);

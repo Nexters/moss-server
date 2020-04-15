@@ -20,7 +20,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -30,7 +29,6 @@ import static org.mockito.BDDMockito.given;
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
 @SpringBootTest
-@Transactional
 public class UserApplicationServiceTest {
     @Autowired
     private TestConfiguration testConfiguration;
@@ -52,9 +50,6 @@ public class UserApplicationServiceTest {
 
     @MockBean(name = "socialTokenService")
     private SocialTokenService socialTokenService;
-
-    @Autowired
-    private HabikeryTokenService habikeryTokenService;
 
     @Autowired
     private UserApplicationService userApplicationService;
@@ -116,23 +111,6 @@ public class UserApplicationServiceTest {
     }
 
     @Test
-    public void leaveTest() {
-        // given
-        userApplicationService.join(testAccessToken, testUser.getNickname());
-        userApplicationService.login(testAccessToken);
-        List<User> userList = userRepository.findAll();
-        int userCount = userList.size();
-        User savedUser = userList.get(userCount - 1);
-
-        // when
-        Response leaveResponse = userApplicationService.leave(savedUser.getId());
-
-        // then
-        assertThat(leaveResponse).isNotNull();
-        assertThat(userRepository.count()).isEqualTo(userCount - 1);
-    }
-
-    @Test
     public void getUserInfoTest() {
         // given
         userApplicationService.join(testAccessToken, testUser.getNickname());
@@ -178,6 +156,23 @@ public class UserApplicationServiceTest {
         assertThat(reportRepository.count()).isEqualTo(1);
         Report report = reportRepository.findAll().get(0);
         assertThat(report.getReason()).isEqualTo(reportReason);
+    }
+
+    @Test
+    public void leaveTest() {
+        // given
+        userApplicationService.join(testAccessToken, testUser.getNickname());
+        userApplicationService.login(testAccessToken);
+        List<User> userList = userRepository.findAll();
+        int userCount = userList.size();
+        User savedUser = userList.get(userCount - 1);
+
+        // when
+        Response leaveResponse = userApplicationService.leave(savedUser.getId());
+
+        // then
+        assertThat(leaveResponse).isNotNull();
+        assertThat(userRepository.count()).isEqualTo(userCount - 1);
     }
 
     private User setupJoinAndLogin(String accessToken, User user) {
