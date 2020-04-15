@@ -4,7 +4,6 @@ import nexters.moss.server.application.CakeApplicationService;
 import nexters.moss.server.application.HabitApplicationService;
 import nexters.moss.server.domain.model.*;
 import nexters.moss.server.domain.repository.*;
-import nexters.moss.server.domain.value.Description;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -26,7 +25,7 @@ public class InitDataConfig {
     HabitRepository habitRepository;
 
     @Autowired
-    PieceOfCakeSendRepository pieceOfCakeSendRepository;
+    SentPieceOfCakeRepository sentPieceOfCakeRepository;
 
     @Autowired
     HabitApplicationService habitApplicationService;
@@ -46,7 +45,7 @@ public class InitDataConfig {
         );
 
         // init message
-        pieceOfCakeSendRepository.saveAll(
+        sentPieceOfCakeRepository.saveAll(
                 Arrays.asList(
                         SentPieceOfCake.builder().user(users.get(0)).categoryId(categories.get(0).getId()).note("물 마실수록 피부 촉촉!!").build(),
                         SentPieceOfCake.builder().user(users.get(0)).categoryId(categories.get(0).getId()).note("미세먼지 나쁠수록 물많이!").build(),

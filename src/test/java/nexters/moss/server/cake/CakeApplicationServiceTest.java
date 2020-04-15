@@ -9,7 +9,7 @@ import nexters.moss.server.domain.model.Habit;
 import nexters.moss.server.domain.model.SentPieceOfCake;
 import nexters.moss.server.domain.model.User;
 import nexters.moss.server.domain.repository.HabitRepository;
-import nexters.moss.server.domain.repository.PieceOfCakeSendRepository;
+import nexters.moss.server.domain.repository.SentPieceOfCakeRepository;
 import nexters.moss.server.domain.repository.UserRepository;
 import nexters.moss.server.domain.value.CakeType;
 import nexters.moss.server.domain.value.HabitType;
@@ -44,7 +44,7 @@ public class CakeApplicationServiceTest {
     private UserRepository userRepository;
 
     @Autowired
-    private PieceOfCakeSendRepository pieceOfCakeSendRepository;
+    private SentPieceOfCakeRepository sentPieceOfCakeRepository;
 
     @Autowired
     private HabitRepository habitRepository;
@@ -72,7 +72,7 @@ public class CakeApplicationServiceTest {
 
         Assert.assertNotNull(res.getData());
 
-        SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findById(res.getData()).get();
+        SentPieceOfCake sentPieceOfCake = sentPieceOfCakeRepository.findById(res.getData()).get();
         Assert.assertEquals(req.getNote(), sentPieceOfCake.getNote());
     }
 }

@@ -15,21 +15,21 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CakeApplicationService {
     private UserRepository userRepository;
-    private PieceOfCakeSendRepository pieceOfCakeSendRepository;
-    private PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository;
+    private SentPieceOfCakeRepository sentPieceOfCakeRepository;
+    private ReceivedPieceOfCakeRepository receivedPieceOfCakeRepository;
     private ImageApplicationService imageApplicationService;
     private CategoryApplicationService categoryApplicationService;
 
     public CakeApplicationService(
             UserRepository userRepository,
-            PieceOfCakeSendRepository pieceOfCakeSendRepository,
-            PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository,
+            SentPieceOfCakeRepository sentPieceOfCakeRepository,
+            ReceivedPieceOfCakeRepository receivedPieceOfCakeRepository,
             ImageApplicationService imageApplicationService,
             CategoryApplicationService categoryApplicationService
     ) {
         this.userRepository = userRepository;
-        this.pieceOfCakeSendRepository = pieceOfCakeSendRepository;
-        this.pieceOfCakeReceiveRepository = pieceOfCakeReceiveRepository;
+        this.sentPieceOfCakeRepository = sentPieceOfCakeRepository;
+        this.receivedPieceOfCakeRepository = receivedPieceOfCakeRepository;
         this.imageApplicationService = imageApplicationService;
         this.categoryApplicationService = categoryApplicationService;
     }
@@ -39,7 +39,7 @@ public class CakeApplicationService {
         User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException("No Matched User"));
         categoryApplicationService.findById(createNewCakeRequest.getCategoryId());
         return new Response<Long>(
-                pieceOfCakeSendRepository.save(
+                sentPieceOfCakeRepository.save(
                         SentPieceOfCake.builder()
                         .user(user)
                         .categoryId(createNewCakeRequest.getCategoryId())
@@ -52,9 +52,9 @@ public class CakeApplicationService {
     public Response<NewCakeDTO> getCake(Long userId, Long categoryId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException("No Matched User"));
         Category category = categoryApplicationService.findById(categoryId);
-        SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findRandomByUser_IdAndCategoryId(userId, categoryId).orElseThrow(() -> new ResourceNotFoundException("Has no remain cake message"));
+        SentPieceOfCake sentPieceOfCake = sentPieceOfCakeRepository.findRandomByUser_IdAndCategoryId(userId, categoryId).orElseThrow(() -> new ResourceNotFoundException("Has no remain cake message"));
 
-        ReceivedPieceOfCake receivedPOC = pieceOfCakeReceiveRepository.save(
+        ReceivedPieceOfCake receivedPOC = receivedPieceOfCakeRepository.save(
                 ReceivedPieceOfCake.builder()
                         .user(user)
                         .categoryId(categoryId)

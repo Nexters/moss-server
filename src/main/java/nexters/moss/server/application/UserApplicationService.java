@@ -21,7 +21,7 @@ public class UserApplicationService {
     private HabikeryTokenService habikeryTokenService;
     private UserRepository userRepository;
     private ReportRepository reportRepository;
-    private PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository;
+    private ReceivedPieceOfCakeRepository receivedPieceOfCakeRepository;
 
     public Response join(String accessToken, String nickname) {
         Long socialId = socialTokenService.getSocialUserId(accessToken);
@@ -68,7 +68,7 @@ public class UserApplicationService {
     }
 
     public Response report(Long receivedPieceOfCakeId, String reason) {
-        ReceivedPieceOfCake receivedPieceOfCake = pieceOfCakeReceiveRepository.findById(receivedPieceOfCakeId)
+        ReceivedPieceOfCake receivedPieceOfCake = receivedPieceOfCakeRepository.findById(receivedPieceOfCakeId)
                 .orElseThrow(() -> new ResourceNotFoundException("No Matched ReceivedPieceOfCake"));
         User reportedUser = receivedPieceOfCake.getSentPieceOfCake().getUser();
 

@@ -50,7 +50,7 @@ public class HabitApplicationServiceTest {
     @Autowired
     private HabitRecordRepository habitRecordRepository;
 
-    private PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository;
+    private ReceivedPieceOfCakeRepository receivedPieceOfCakeRepository;
     private WholeCakeRepository wholeCakeRepository;
 
     @Before
@@ -111,10 +111,10 @@ public class HabitApplicationServiceTest {
     @Test
     public void doneHabitTest() {
         // given
-        pieceOfCakeReceiveRepository = mock(PieceOfCakeReceiveRepository.class);
+        receivedPieceOfCakeRepository = mock(ReceivedPieceOfCakeRepository.class);
         wholeCakeRepository = mock(WholeCakeRepository.class);
 
-        given(pieceOfCakeReceiveRepository.countAllByUser_IdAndCategoryId(testUser.getId(), testCategory.getId()))
+        given(receivedPieceOfCakeRepository.countAllByUser_IdAndCategoryId(testUser.getId(), testCategory.getId()))
                 .willReturn(8);
 
         Response<HabitHistory> createResponse = habitApplicationService.createHabit(testUser.getId(), testCategory.getId());

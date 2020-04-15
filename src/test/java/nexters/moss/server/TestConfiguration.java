@@ -5,7 +5,6 @@ import nexters.moss.server.domain.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Service;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
@@ -19,10 +18,10 @@ public class TestConfiguration {
     private HabitRepository habitRepository;
 
     @Autowired
-    private PieceOfCakeSendRepository pieceOfCakeSendRepository;
+    private SentPieceOfCakeRepository sentPieceOfCakeRepository;
 
     @Autowired
-    private PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository;
+    private ReceivedPieceOfCakeRepository receivedPieceOfCakeRepository;
 
     @Autowired
     private ReportRepository reportRepository;
@@ -31,8 +30,8 @@ public class TestConfiguration {
     private WholeCakeRepository wholeCakeRepository;
 
     public void tearDown() {
-        pieceOfCakeReceiveRepository.deleteAll();
-        pieceOfCakeSendRepository.deleteAll();
+        receivedPieceOfCakeRepository.deleteAll();
+        sentPieceOfCakeRepository.deleteAll();
         wholeCakeRepository.deleteAll();
         habitRepository.deleteAll();
         reportRepository.deleteAll();

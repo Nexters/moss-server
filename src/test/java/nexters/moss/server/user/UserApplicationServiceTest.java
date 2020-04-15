@@ -45,10 +45,10 @@ public class UserApplicationServiceTest {
     private HabitRepository habitRepository;
 
     @Autowired
-    private PieceOfCakeSendRepository pieceOfCakeSendRepository;
+    private SentPieceOfCakeRepository sentPieceOfCakeRepository;
 
     @Autowired
-    private PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository;
+    private ReceivedPieceOfCakeRepository receivedPieceOfCakeRepository;
 
     @MockBean(name = "socialTokenService")
     private SocialTokenService socialTokenService;
@@ -209,7 +209,7 @@ public class UserApplicationServiceTest {
                 .user(sendingUser)
                 .categoryId(category.getId())
                 .build();
-        return pieceOfCakeSendRepository.save(sentCake);
+        return sentPieceOfCakeRepository.save(sentCake);
     }
 
     private ReceivedPieceOfCake setupReceivedPieceOfCake(User receivingUser, Category category, SentPieceOfCake sentCake) {
@@ -218,6 +218,6 @@ public class UserApplicationServiceTest {
                 .sentPieceOfCake(sentCake)
                 .categoryId(category.getId())
                 .build();
-        return pieceOfCakeReceiveRepository.save(receivedCake);
+        return receivedPieceOfCakeRepository.save(receivedCake);
     }
 }

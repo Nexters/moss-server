@@ -16,20 +16,20 @@ import java.util.stream.Collectors;
 @Transactional
 public class DiaryApplicationService {
     private WholeCakeRepository wholeCakeRepository;
-    private PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository;
+    private ReceivedPieceOfCakeRepository receivedPieceOfCakeRepository;
     private HabitRepository habitRepository;
     private ImageApplicationService imageApplicationService;
     private CategoryApplicationService categoryApplicationService;
 
     public DiaryApplicationService(
             WholeCakeRepository wholeCakeRepository,
-            PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository,
+            ReceivedPieceOfCakeRepository receivedPieceOfCakeRepository,
             HabitRepository habitRepository,
             ImageApplicationService imageApplicationService,
             CategoryApplicationService categoryApplicationService
     ) {
         this.wholeCakeRepository = wholeCakeRepository;
-        this.pieceOfCakeReceiveRepository = pieceOfCakeReceiveRepository;
+        this.receivedPieceOfCakeRepository = receivedPieceOfCakeRepository;
         this.habitRepository = habitRepository;
         this.imageApplicationService = imageApplicationService;
         this.categoryApplicationService = categoryApplicationService;
@@ -46,11 +46,11 @@ public class DiaryApplicationService {
                                             category.getHabitType().getName(),
                                             category.getCakeType().getName(),
                                             category.getDiaryDescription().getMessage(),
-                                            pieceOfCakeReceiveRepository.countAllByUser_IdAndCategoryId(userId, category.getId()) % 8,
+                                            receivedPieceOfCakeRepository.countAllByUser_IdAndCategoryId(userId, category.getId()) % 8,
                                             imageApplicationService.getPieceDiaryImagePath(
                                                     category.getHabitType(),
                                                     ImageEvent.PIECE_OF_CAKE_DIARY,
-                                                    pieceOfCakeReceiveRepository.countAllByUser_IdAndCategoryId(userId, category.getId())
+                                                    receivedPieceOfCakeRepository.countAllByUser_IdAndCategoryId(userId, category.getId())
                                             )
                                     );
                                 }

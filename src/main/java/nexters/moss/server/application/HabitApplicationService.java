@@ -28,9 +28,9 @@ public class HabitApplicationService {
     private HabitRepository habitRepository;
     private HabitService habitService;
     private UserRepository userRepository;
-    private PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository;
+    private ReceivedPieceOfCakeRepository receivedPieceOfCakeRepository;
     private WholeCakeRepository wholeCakeRepository;
-    private PieceOfCakeSendRepository pieceOfCakeSendRepository;
+    private SentPieceOfCakeRepository sentPieceOfCakeRepository;
     private ImageApplicationService imageApplicationService;
     private CategoryApplicationService categoryApplicationService;
 
@@ -38,18 +38,18 @@ public class HabitApplicationService {
             HabitRepository habitRepository,
             HabitService habitService,
             UserRepository userRepository,
-            PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository,
+            ReceivedPieceOfCakeRepository receivedPieceOfCakeRepository,
             WholeCakeRepository wholeCakeRepository,
-            PieceOfCakeSendRepository pieceOfCakeSendRepository,
+            SentPieceOfCakeRepository sentPieceOfCakeRepository,
             ImageApplicationService imageApplicationService,
             CategoryApplicationService categoryApplicationService
     ) {
         this.habitRepository = habitRepository;
         this.habitService = habitService;
         this.userRepository = userRepository;
-        this.pieceOfCakeReceiveRepository = pieceOfCakeReceiveRepository;
+        this.receivedPieceOfCakeRepository = receivedPieceOfCakeRepository;
         this.wholeCakeRepository = wholeCakeRepository;
-        this.pieceOfCakeSendRepository = pieceOfCakeSendRepository;
+        this.sentPieceOfCakeRepository = sentPieceOfCakeRepository;
         this.imageApplicationService = imageApplicationService;
         this.categoryApplicationService = categoryApplicationService;
     }
@@ -142,12 +142,12 @@ public class HabitApplicationService {
                     ), null
             );
         }
-        SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findRandomByUser_IdAndCategoryId(userId, habit.getCategoryId())
+        SentPieceOfCake sentPieceOfCake = sentPieceOfCakeRepository.findRandomByUser_IdAndCategoryId(userId, habit.getCategoryId())
                 .orElseThrow(() -> new ResourceNotFoundException("Has no remain cake message"));
 
-        int pieceCount = pieceOfCakeReceiveRepository.countAllByUser_IdAndCategoryId(userId, habit.getCategoryId());
+        int pieceCount = receivedPieceOfCakeRepository.countAllByUser_IdAndCategoryId(userId, habit.getCategoryId());
 
-        pieceOfCakeReceiveRepository.save(
+        receivedPieceOfCakeRepository.save(
                 ReceivedPieceOfCake.builder()
                         .user(user)
                         .categoryId(category.getId())

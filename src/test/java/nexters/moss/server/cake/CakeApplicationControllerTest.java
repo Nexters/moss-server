@@ -6,7 +6,7 @@ import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.domain.model.Category;
 import nexters.moss.server.domain.model.SentPieceOfCake;
 import nexters.moss.server.domain.model.User;
-import nexters.moss.server.domain.repository.PieceOfCakeSendRepository;
+import nexters.moss.server.domain.repository.SentPieceOfCakeRepository;
 import nexters.moss.server.domain.repository.UserRepository;
 import nexters.moss.server.domain.service.SocialTokenService;
 import nexters.moss.server.domain.value.CakeType;
@@ -55,7 +55,7 @@ public class CakeApplicationControllerTest {
     private UserApplicationService userApplicationService;
 
     @Autowired
-    private PieceOfCakeSendRepository pieceOfCakeSendRepository;
+    private SentPieceOfCakeRepository sentPieceOfCakeRepository;
 
     @MockBean(name = "socialTokenService")
     private SocialTokenService socialTokenService;
@@ -106,7 +106,7 @@ public class CakeApplicationControllerTest {
         assertThat(res).isNotNull();
 
         long pieceOfCakeId = res.getData().longValue();
-        SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findById(pieceOfCakeId).get();
+        SentPieceOfCake sentPieceOfCake = sentPieceOfCakeRepository.findById(pieceOfCakeId).get();
         assertThat(data.get("note")).isEqualTo(sentPieceOfCake.getNote());
     }
 }

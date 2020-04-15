@@ -48,9 +48,9 @@ public class DiaryApplicationServiceTest {
     @Autowired
     private HabitRepository habitRepository;
     @Autowired
-    private PieceOfCakeSendRepository pieceOfCakeSendRepository;
+    private SentPieceOfCakeRepository sentPieceOfCakeRepository;
     @Autowired
-    private PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository;
+    private ReceivedPieceOfCakeRepository receivedPieceOfCakeRepository;
     @Autowired
     private WholeCakeRepository wholeCakeRepository;
 
@@ -62,8 +62,8 @@ public class DiaryApplicationServiceTest {
 
         habit = habitRepository.save(new Habit(null, category.getId(), receiver.getId(), null, 0, false, false, 0));
 
-        sentPieceOfCake = pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, category.getId(), "note", null));
-        pieceOfCakeReceiveRepository.save(new ReceivedPieceOfCake(null, receiver, sentPieceOfCake, category.getId()));
+        sentPieceOfCake = sentPieceOfCakeRepository.save(new SentPieceOfCake(null, sender, category.getId(), "note", null));
+        receivedPieceOfCakeRepository.save(new ReceivedPieceOfCake(null, receiver, sentPieceOfCake, category.getId()));
         wholeCake = wholeCakeRepository.save(new WholeCake(null, receiver, habit.getId(), category.getId()));
 
     }
