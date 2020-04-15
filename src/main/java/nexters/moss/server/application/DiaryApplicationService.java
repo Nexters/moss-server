@@ -70,7 +70,7 @@ public class DiaryApplicationService {
                                             category.getHabitType().getName(),
                                             category.getCakeType().getName(),
                                             category.getDiaryDescription().getMessage(),
-                                            wholeCakeRepository.countAllByUser_IdAndCategoryId(userId, category.getId()),
+                                            wholeCakeRepository.countAllByUserIdAndCategoryId(userId, category.getId()),
                                             imageApplicationService.getWholeDiaryImagePath(category.getHabitType(), ImageEvent.WHOLE_CAKE_DIARY)
                                     );
                                 }
@@ -86,7 +86,7 @@ public class DiaryApplicationService {
                         category.getHabitType().getName(),
                         category.getDiaryDescription().getMessage(),
                         category.getCakeType().getName(),
-                        wholeCakeRepository.findAllByUser_IdAndCategoryId(userId, categoryId)
+                        wholeCakeRepository.findAllByUserIdAndCategoryId(userId, categoryId)
                                 .stream()
                                 .map(wholeCake -> wholeCake.getCreatedAt())
                                 .collect(Collectors.toList()),

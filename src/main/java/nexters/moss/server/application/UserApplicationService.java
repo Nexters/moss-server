@@ -20,7 +20,6 @@ public class UserApplicationService {
     private SocialTokenService socialTokenService;
     private HabikeryTokenService habikeryTokenService;
     private UserRepository userRepository;
-    private ReportRepository reportRepository;
     private ReceivedPieceOfCakeRepository receivedPieceOfCakeRepository;
 
     public Response join(String accessToken, String nickname) {

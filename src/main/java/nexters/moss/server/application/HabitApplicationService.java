@@ -113,8 +113,6 @@ public class HabitApplicationService {
         return new Response<>(habitId);
     }
 
-    // TODO: separate done and receive logic
-    // TODO: separate jpa consistence context
     public HabitDoneResponse doneHabit(Long userId, Long habitId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException("No Matched User"));
         Habit habit = habitRepository.findById(habitId).orElseThrow(() -> new ResourceNotFoundException("No Matched Habit"));
@@ -129,39 +127,6 @@ public class HabitApplicationService {
         }
         habit.done();
         habit.refreshHabitHistory();
-        habitRepository.save(habit);
-
-        if (!habit.isReadyToReceiveCake()) {
-            return new HabitDoneResponse(
-                    new HabitCheckResponse(
-                            habit.getId(),
-                            category.getHabitType(),
-                            habit.getIsFirstCheck(),
-                            habit.getHabitRecords(),
-                            habit.getCategoryId()
-                    ), null
-            );
-        }
-        SentPieceOfCake sentPieceOfCake = sentPieceOfCakeRepository.findRandomByUserIdAndCategoryId(userId, habit.getCategoryId())
-                .orElseThrow(() -> new ResourceNotFoundException("Has no remain cake message"));
-
-        int pieceCount = receivedPieceOfCakeRepository.countAllByUserIdAndCategoryId(userId, habit.getCategoryId());
-
-        receivedPieceOfCakeRepository.save(
-                ReceivedPieceOfCake.builder()
-                        .userId(userId)
-                        .categoryId(category.getId())
-                        .sentPieceOfCakeId(sentPieceOfCake.getId())
-                        .build()
-        );
-
-        if ((pieceCount + 1) % 8 == 0) {
-            wholeCakeRepository.save(new WholeCake(
-                    userId,
-                    habitId,
-                    category.getId()
-            ));
-        }
 
         return new HabitDoneResponse(
                 new HabitCheckResponse(
@@ -171,11 +136,38 @@ public class HabitApplicationService {
                         habit.getHabitRecords(),
                         habit.getCategoryId()
                 ),
-                new NewCakeDTO(
-                        user.getNickname(),
-                        sentPieceOfCake.getNote(),
-                        category.getCakeType().getName(),
-                        imageApplicationService.getMoveImagePath(category.getHabitType(), ImageEvent.NEW_CAKE))
+                habit.isReadyToReceiveCake() ? processSendPieceOfCake(user, category, habit) : null
+        );
+
+    }
+
+    private NewCakeDTO processSendPieceOfCake(User user, Category category, Habit habit) {
+        SentPieceOfCake sentPieceOfCake = sentPieceOfCakeRepository.findRandomByUserIdAndCategoryId(user.getId(), category.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Has no remain cake message"));
+
+        int pieceCount = receivedPieceOfCakeRepository.countAllByUserIdAndCategoryId(user.getId(), category.getId());
+
+        receivedPieceOfCakeRepository.save(
+                ReceivedPieceOfCake.builder()
+                        .userId(user.getId())
+                        .categoryId(category.getId())
+                        .sentPieceOfCakeId(sentPieceOfCake.getId())
+                        .build()
+        );
+
+        if ((pieceCount + 1) % 8 == 0) {
+            wholeCakeRepository.save(new WholeCake(
+                    user.getId(),
+                    habit.getId(),
+                    category.getId()
+            ));
+        }
+
+        return new NewCakeDTO(
+                user.getNickname(),
+                sentPieceOfCake.getNote(),
+                category.getCakeType().getName(),
+                imageApplicationService.getMoveImagePath(category.getHabitType(), ImageEvent.NEW_CAKE)
         );
     }
 
