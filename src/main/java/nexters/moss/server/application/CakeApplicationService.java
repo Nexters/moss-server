@@ -8,6 +8,7 @@ import nexters.moss.server.config.exception.UnauthorizedException;
 import nexters.moss.server.domain.model.*;
 import nexters.moss.server.domain.repository.*;
 import nexters.moss.server.application.value.ImageEvent;
+import nexters.moss.server.domain.value.CategoryType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,33 +16,34 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CakeApplicationService {
     private UserRepository userRepository;
-    private CategoryRepository categoryRepository;
     private PieceOfCakeSendRepository pieceOfCakeSendRepository;
     private PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository;
     private ImageApplicationService imageApplicationService;
+    private CategoryApplicationService categoryApplicationService;
 
     public CakeApplicationService(
             UserRepository userRepository,
-            CategoryRepository categoryRepository,
             PieceOfCakeSendRepository pieceOfCakeSendRepository,
             PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository,
-            ImageApplicationService imageApplicationService) {
+            ImageApplicationService imageApplicationService,
+            CategoryApplicationService categoryApplicationService
+    ) {
         this.userRepository = userRepository;
-        this.categoryRepository = categoryRepository;
         this.pieceOfCakeSendRepository = pieceOfCakeSendRepository;
         this.pieceOfCakeReceiveRepository = pieceOfCakeReceiveRepository;
         this.imageApplicationService = imageApplicationService;
+        this.categoryApplicationService = categoryApplicationService;
     }
 
     @Transactional
     public Response<Long> sendCake(Long userId, CreateNewCakeRequest createNewCakeRequest) {
         User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException("No Matched User"));
-        Category category = categoryRepository.findById(createNewCakeRequest.getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("No Matched Category"));
+        categoryApplicationService.findById(createNewCakeRequest.getCategoryId());
         return new Response<Long>(
                 pieceOfCakeSendRepository.save(
                         SentPieceOfCake.builder()
                         .user(user)
-                        .category(category)
+                        .categoryId(createNewCakeRequest.getCategoryId())
                         .note(createNewCakeRequest.getNote())
                         .build()
                 ).getId()
@@ -50,13 +52,13 @@ public class CakeApplicationService {
 
     public Response<NewCakeDTO> getCake(Long userId, Long categoryId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException("No Matched User"));
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("No Matched Category"));
-        SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findRandomByUser_IdAndCategory_Id(userId, categoryId).orElseThrow(() -> new ResourceNotFoundException("Has no remain cake message"));
+        CategoryType category = categoryApplicationService.findById(categoryId);
+        SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findRandomByUser_IdAndCategoryId(userId, categoryId).orElseThrow(() -> new ResourceNotFoundException("Has no remain cake message"));
 
         ReceivedPieceOfCake receivedPOC = pieceOfCakeReceiveRepository.save(
                 ReceivedPieceOfCake.builder()
                         .user(user)
-                        .category(category)
+                        .categoryId(categoryId)
                         .sentPieceOfCake(sentPieceOfCake)
                         .build()
         );
@@ -65,7 +67,7 @@ public class CakeApplicationService {
                 new NewCakeDTO(
                         receivedPOC.getUser().getNickname(),
                         receivedPOC.getSentPieceOfCake().getNote(),
-                        receivedPOC.getSentPieceOfCake().getCategory().getCakeType().getName(),
+                        category.getCakeType().getName(),
                         imageApplicationService.getMoveImagePath(category.getHabitType(), ImageEvent.NEW_CAKE))
         );
     }

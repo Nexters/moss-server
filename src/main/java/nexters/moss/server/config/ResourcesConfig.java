@@ -1,9 +1,13 @@
 package nexters.moss.server.config;
 
 import nexters.moss.server.application.dto.Image;
+import nexters.moss.server.domain.value.CategoryType;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
 
 @Configuration
 @EnableConfigurationProperties({ResourcesProperties.class})
@@ -17,5 +21,11 @@ public class ResourcesConfig {
     @Bean
     public Image image() {
         return resourcesProperties().getImage();
+    }
+
+    @Bean
+    @Qualifier("categories")
+    public List<CategoryType> categories() {
+        return resourcesProperties().getCategories();
     }
 }

@@ -9,6 +9,7 @@ import nexters.moss.server.application.dto.diary.HistoryResponse;
 import nexters.moss.server.domain.model.*;
 import nexters.moss.server.domain.repository.*;
 import nexters.moss.server.domain.value.CakeType;
+import nexters.moss.server.domain.value.CategoryType;
 import nexters.moss.server.domain.value.HabitType;
 import nexters.moss.server.application.value.ImageEvent;
 import org.junit.After;
@@ -32,7 +33,7 @@ public class DiaryApplicationServiceTest {
     private User sender;
 
     private Habit habit;
-    private Category category;
+    private CategoryType categoryType;
     private SentPieceOfCake sentPieceOfCake;
     private WholeCake wholeCake;
 
@@ -48,8 +49,6 @@ public class DiaryApplicationServiceTest {
     private HabitRepository habitRepository;
 
     @Autowired
-    private CategoryRepository categoryRepository;
-    @Autowired
     private DescriptionRepository descriptionRepository;
     @Autowired
     private PieceOfCakeSendRepository pieceOfCakeSendRepository;
@@ -62,14 +61,14 @@ public class DiaryApplicationServiceTest {
     public void setup() {
         sender = userRepository.save(new User(null, null, "accountToken", "sender", null, null));
         receiver = userRepository.save(new User(null, null, "accountToken", "receiver", null, null));
-        category = categoryRepository.save(new Category(null, HabitType.BREAKFAST, CakeType.APPLE));
+        categoryType = new CategoryType(1L, HabitType.WATER, CakeType.WATERMELON);
 
-        habit = habitRepository.save(new Habit(null, category, receiver.getId(), null, 0, false, false, 0));
-        descriptionRepository.save(new Description(null, category, "receivePieceOfCake", "diary"));
+        habit = habitRepository.save(new Habit(null, categoryType.getId(), receiver.getId(), null, 0, false, false, 0));
+        descriptionRepository.save(new Description(null, categoryType.getId(), "receivePieceOfCake", "diary"));
 
-        sentPieceOfCake = pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, category, "note", null));
-        pieceOfCakeReceiveRepository.save(new ReceivedPieceOfCake(null, receiver, sentPieceOfCake, category));
-        wholeCake = wholeCakeRepository.save(new WholeCake(null, receiver, habit, category));
+        sentPieceOfCake = pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, categoryType.getId(), "note", null));
+        pieceOfCakeReceiveRepository.save(new ReceivedPieceOfCake(null, receiver, sentPieceOfCake, categoryType.getId()));
+        wholeCake = wholeCakeRepository.save(new WholeCake(null, receiver, habit, categoryType.getId()));
 
     }
 
@@ -84,9 +83,9 @@ public class DiaryApplicationServiceTest {
 
         Response<List<DiaryDTO>> res = diaryApplicationService.getPieceOfCakeDiary(userId);
         Assert.assertNotNull(res.getData());
-        Assert.assertEquals(sentPieceOfCake.getCategory().getCakeType().getName(), res.getData().get(0).getCakeName());
+        Assert.assertEquals(categoryType.getCakeType().getName(), res.getData().get(0).getCakeName());
 
-        String imagePath = image.getUrl() + "/" + category.getHabitType().getKey() + "/" + ImageEvent.PIECE_OF_CAKE_DIARY.getName() + "_" + res.getData().get(0).getCount() + ".png";
+        String imagePath = image.getUrl() + "/" + categoryType.getHabitType().getKey() + "/" + ImageEvent.PIECE_OF_CAKE_DIARY.getName() + "_" + res.getData().get(0).getCount() + ".png";
         Assert.assertEquals(imagePath, res.getData().get(0).getImagePath());
 
     }
@@ -97,9 +96,9 @@ public class DiaryApplicationServiceTest {
 
         Response<List<DiaryDTO>> res = diaryApplicationService.getWholeCakeDiary(userId);
         Assert.assertNotNull(res.getData());
-        Assert.assertEquals(wholeCake.getCategory().getCakeType().getName(), res.getData().get(0).getCakeName());
+        Assert.assertEquals(categoryType.getCakeType().getName(), res.getData().get(0).getCakeName());
 
-        String imagePath = image.getUrl() + "/" + wholeCake.getCategory().getHabitType().getKey() + "/" + ImageEvent.WHOLE_CAKE_DIARY.getName() + ".png";
+        String imagePath = image.getUrl() + "/" + categoryType.getHabitType().getKey() + "/" + ImageEvent.WHOLE_CAKE_DIARY.getName() + ".png";
         Assert.assertEquals(imagePath, res.getData().get(0).getImagePath());
 
     }
@@ -107,13 +106,13 @@ public class DiaryApplicationServiceTest {
     @Test
     public void getCakeHistoryTest() {
         Long userId = receiver.getId();
-        Long categoryId = category.getId();
+        Long categoryId = categoryType.getId();
 
         Response<HistoryResponse> res = diaryApplicationService.getCakeHistory(userId, categoryId);
         Assert.assertNotNull(res.getData());
-        Assert.assertEquals(wholeCake.getCategory().getCakeType().getName(), res.getData().getCakeName());
+        Assert.assertEquals(categoryType.getCakeType().getName(), res.getData().getCakeName());
 
-        String imagePath = image.getUrl() + "/" + wholeCake.getCategory().getHabitType().getKey() + "/" + ImageEvent.HISTORY.getName() + ".gif";
+        String imagePath = image.getUrl() + "/" + categoryType.getHabitType().getKey() + "/" + ImageEvent.HISTORY.getName() + ".gif";
         Assert.assertEquals(imagePath, res.getData().getImagePath());
 
     }

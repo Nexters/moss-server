@@ -27,23 +27,6 @@ public class ReceivedPieceOfCake extends TimeProvider {
     @JoinColumn(name = "sent_piece_of_cake_id", nullable = false)
     private SentPieceOfCake sentPieceOfCake;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
-
-    public ReceivedPieceOfCake(
-            Long userId,
-            Long sentPieceOfCakeId,
-            Long categoryId
-    ) {
-        this.user = User.builder()
-                .id(userId)
-                .build();
-        this.sentPieceOfCake = SentPieceOfCake.builder()
-                .id(sentPieceOfCakeId)
-                .build();
-        this.category = Category.builder()
-                .id(categoryId)
-                .build();
-    }
+    @Column(name = "category_id")
+    private Long categoryId;
 }

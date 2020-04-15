@@ -4,12 +4,11 @@ import nexters.moss.server.TestConfiguration;
 import nexters.moss.server.application.HabitApplicationService;
 import nexters.moss.server.application.dto.HabitHistory;
 import nexters.moss.server.application.dto.Response;
-import nexters.moss.server.domain.model.Category;
+import nexters.moss.server.domain.value.CategoryType;
 import nexters.moss.server.domain.model.Habit;
 import nexters.moss.server.domain.model.HabitRecord;
 import nexters.moss.server.domain.model.User;
 import nexters.moss.server.domain.repository.*;
-import nexters.moss.server.domain.service.HabitRecordService;
 import nexters.moss.server.domain.value.CakeType;
 import nexters.moss.server.domain.value.HabitType;
 import org.junit.After;
@@ -32,15 +31,12 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 @ActiveProfiles("test")
 public class HabitApplicationServiceTest {
-    private Category testCategory;
+    private CategoryType testCategoryType;
 
     private User testUser;
 
     @Autowired
     private TestConfiguration testConfiguration;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
 
     @Autowired
     private HabitApplicationService habitApplicationService;
@@ -51,12 +47,15 @@ public class HabitApplicationServiceTest {
     @Autowired
     private HabitRepository habitRepository;
 
+    @Autowired
+    private HabitRecordRepository habitRecordRepository;
+
     private PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository;
     private WholeCakeRepository wholeCakeRepository;
 
     @Before
     public void setup() {
-        testCategory = categoryRepository.save(new Category(null, HabitType.WATER, CakeType.WATERMELON));
+        testCategoryType = new CategoryType(1L, HabitType.WATER, CakeType.WATERMELON);
 
         testUser = userRepository.save(
                 new User(
@@ -78,7 +77,7 @@ public class HabitApplicationServiceTest {
     @Test
     // TODO
     public void getHabitHistoryTest() {
-        habitApplicationService.createHabit(testUser.getId(), testCategory.getId());
+        habitApplicationService.createHabit(testUser.getId(), testCategoryType.getId());
         Response<List<HabitHistory>> getResponse = habitApplicationService.getHabit(testUser.getId());
         Assert.assertEquals(1, getResponse.getData().size());
 
@@ -89,7 +88,7 @@ public class HabitApplicationServiceTest {
 
     @Test
     public void createHabitTest() {
-        Response<HabitHistory> createResponse = habitApplicationService.createHabit(testUser.getId(), testCategory.getId());
+        Response<HabitHistory> createResponse = habitApplicationService.createHabit(testUser.getId(), testCategoryType.getId());
         Assert.assertNotNull(createResponse.getData());
 
         List<HabitRecord> habitRecords = createResponse.getData().getHabitRecords();
@@ -101,13 +100,13 @@ public class HabitApplicationServiceTest {
         }
     }
 
-//    @Test
-//    public void deleteHabitTest() {
-//        Response<HabitHistory> createResponse = habitApplicationService.createHabit(testUser.getId(), testCategory.getId());
-//        long habitId = createResponse.getData().getHabitId();
-//        habitApplicationService.deleteHabit(testUser.getId(), habitId);
-//        Assert.assertEquals(0, habitRecordRepository.findAllByUser_IdAndHabit_Id(testUser.getId(), habitId).size());
-//    }
+    @Test
+    public void deleteHabitTest() {
+        Response<HabitHistory> createResponse = habitApplicationService.createHabit(testUser.getId(), testCategoryType.getId());
+        long habitId = createResponse.getData().getHabitId();
+        habitApplicationService.deleteHabit(testUser.getId(), habitId);
+        Assert.assertEquals(0, habitRecordRepository.findAllByUserIdAndHabitId(testUser.getId(), habitId).size());
+    }
 
     @Test
     public void doneHabitTest() {
@@ -115,10 +114,10 @@ public class HabitApplicationServiceTest {
         pieceOfCakeReceiveRepository = mock(PieceOfCakeReceiveRepository.class);
         wholeCakeRepository = mock(WholeCakeRepository.class);
 
-        given(pieceOfCakeReceiveRepository.countAllByUser_IdAndCategory_Id(testUser.getId(), testCategory.getId()))
+        given(pieceOfCakeReceiveRepository.countAllByUser_IdAndCategoryId(testUser.getId(), testCategoryType.getId()))
                 .willReturn(8);
 
-        Response<HabitHistory> createResponse = habitApplicationService.createHabit(testUser.getId(), testCategory.getId());
+        Response<HabitHistory> createResponse = habitApplicationService.createHabit(testUser.getId(), testCategoryType.getId());
         long habitId = createResponse.getData().getHabitId();
 
         // when

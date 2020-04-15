@@ -3,7 +3,7 @@ package nexters.moss.server.cake;
 import nexters.moss.server.TestConfiguration;
 import nexters.moss.server.application.UserApplicationService;
 import nexters.moss.server.application.dto.Response;
-import nexters.moss.server.domain.model.Category;
+import nexters.moss.server.domain.value.CategoryType;
 import nexters.moss.server.domain.model.SentPieceOfCake;
 import nexters.moss.server.domain.model.User;
 import nexters.moss.server.domain.repository.CategoryRepository;
@@ -51,10 +51,10 @@ public class CakeApplicationControllerTest {
 
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private UserApplicationService userApplicationService;
-    @Autowired
-    private CategoryRepository categoryRepository;
+
     @Autowired
     private PieceOfCakeSendRepository pieceOfCakeSendRepository;
 
@@ -64,7 +64,7 @@ public class CakeApplicationControllerTest {
     private String testAccessToken;
     private String habikeryToken;
     private User testUser;
-    private Category category;
+    private CategoryType categoryType;
 
     @Before
     public void setup() {
@@ -82,7 +82,7 @@ public class CakeApplicationControllerTest {
 
         List<HabitType> habitTypes = Arrays.asList(HabitType.values());
         List<CakeType> cakeTypes = Arrays.asList(CakeType.values());
-        category = categoryRepository.save(new Category(null, habitTypes.get(0), cakeTypes.get(0)));
+        categoryType = new CategoryType(1L, habitTypes.get(0), cakeTypes.get(0));
     }
 
     @After
@@ -99,7 +99,7 @@ public class CakeApplicationControllerTest {
 
         Map<String, Object> data = new HashMap<>();
         data.put("note", "test~!!");
-        data.put("categoryId", category.getId());
+        data.put("categoryId", categoryType.getId());
 
         HttpEntity<Map<String, Object>> req = new HttpEntity<>(data, httpHeaders);
 

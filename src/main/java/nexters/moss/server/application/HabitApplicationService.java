@@ -11,11 +11,9 @@ import nexters.moss.server.config.exception.ResourceNotFoundException;
 import nexters.moss.server.config.exception.UnauthorizedException;
 import nexters.moss.server.domain.model.*;
 import nexters.moss.server.domain.repository.*;
-import nexters.moss.server.domain.model.Category;
+import nexters.moss.server.domain.value.CategoryType;
 import nexters.moss.server.domain.model.Habit;
-import nexters.moss.server.domain.model.HabitRecord;
 import nexters.moss.server.domain.model.User;
-import nexters.moss.server.domain.repository.CategoryRepository;
 import nexters.moss.server.domain.repository.HabitRepository;
 import nexters.moss.server.domain.repository.UserRepository;
 import nexters.moss.server.domain.service.HabitService;
@@ -28,7 +26,6 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class HabitApplicationService {
-    private CategoryRepository categoryRepository;
     private HabitRepository habitRepository;
     private HabitService habitService;
     private UserRepository userRepository;
@@ -36,18 +33,18 @@ public class HabitApplicationService {
     private WholeCakeRepository wholeCakeRepository;
     private PieceOfCakeSendRepository pieceOfCakeSendRepository;
     private ImageApplicationService imageApplicationService;
+    private CategoryApplicationService categoryApplicationService;
 
     public HabitApplicationService(
-            CategoryRepository categoryRepository,
             HabitRepository habitRepository,
             HabitService habitService,
             UserRepository userRepository,
             PieceOfCakeReceiveRepository pieceOfCakeReceiveRepository,
             WholeCakeRepository wholeCakeRepository,
             PieceOfCakeSendRepository pieceOfCakeSendRepository,
-            ImageApplicationService imageApplicationService
+            ImageApplicationService imageApplicationService,
+            CategoryApplicationService categoryApplicationService
     ) {
-        this.categoryRepository = categoryRepository;
         this.habitRepository = habitRepository;
         this.habitService = habitService;
         this.userRepository = userRepository;
@@ -55,20 +52,21 @@ public class HabitApplicationService {
         this.wholeCakeRepository = wholeCakeRepository;
         this.pieceOfCakeSendRepository = pieceOfCakeSendRepository;
         this.imageApplicationService = imageApplicationService;
+        this.categoryApplicationService = categoryApplicationService;
     }
 
     public Response<HabitHistory> createHabit(Long userId, Long categoryId) {
         // TODO: user exist validation
-        Category category = this.findCategoryById(categoryId);
+        CategoryType category = categoryApplicationService.findById(categoryId);
 
-        if (habitRepository.existsByUserIdAndCategory_Id(userId, categoryId)) {
+        if (habitRepository.existsByUserIdAndCategoryId(userId, categoryId)) {
             throw new IllegalArgumentException("Already Has Habit");
         }
         int habitCount = habitRepository.countAllByUserId(userId);
         Habit habit = habitRepository.save(
                 Habit.builder()
                         .userId(userId)
-                        .category(category)
+                        .categoryId(categoryId)
                         .order(habitCount)
                         .build()
         );
@@ -76,7 +74,7 @@ public class HabitApplicationService {
         return new Response(
                 new HabitHistory(
                         habit.getId(),
-                        categoryId,
+                        habit.getCategoryId(),
                         category.getHabitType(),
                         habit.getIsFirstCheck(),
                         habit.getHabitRecords()
@@ -91,16 +89,14 @@ public class HabitApplicationService {
                 habits
                         .stream()
                         .map(habit -> {
-                                    List<HabitRecord> habitRecords = habit.getHabitRecords();
-                                    if (habit.refreshHabitHistory()) {
-                                        habit.changeHabitRecords(habitRecords);
-                                    }
+                                    habit.refreshHabitHistory();
+                                    CategoryType category = categoryApplicationService.findById(habit.getCategoryId());
                                     return new HabitHistory(
                                             habit.getId(),
-                                            habit.getCategory().getId(),
-                                            habit.getCategory().getHabitType(),
+                                            habit.getCategoryId(),
+                                            category.getHabitType(),
                                             habit.getIsFirstCheck(),
-                                            habitRecords
+                                            habit.getHabitRecords()
                                     );
                                 }
                         )
@@ -123,39 +119,39 @@ public class HabitApplicationService {
     public HabitDoneResponse doneHabit(Long userId, Long habitId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException("No Matched User"));
         Habit habit = habitRepository.findById(habitId).orElseThrow(() -> new ResourceNotFoundException("No Matched Habit"));
+        CategoryType category = categoryApplicationService.findById(habit.getCategoryId());
         if (habit.isDone()) {
             throw new AlreadyExistException("Already done habit");
         }
         habit.count();
         habit.offFirstCheck();
-        if(habit.isFirstCheck()) {
+        if (habit.isFirstCheck()) {
             habit.onFirstCheck();
         }
         habit.done();
-        habitRepository.save(habit);
-
         habit.refreshHabitHistory();
+        habitRepository.save(habit);
 
         if (!habit.isReadyToReceiveCake()) {
             return new HabitDoneResponse(
                     new HabitCheckResponse(
                             habit.getId(),
-                            habit.getCategory().getHabitType(),
+                            category.getHabitType(),
                             habit.getIsFirstCheck(),
                             habit.getHabitRecords(),
-                            habit.getCategory().getId()
+                            habit.getCategoryId()
                     ), null
             );
         }
-        SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findRandomByUser_IdAndCategory_Id(userId, habit.getCategory().getId())
+        SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findRandomByUser_IdAndCategoryId(userId, habit.getCategoryId())
                 .orElseThrow(() -> new ResourceNotFoundException("Has no remain cake message"));
 
-        int pieceCount = pieceOfCakeReceiveRepository.countAllByUser_IdAndCategory_Id(userId, habit.getCategory().getId());
+        int pieceCount = pieceOfCakeReceiveRepository.countAllByUser_IdAndCategoryId(userId, habit.getCategoryId());
 
         pieceOfCakeReceiveRepository.save(
                 ReceivedPieceOfCake.builder()
                         .user(user)
-                        .category(habit.getCategory())
+                        .categoryId(category.getId())
                         .sentPieceOfCake(sentPieceOfCake)
                         .build()
         );
@@ -164,23 +160,23 @@ public class HabitApplicationService {
             wholeCakeRepository.save(new WholeCake(
                     userId,
                     habitId,
-                    habit.getCategory().getId()
+                    category.getId()
             ));
         }
 
         return new HabitDoneResponse(
                 new HabitCheckResponse(
                         habit.getId(),
-                        habit.getCategory().getHabitType(),
+                        category.getHabitType(),
                         habit.getIsFirstCheck(),
                         habit.getHabitRecords(),
-                        habit.getCategory().getId()
+                        habit.getCategoryId()
                 ),
                 new NewCakeDTO(
                         user.getNickname(),
                         sentPieceOfCake.getNote(),
-                        habit.getCategory().getCakeType().getName(),
-                        imageApplicationService.getMoveImagePath(habit.getCategory().getHabitType(), ImageEvent.NEW_CAKE))
+                        category.getCakeType().getName(),
+                        imageApplicationService.getMoveImagePath(category.getHabitType(), ImageEvent.NEW_CAKE))
         );
     }
 
@@ -212,18 +208,13 @@ public class HabitApplicationService {
     }
 
     @Transactional(readOnly = true)
-    public Category findCategoryById(Long categoryId) {
-        return categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("No Matched Category"));
-    }
-
-    @Transactional(readOnly = true)
     public Habit findHabitById(Long habitId) {
         return habitRepository.findById(habitId).orElseThrow(() -> new ResourceNotFoundException("No Matched Habit"));
     }
 
     private Habit findHabitById(List<Habit> habits, Long habitId) {
-        for(Habit habit: habits) {
-            if(habit.getId().equals(habitId)) {
+        for (Habit habit : habits) {
+            if (habit.getId().equals(habitId)) {
                 return habit;
             }
         }

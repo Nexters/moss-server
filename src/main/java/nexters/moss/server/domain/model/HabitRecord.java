@@ -23,6 +23,9 @@ public class HabitRecord extends TimeProvider {
     @Column(name = "user_id")
     private Long userId;
 
+    @Column(name = "habit_id")
+    private Long habitId;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "habit_status")
     @Setter

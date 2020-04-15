@@ -4,7 +4,7 @@ import nexters.moss.server.TestConfiguration;
 import nexters.moss.server.application.CakeApplicationService;
 import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.application.dto.cake.CreateNewCakeRequest;
-import nexters.moss.server.domain.model.Category;
+import nexters.moss.server.domain.value.CategoryType;
 import nexters.moss.server.domain.model.Habit;
 import nexters.moss.server.domain.model.SentPieceOfCake;
 import nexters.moss.server.domain.model.User;
@@ -33,16 +33,13 @@ import java.util.List;
 public class CakeApplicationServiceTest {
     private Habit testHabit;
     private User sender;
-    private Category category;
+    private CategoryType categoryType;
 
     @Autowired
     private TestConfiguration testConfiguration;
 
     @Autowired
     private CakeApplicationService cakeApplicationService;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -58,13 +55,10 @@ public class CakeApplicationServiceTest {
         List<HabitType> habitTypes = Arrays.asList(HabitType.values());
         List<CakeType> cakeTypes = Arrays.asList(CakeType.values());
 
-        for (int i = 1; i < habitTypes.size(); i++) {
-            categoryRepository.save(new Category(null, habitTypes.get(i), cakeTypes.get(i)));
-        }
-        category = categoryRepository.save(new Category(null, habitTypes.get(0), cakeTypes.get(0)));
+        categoryType = new CategoryType(1L, habitTypes.get(0), cakeTypes.get(0));
         sender = userRepository.save(new User(null, null, "accounToken", "nickName", null, null));
 
-        testHabit = habitRepository.save(new Habit(null, category, sender.getId(), null, 0, false, false, 0));
+        testHabit = habitRepository.save(new Habit(null, categoryType.getId(), sender.getId(), null, 0, false, false, 0));
     }
 
     @After
@@ -74,14 +68,13 @@ public class CakeApplicationServiceTest {
 
     @Test
     public void createNewCakeTest() {
-        CreateNewCakeRequest req = new CreateNewCakeRequest(testHabit.getCategory().getId(), "note~!!");
+        CreateNewCakeRequest req = new CreateNewCakeRequest(testHabit.getCategoryId(), "note~!!");
         Response<Long> res = cakeApplicationService.sendCake(sender.getId(), req);
 
         Assert.assertNotNull(res.getData());
 
         SentPieceOfCake sentPieceOfCake = pieceOfCakeSendRepository.findById(res.getData()).get();
         Assert.assertEquals(req.getNote(), sentPieceOfCake.getNote());
-
     }
 }
 

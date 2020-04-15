@@ -27,9 +27,8 @@ public class SentPieceOfCake extends TimeProvider {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
+    @Column(name = "category_id")
+    private Long categoryId;
 
     @Column(name = "note")
     @Length(min = 3, max = 14)
@@ -37,14 +36,4 @@ public class SentPieceOfCake extends TimeProvider {
 
     @OneToMany(mappedBy = "sentPieceOfCake", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReceivedPieceOfCake> receivedPieceOfCakeList = new ArrayList<>();
-
-    public SentPieceOfCake(Long userId, CreateNewCakeRequest createNewCakeRequest) {
-        this.user = User.builder()
-                .id(userId)
-                .build();
-        this.category = Category.builder()
-                .id(createNewCakeRequest.getCategoryId())
-                .build();
-        this.note = createNewCakeRequest.getNote();
-    }
 }

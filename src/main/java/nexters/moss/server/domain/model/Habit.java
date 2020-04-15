@@ -25,9 +25,8 @@ public class Habit extends TimeProvider {
     @Column(name = "habit_id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
+    @Column(name = "category_id")
+    private Long categoryId;
 
     @Column(name = "user_id")
     private Long userId;
@@ -38,7 +37,7 @@ public class Habit extends TimeProvider {
     private List<HabitRecord> habitRecords = new ArrayList<>();
 
     @Column(name = "habit_order")
-    private int order = 0;
+    private Integer order = 0;
 
     @Column(name = "isActivated", columnDefinition = "boolean default false")
     private Boolean isActivated = false;
@@ -54,8 +53,8 @@ public class Habit extends TimeProvider {
     }
 
     @Builder
-    public Habit(Category category, Long userId, int order) {
-        this.category = category;
+    public Habit(Long categoryId, Long userId, Integer order) {
+        this.categoryId = categoryId;
         this.userId = userId;
         this.order = order;
         createHabitRecords(userId);
@@ -73,6 +72,7 @@ public class Habit extends TimeProvider {
             habitRecords.add(
                     HabitRecord.builder()
                             .userId(userId)
+                            .habitId(this.id)
                             .habitStatus(habitStatus)
                             .date(date.plusDays(day))
                             .build()

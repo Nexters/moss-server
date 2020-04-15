@@ -9,6 +9,7 @@ import nexters.moss.server.domain.model.*;
 import nexters.moss.server.domain.repository.*;
 import nexters.moss.server.domain.service.SocialTokenService;
 import nexters.moss.server.domain.value.CakeType;
+import nexters.moss.server.domain.value.CategoryType;
 import nexters.moss.server.domain.value.HabitType;
 import org.junit.After;
 import org.junit.Before;
@@ -53,8 +54,6 @@ public class DiaryApplicationControllerTest {
     @Autowired
     private UserApplicationService userApplicationService;
     @Autowired
-    private CategoryRepository categoryRepository;
-    @Autowired
     private DescriptionRepository descriptionRepository;
     @Autowired
     private PieceOfCakeSendRepository pieceOfCakeSendRepository;
@@ -77,7 +76,7 @@ public class DiaryApplicationControllerTest {
     private User sender;
 
     private Habit habit;
-    private Category category;
+    private CategoryType categoryType;
     private SentPieceOfCake sentPieceOfCake;
     private WholeCake wholeCake;
 
@@ -106,14 +105,14 @@ public class DiaryApplicationControllerTest {
         List<HabitType> habitTypes = Arrays.asList(HabitType.values());
         List<CakeType> cakeTypes = Arrays.asList(CakeType.values());
 
-        category = categoryRepository.save(new Category(null, habitTypes.get(0), cakeTypes.get(0)));
-        descriptionRepository.save(new Description(null, category, "receivePieceOfCake", "diary"));
+        categoryType = new CategoryType(null, habitTypes.get(0), cakeTypes.get(0));
+        descriptionRepository.save(new Description(null, categoryType.getId(), "receivePieceOfCake", "diary"));
 
-        habit = habitRepository.save(new Habit(null, category, receiver.getId(), null, 0, false, false, 0));
+        habit = habitRepository.save(new Habit(null, categoryType.getId(), receiver.getId(), null, 0, false, false, 0));
 
-        sentPieceOfCake = pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, category, "note", null));
-        pieceOfCakeReceiveRepository.save(new ReceivedPieceOfCake(null, receiver, sentPieceOfCake, category));
-        wholeCake = wholeCakeRepository.save(new WholeCake(null, receiver, habit, category));
+        sentPieceOfCake = pieceOfCakeSendRepository.save(new SentPieceOfCake(null, sender, categoryType.getId(), "note", null));
+        pieceOfCakeReceiveRepository.save(new ReceivedPieceOfCake(null, receiver, sentPieceOfCake, categoryType.getId()));
+        wholeCake = wholeCakeRepository.save(new WholeCake(null, receiver, habit, categoryType.getId()));
     }
 
     @After
@@ -124,43 +123,51 @@ public class DiaryApplicationControllerTest {
     @Test
     public void getPieceOfCakeDiaryTest() throws URISyntaxException {
 
-        ResponseEntity<Response<Object>> res = getTestResponse("/api/diary/piece", new ParameterizedTypeReference<Response<List<DiaryDTO>>>(){});
+        ResponseEntity<Response<Object>> res = getTestResponse("/api/diary/piece", new ParameterizedTypeReference<Response<List<DiaryDTO>>>() {
+        });
         List<DiaryDTO> diaries = (List<DiaryDTO>) res.getBody().getData();
 
         assertThat(res.getBody().getData()).isNotNull();
         assertThat(diaries.get(0).getCakeName())
-                                .isEqualTo(sentPieceOfCake.getCategory()
-                                                          .getCakeType()
-                                                          .getName());
-            }
+                .isEqualTo(
+                        categoryType
+                                .getCakeType()
+                                .getName()
+                );
+    }
 
     @Test
     public void getWholeCakeDiaryTest() throws URISyntaxException {
 
-        ResponseEntity<Response<Object>> res = getTestResponse("/api/diary/whole", new ParameterizedTypeReference<Response<List<DiaryDTO>>>(){});
+        ResponseEntity<Response<Object>> res = getTestResponse("/api/diary/whole", new ParameterizedTypeReference<Response<List<DiaryDTO>>>() {
+        });
 
         List<DiaryDTO> diaries = (List<DiaryDTO>) res.getBody().getData();
 
         assertThat(res.getBody().getData()).isNotNull();
         assertThat(diaries.get(0).getCakeName())
-                        .isEqualTo(wholeCake.getCategory()
-                                            .getCakeType()
-                                            .getName());
+                .isEqualTo(
+                        categoryType
+                                .getCakeType()
+                                .getName()
+                );
     }
 
     @Test
     public void getCakeHistoryTest() throws URISyntaxException {
 
-        ResponseEntity<Response<Object>> res = getTestResponse("/api/diary/history?categoryId=" + category.getId(), new ParameterizedTypeReference<Response<HistoryResponse>>(){});
+        ResponseEntity<Response<Object>> res = getTestResponse("/api/diary/history?categoryId=" + categoryType.getId(), new ParameterizedTypeReference<Response<HistoryResponse>>() {
+        });
 
         HistoryResponse historyResponse = (HistoryResponse) res.getBody().getData();
 
         assertThat(historyResponse).isNotNull();
         assertThat(historyResponse.getCakeName())
-                                  .isEqualTo(wholeCake.getCategory()
-                                                      .getCakeType()
-                                                      .getName());
-
+                .isEqualTo(
+                        categoryType
+                                .getCakeType()
+                                .getName()
+                );
     }
 
     private ResponseEntity<Response<Object>> getTestResponse(String uri, ParameterizedTypeReference parameterizedTypeReference) throws URISyntaxException {
@@ -168,11 +175,11 @@ public class DiaryApplicationControllerTest {
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("habikeryToken", receiverHabikeryToken);
-        HttpEntity<Map<String,Object>> req = new HttpEntity<>(httpHeaders);
+        HttpEntity<Map<String, Object>> req = new HttpEntity<>(httpHeaders);
 
         return this.testRestTemplate.exchange(uri
-                ,HttpMethod.GET
-                ,req
-                ,parameterizedTypeReference);
+                , HttpMethod.GET
+                , req
+                , parameterizedTypeReference);
     }
 }

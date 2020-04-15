@@ -16,9 +16,8 @@ public class Description {
     @Column(name = "description_id")
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
+    @Column(name = "category_id")
+    private Long categoryId;
 
     @Column(name = "receive_piece_of_cake")
     private String receivePieceOfCake;

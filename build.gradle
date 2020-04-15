@@ -26,6 +26,9 @@ dependencies {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
 
+    // google
+    compile group: 'com.google.guava', name: 'guava', version: '23.0'
+    
     // jackson
     compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.10.2'
 

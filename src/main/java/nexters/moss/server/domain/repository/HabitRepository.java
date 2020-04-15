@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface HabitRepository extends JpaRepository<Habit, Long> {
     List<Habit> findAllByUserId(Long userId);
-    Boolean existsByUserIdAndCategory_Id(Long userId, Long categoryId);
+    Boolean existsByUserIdAndCategoryId(Long userId, Long categoryId);
     List<Habit> findAllByUserIdOrderByOrderAsc(Long userId);
     int countAllByUserId(Long userId);
 }

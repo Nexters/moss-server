@@ -52,8 +52,8 @@ public class HabitServiceTest {
     @Test
     public void changeHabitsOrderTest1() {
         habitService.changeHabitsOrder(testHabits, 0, 4);
-        Assert.assertEquals(3, testHabits.get(4).getOrder());
-        Assert.assertEquals(4, testHabits.get(0).getOrder());
+        Assert.assertEquals(Integer.valueOf(3), testHabits.get(4).getOrder());
+        Assert.assertEquals(Integer.valueOf(4), testHabits.get(0).getOrder());
     }
 
     /*
@@ -66,8 +66,8 @@ public class HabitServiceTest {
     @Test
     public void changeHabitsOrderTest2() {
         habitService.changeHabitsOrder(testHabits, 2, 3);
-        Assert.assertEquals(2, testHabits.get(3).getOrder());
-        Assert.assertEquals(3, testHabits.get(2).getOrder());
+        Assert.assertEquals(Integer.valueOf(2), testHabits.get(3).getOrder());
+        Assert.assertEquals(Integer.valueOf(3), testHabits.get(2).getOrder());
     }
 
     /*
@@ -80,8 +80,8 @@ public class HabitServiceTest {
     @Test
     public void changeHabitsOrderTest3() {
         habitService.changeHabitsOrder(testHabits, 4, 1);
-        Assert.assertEquals(2, testHabits.get(1).getOrder());
-        Assert.assertEquals(1, testHabits.get(4).getOrder());
+        Assert.assertEquals(Integer.valueOf(2), testHabits.get(1).getOrder());
+        Assert.assertEquals(Integer.valueOf(1), testHabits.get(4).getOrder());
     }
 
     /*
@@ -94,7 +94,7 @@ public class HabitServiceTest {
     @Test
     public void changeHabitsOrderTest4() {
         habitService.changeHabitsOrder(testHabits, 3, 0);
-        Assert.assertEquals(1, testHabits.get(0).getOrder());
-        Assert.assertEquals(0, testHabits.get(3).getOrder());
+        Assert.assertEquals(Integer.valueOf(1), testHabits.get(0).getOrder());
+        Assert.assertEquals(Integer.valueOf(0), testHabits.get(3).getOrder());
     }
 }
