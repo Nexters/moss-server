@@ -46,11 +46,11 @@ public class DiaryApplicationService {
                                             category.getHabitType().getName(),
                                             category.getCakeType().getName(),
                                             category.getDiaryDescription().getMessage(),
-                                            receivedPieceOfCakeRepository.countAllByUser_IdAndCategoryId(userId, category.getId()) % 8,
+                                            receivedPieceOfCakeRepository.countAllByUserIdAndCategoryId(userId, category.getId()) % 8,
                                             imageApplicationService.getPieceDiaryImagePath(
                                                     category.getHabitType(),
                                                     ImageEvent.PIECE_OF_CAKE_DIARY,
-                                                    receivedPieceOfCakeRepository.countAllByUser_IdAndCategoryId(userId, category.getId())
+                                                    receivedPieceOfCakeRepository.countAllByUserIdAndCategoryId(userId, category.getId())
                                             )
                                     );
                                 }

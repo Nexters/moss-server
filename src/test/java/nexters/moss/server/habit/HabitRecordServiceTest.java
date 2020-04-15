@@ -28,7 +28,7 @@ public class HabitRecordServiceTest {
     public void yesterdayIsNotDoneAndTodayIsNotDoneAndNotChangedAndTodayTest() {
         // given
         LocalDateTime date = LocalDate.now().atTime(0, 0, 0);
-        Habit habit = Habit.builder().categoryId(null).userId(null).order(null).build();
+        Habit habit = Habit.builder().categoryId(null).userId(null).build();
         habit.changeHabitRecords(setupDefaultHabitRecordsWithStartDate(date));
         List<HabitRecord> habitRecords = habit.getHabitRecords();
 
@@ -52,7 +52,7 @@ public class HabitRecordServiceTest {
     public void yesterdayIsNotDoneAndTodayIsNotDoneAndNotChangedAndNextDayTest() {
         // given
         LocalDateTime date = LocalDate.now().minusDays(1).atTime(0, 0, 0);
-        Habit habit = Habit.builder().categoryId(null).userId(null).order(null).build();
+        Habit habit = Habit.builder().categoryId(null).userId(null).build();
         habit.changeHabitRecords(setupDefaultHabitRecordsWithStartDate(date));
         List<HabitRecord> habitRecords = habit.getHabitRecords();
 
@@ -76,7 +76,7 @@ public class HabitRecordServiceTest {
     public void yesterdayIsNotDoneAndTodayIsDoneAndChangedAndNextDayTest() {
         // given
         LocalDateTime date = LocalDate.now().minusDays(1).atTime(0, 0, 0);
-        Habit habit = Habit.builder().categoryId(null).userId(null).order(null).build();
+        Habit habit = Habit.builder().categoryId(null).userId(null).build();
         habit.changeHabitRecords(setupDefaultHabitRecordsWithStartDate(date));
         List<HabitRecord> habitRecords = habit.getHabitRecords();
 
@@ -105,7 +105,7 @@ public class HabitRecordServiceTest {
     public void yesterdayIsDoneAndTodayIsCakeNotDoneAndChangedAndNextDayTest() {
         // given
         LocalDateTime date = LocalDate.now().minusDays(1).atTime(0, 0, 0);
-        Habit habit = Habit.builder().categoryId(null).userId(null).order(null).build();
+        Habit habit = Habit.builder().categoryId(null).userId(null).build();
         habit.changeHabitRecords(setupDefaultHabitRecordsWithStartDate(date));
         List<HabitRecord> habitRecords = habit.getHabitRecords();
         habitRecords.get(0).setHabitStatus(DONE);
@@ -140,7 +140,7 @@ public class HabitRecordServiceTest {
     public void yesterdayIsDoneAndTodayIsNotDoneAndChangedAndNextDayTest() {
         // given
         LocalDateTime date = LocalDate.now().minusDays(1).atTime(0, 0, 0);
-        Habit habit = Habit.builder().categoryId(null).userId(null).order(null).build();
+        Habit habit = Habit.builder().categoryId(null).userId(null).build();
         habit.changeHabitRecords(setupDefaultHabitRecordsWithStartDate(date));
         List<HabitRecord> habitRecords = habit.getHabitRecords();
         habitRecords.get(0).setHabitStatus(DONE);

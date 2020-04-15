@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "whole_cakes")
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class WholeCake extends TimeProvider {
@@ -18,9 +17,8 @@ public class WholeCake extends TimeProvider {
     @Column(name = "whole_cake_id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "user_id")
+    private Long userId;
 
     @Column(name = "habit_id")
     private Long habitId;
@@ -28,14 +26,13 @@ public class WholeCake extends TimeProvider {
     @Column(name = "category_id")
     private Long categoryId;
 
+    @Builder
     public WholeCake(
             Long userId,
             Long habitId,
             Long categoryId
     ) {
-        this.user = User.builder()
-                .id(userId)
-                .build();
+        this.userId = userId;
         this.habitId = habitId;
         this.categoryId = categoryId;
     }

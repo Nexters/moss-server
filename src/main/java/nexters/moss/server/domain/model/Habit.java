@@ -53,10 +53,14 @@ public class Habit extends TimeProvider {
     }
 
     @Builder
-    public Habit(Long categoryId, Long userId, Integer order) {
+    public Habit(Long categoryId, Long userId) {
         this.categoryId = categoryId;
         this.userId = userId;
-        this.order = order;
+        this.habitRecords = new ArrayList<>();
+        this.order = 0;
+        this.isActivated = false;
+        this.isFirstCheck = false;
+        this.checkCount = 0;
         createHabitRecords(userId);
     }
 

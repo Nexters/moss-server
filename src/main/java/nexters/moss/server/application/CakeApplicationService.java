@@ -36,12 +36,12 @@ public class CakeApplicationService {
 
     @Transactional
     public Response<Long> sendCake(Long userId, CreateNewCakeRequest createNewCakeRequest) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException("No Matched User"));
+        // TODO: user exist validation
         categoryApplicationService.findById(createNewCakeRequest.getCategoryId());
         return new Response<Long>(
                 sentPieceOfCakeRepository.save(
                         SentPieceOfCake.builder()
-                        .user(user)
+                        .userId(userId)
                         .categoryId(createNewCakeRequest.getCategoryId())
                         .note(createNewCakeRequest.getNote())
                         .build()
@@ -52,20 +52,20 @@ public class CakeApplicationService {
     public Response<NewCakeDTO> getCake(Long userId, Long categoryId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException("No Matched User"));
         Category category = categoryApplicationService.findById(categoryId);
-        SentPieceOfCake sentPieceOfCake = sentPieceOfCakeRepository.findRandomByUser_IdAndCategoryId(userId, categoryId).orElseThrow(() -> new ResourceNotFoundException("Has no remain cake message"));
+        SentPieceOfCake sentPieceOfCake = sentPieceOfCakeRepository.findRandomByUserIdAndCategoryId(userId, categoryId).orElseThrow(() -> new ResourceNotFoundException("Has no remain cake message"));
 
         ReceivedPieceOfCake receivedPOC = receivedPieceOfCakeRepository.save(
                 ReceivedPieceOfCake.builder()
-                        .user(user)
+                        .userId(userId)
                         .categoryId(categoryId)
-                        .sentPieceOfCake(sentPieceOfCake)
+                        .sentPieceOfCakeId(sentPieceOfCake.getId())
                         .build()
         );
 
         return new Response<NewCakeDTO>(
                 new NewCakeDTO(
-                        receivedPOC.getUser().getNickname(),
-                        receivedPOC.getSentPieceOfCake().getNote(),
+                        user.getNickname(),
+                        sentPieceOfCake.getNote(),
                         category.getCakeType().getName(),
                         imageApplicationService.getMoveImagePath(category.getHabitType(), ImageEvent.NEW_CAKE))
         );

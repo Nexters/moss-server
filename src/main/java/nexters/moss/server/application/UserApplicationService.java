@@ -47,14 +47,12 @@ public class UserApplicationService {
 
         String habikeryToken = habikeryTokenService.createToken(user.getId(), accessToken);
         user.setHabikeryToken(habikeryToken);
-        User updatedUser = userRepository.save(user);
-
-        return new Response<>(updatedUser.getHabikeryToken());
+        return new Response<>(habikeryToken);
     }
 
     public Response<Long> leave(Long userId) {
-        if(!userRepository.existsById(userId)) {
-            throw  new ResourceNotFoundException("No Matched Habikery User with User ID");
+        if (!userRepository.existsById(userId)) {
+            throw new ResourceNotFoundException("No Matched Habikery User with User ID");
         }
         userRepository.deleteById(userId);
         return new Response(userId);
@@ -70,15 +68,11 @@ public class UserApplicationService {
     public Response report(Long receivedPieceOfCakeId, String reason) {
         ReceivedPieceOfCake receivedPieceOfCake = receivedPieceOfCakeRepository.findById(receivedPieceOfCakeId)
                 .orElseThrow(() -> new ResourceNotFoundException("No Matched ReceivedPieceOfCake"));
-        User reportedUser = receivedPieceOfCake.getSentPieceOfCake().getUser();
+        User reportedUser = userRepository.findById(
+                receivedPieceOfCake.getSentPieceOfCakeId()
+        ).orElseThrow(() -> new ResourceNotFoundException("No Matched Habikery User with User ID"));
 
-        reportRepository.save(
-                Report.builder()
-                .user(reportedUser)
-                .reason(reason)
-                .build()
-        );
-
+        reportedUser.reported(reason);
         return new Response();
     }
 }

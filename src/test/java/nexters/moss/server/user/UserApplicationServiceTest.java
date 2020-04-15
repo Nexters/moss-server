@@ -177,7 +177,6 @@ public class UserApplicationServiceTest {
 
         assertThat(reportRepository.count()).isEqualTo(1);
         Report report = reportRepository.findAll().get(0);
-        assertThat(report.getUser().getId()).isEqualTo(sendingUser.getId());
         assertThat(report.getReason()).isEqualTo(reportReason);
     }
 
@@ -206,7 +205,7 @@ public class UserApplicationServiceTest {
 
     private SentPieceOfCake setupSentPieceOfCake(User sendingUser, Habit habit, Category category) {
         SentPieceOfCake sentCake = SentPieceOfCake.builder()
-                .user(sendingUser)
+                .userId(sendingUser.getId())
                 .categoryId(category.getId())
                 .build();
         return sentPieceOfCakeRepository.save(sentCake);
@@ -214,8 +213,8 @@ public class UserApplicationServiceTest {
 
     private ReceivedPieceOfCake setupReceivedPieceOfCake(User receivingUser, Category category, SentPieceOfCake sentCake) {
         ReceivedPieceOfCake receivedCake = ReceivedPieceOfCake.builder()
-                .user(receivingUser)
-                .sentPieceOfCake(sentCake)
+                .userId(receivingUser.getId())
+                .sentPieceOfCakeId(sentCake.getId())
                 .categoryId(category.getId())
                 .build();
         return receivedPieceOfCakeRepository.save(receivedCake);

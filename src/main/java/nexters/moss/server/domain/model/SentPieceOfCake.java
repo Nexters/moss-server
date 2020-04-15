@@ -23,9 +23,8 @@ public class SentPieceOfCake extends TimeProvider {
     @Column(name = "sent_piece_of_cake_id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "user_id")
+    private Long userId;
 
     @Column(name = "category_id")
     private Long categoryId;
@@ -34,6 +33,6 @@ public class SentPieceOfCake extends TimeProvider {
     @Length(min = 3, max = 14)
     private String note;
 
-    @OneToMany(mappedBy = "sentPieceOfCake", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReceivedPieceOfCake> receivedPieceOfCakeList = new ArrayList<>();
 }

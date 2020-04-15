@@ -28,11 +28,16 @@ public class User extends TimeProvider {
     @Column(name = "nickname")
     private String nickname;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "user_id")
     @Builder.Default
-    private List<SentPieceOfCake> sentPieceOfCakes = new ArrayList<>();
+    private List<Report> reports = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<WholeCake> wholeCakes = new ArrayList<>();
+    public void reported(String reason) {
+        reports.add(
+                Report.builder()
+                        .reason(reason)
+                        .build()
+        );
+    }
 }

@@ -63,7 +63,6 @@ public class HabitApplicationServiceTest {
                         12345678L,
                         "accountToken",
                         "nickname",
-                        null,
                         null
                 )
         );
@@ -114,7 +113,7 @@ public class HabitApplicationServiceTest {
         receivedPieceOfCakeRepository = mock(ReceivedPieceOfCakeRepository.class);
         wholeCakeRepository = mock(WholeCakeRepository.class);
 
-        given(receivedPieceOfCakeRepository.countAllByUser_IdAndCategoryId(testUser.getId(), testCategory.getId()))
+        given(receivedPieceOfCakeRepository.countAllByUserIdAndCategoryId(testUser.getId(), testCategory.getId()))
                 .willReturn(8);
 
         Response<HabitHistory> createResponse = habitApplicationService.createHabit(testUser.getId(), testCategory.getId());

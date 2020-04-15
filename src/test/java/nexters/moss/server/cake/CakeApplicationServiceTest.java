@@ -55,7 +55,7 @@ public class CakeApplicationServiceTest {
         List<CakeType> cakeTypes = Arrays.asList(CakeType.values());
 
         category = new Category(1L, habitTypes.get(0), cakeTypes.get(0), null, null);
-        sender = userRepository.save(new User(null, null, "accounToken", "nickName", null, null));
+        sender = userRepository.save(new User(null, null, "accounToken", "nickName", null));
 
         testHabit = habitRepository.save(new Habit(null, category.getId(), sender.getId(), null, 0, false, false, 0));
     }

@@ -66,9 +66,9 @@ public class HabitApplicationService {
                 Habit.builder()
                         .userId(userId)
                         .categoryId(categoryId)
-                        .order(habitCount)
                         .build()
         );
+        habit.changeOrder(habitCount);
         habit.onActivation();
         return new Response(
                 new HabitHistory(
@@ -142,16 +142,16 @@ public class HabitApplicationService {
                     ), null
             );
         }
-        SentPieceOfCake sentPieceOfCake = sentPieceOfCakeRepository.findRandomByUser_IdAndCategoryId(userId, habit.getCategoryId())
+        SentPieceOfCake sentPieceOfCake = sentPieceOfCakeRepository.findRandomByUserIdAndCategoryId(userId, habit.getCategoryId())
                 .orElseThrow(() -> new ResourceNotFoundException("Has no remain cake message"));
 
-        int pieceCount = receivedPieceOfCakeRepository.countAllByUser_IdAndCategoryId(userId, habit.getCategoryId());
+        int pieceCount = receivedPieceOfCakeRepository.countAllByUserIdAndCategoryId(userId, habit.getCategoryId());
 
         receivedPieceOfCakeRepository.save(
                 ReceivedPieceOfCake.builder()
-                        .user(user)
+                        .userId(userId)
                         .categoryId(category.getId())
-                        .sentPieceOfCake(sentPieceOfCake)
+                        .sentPieceOfCakeId(sentPieceOfCake.getId())
                         .build()
         );
 

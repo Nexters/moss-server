@@ -19,13 +19,11 @@ public class ReceivedPieceOfCake extends TimeProvider {
     @Column(name = "received_piece_of_cake_id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "user_id")
+    private Long userId;
 
-    @ManyToOne
-    @JoinColumn(name = "sent_piece_of_cake_id", nullable = false)
-    private SentPieceOfCake sentPieceOfCake;
+    @Column(name = "sent_piece_of_cake_id")
+    private Long sentPieceOfCakeId;
 
     @Column(name = "category_id")
     private Long categoryId;

@@ -56,14 +56,14 @@ public class DiaryApplicationServiceTest {
 
     @Before
     public void setup() {
-        sender = userRepository.save(new User(null, null, "accountToken", "sender", null, null));
-        receiver = userRepository.save(new User(null, null, "accountToken", "receiver", null, null));
+        sender = userRepository.save(new User(null, null, "accountToken", "sender", null));
+        receiver = userRepository.save(new User(null, null, "accountToken", "receiver", null));
         category = new Category(1L, HabitType.WATER, CakeType.WATERMELON,  new Description("receivePieceOfCake"), new Description("diary"));
 
         habit = habitRepository.save(new Habit(null, category.getId(), receiver.getId(), null, 0, false, false, 0));
 
-        sentPieceOfCake = sentPieceOfCakeRepository.save(new SentPieceOfCake(null, sender, category.getId(), "note", null));
-        receivedPieceOfCakeRepository.save(new ReceivedPieceOfCake(null, receiver, sentPieceOfCake, category.getId()));
+        sentPieceOfCake = sentPieceOfCakeRepository.save(new SentPieceOfCake(null, sender.getId(), category.getId(), "note", null));
+        receivedPieceOfCakeRepository.save(new ReceivedPieceOfCake(null, receiver.getId(), sentPieceOfCake.getId(), category.getId()));
         wholeCake = wholeCakeRepository.save(new WholeCake(null, receiver, habit.getId(), category.getId()));
 
     }
