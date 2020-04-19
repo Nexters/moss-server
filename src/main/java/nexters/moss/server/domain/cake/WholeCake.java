@@ -1,10 +1,9 @@
-package nexters.moss.server.domain.model;
+package nexters.moss.server.domain.cake;
 
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
+import nexters.moss.server.domain.TimeProvider;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "whole_cakes")

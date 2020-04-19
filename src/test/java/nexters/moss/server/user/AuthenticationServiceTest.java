@@ -1,10 +1,10 @@
 package nexters.moss.server.user;
 
 import nexters.moss.server.TestConfiguration;
-import nexters.moss.server.domain.model.User;
-import nexters.moss.server.domain.repository.UserRepository;
-import nexters.moss.server.domain.service.AuthenticationService;
-import nexters.moss.server.domain.service.HabikeryTokenService;
+import nexters.moss.server.domain.user.User;
+import nexters.moss.server.domain.user.UserRepository;
+import nexters.moss.server.domain.user.AuthenticationService;
+import nexters.moss.server.domain.user.HabikeryTokenService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;

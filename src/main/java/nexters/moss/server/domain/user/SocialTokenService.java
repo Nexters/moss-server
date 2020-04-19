@@ -1,4 +1,4 @@
-package nexters.moss.server.domain.service;
+package nexters.moss.server.domain.user;
 
 import nexters.moss.server.config.exception.UnauthorizedException;
 

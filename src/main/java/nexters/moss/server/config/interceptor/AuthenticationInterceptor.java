@@ -1,6 +1,6 @@
 package nexters.moss.server.config.interceptor;
 
-import nexters.moss.server.domain.service.AuthenticationService;
+import nexters.moss.server.domain.user.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;

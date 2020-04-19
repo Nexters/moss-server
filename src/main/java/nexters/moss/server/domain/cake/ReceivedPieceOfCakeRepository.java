@@ -1,6 +1,5 @@
-package nexters.moss.server.domain.repository;
+package nexters.moss.server.domain.cake;
 
-import nexters.moss.server.domain.model.ReceivedPieceOfCake;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ReceivedPieceOfCakeRepository extends JpaRepository<ReceivedPieceOfCake, Long> {

@@ -5,9 +5,14 @@ import nexters.moss.server.application.dto.cake.NewCakeDTO;
 import nexters.moss.server.application.dto.cake.CreateNewCakeRequest;
 import nexters.moss.server.config.exception.ResourceNotFoundException;
 import nexters.moss.server.config.exception.UnauthorizedException;
-import nexters.moss.server.domain.model.*;
-import nexters.moss.server.domain.repository.*;
+import nexters.moss.server.domain.Category;
+import nexters.moss.server.domain.cake.ReceivedPieceOfCake;
+import nexters.moss.server.domain.cake.ReceivedPieceOfCakeRepository;
+import nexters.moss.server.domain.cake.SentPieceOfCake;
+import nexters.moss.server.domain.cake.SentPieceOfCakeRepository;
 import nexters.moss.server.application.value.ImageEvent;
+import nexters.moss.server.domain.user.User;
+import nexters.moss.server.domain.user.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

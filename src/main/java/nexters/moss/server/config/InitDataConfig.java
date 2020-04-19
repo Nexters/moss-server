@@ -2,8 +2,12 @@ package nexters.moss.server.config;
 
 import nexters.moss.server.application.CakeApplicationService;
 import nexters.moss.server.application.HabitApplicationService;
-import nexters.moss.server.domain.model.*;
-import nexters.moss.server.domain.repository.*;
+import nexters.moss.server.domain.Category;
+import nexters.moss.server.domain.cake.SentPieceOfCake;
+import nexters.moss.server.domain.cake.SentPieceOfCakeRepository;
+import nexters.moss.server.domain.habit.HabitRepository;
+import nexters.moss.server.domain.user.User;
+import nexters.moss.server.domain.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;

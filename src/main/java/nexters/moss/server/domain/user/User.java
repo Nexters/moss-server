@@ -1,6 +1,7 @@
-package nexters.moss.server.domain.model;
+package nexters.moss.server.domain.user;
 
 import lombok.*;
+import nexters.moss.server.domain.TimeProvider;
 
 import javax.persistence.*;
 import java.util.ArrayList;

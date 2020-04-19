@@ -1,6 +1,7 @@
-package nexters.moss.server.domain.model;
+package nexters.moss.server.domain.habit;
 
 import lombok.*;
+import nexters.moss.server.domain.TimeProvider;
 import nexters.moss.server.domain.value.HabitStatus;
 import org.hibernate.annotations.OrderBy;
 

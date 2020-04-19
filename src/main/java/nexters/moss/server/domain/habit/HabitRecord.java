@@ -1,8 +1,8 @@
-package nexters.moss.server.domain.model;
+package nexters.moss.server.domain.habit;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import nexters.moss.server.domain.TimeProvider;
 import nexters.moss.server.domain.value.HabitStatus;
 
 import javax.persistence.*;

@@ -1,6 +1,4 @@
-package nexters.moss.server.domain.service;
-
-import nexters.moss.server.domain.model.Token;
+package nexters.moss.server.domain.user;
 
 public interface HabikeryTokenService {
     public String createToken(Long userId, String accessToken);

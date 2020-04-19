@@ -5,11 +5,12 @@ import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.config.exception.AlreadyExistException;
 import nexters.moss.server.config.exception.ResourceNotFoundException;
 import nexters.moss.server.config.exception.UnauthorizedException;
-import nexters.moss.server.domain.model.*;
-import nexters.moss.server.domain.repository.*;
-import nexters.moss.server.domain.service.SocialTokenService;
-import nexters.moss.server.domain.service.HabikeryTokenService;
-import nexters.moss.server.domain.model.User;
+import nexters.moss.server.domain.cake.ReceivedPieceOfCake;
+import nexters.moss.server.domain.cake.ReceivedPieceOfCakeRepository;
+import nexters.moss.server.domain.user.SocialTokenService;
+import nexters.moss.server.domain.user.HabikeryTokenService;
+import nexters.moss.server.domain.user.User;
+import nexters.moss.server.domain.user.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

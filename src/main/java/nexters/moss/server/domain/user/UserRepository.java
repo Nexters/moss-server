@@ -1,6 +1,5 @@
-package nexters.moss.server.domain.repository;
+package nexters.moss.server.domain.user;
 
-import nexters.moss.server.domain.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

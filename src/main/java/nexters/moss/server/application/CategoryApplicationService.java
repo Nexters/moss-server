@@ -1,7 +1,7 @@
 package nexters.moss.server.application;
 
 import nexters.moss.server.config.exception.ResourceNotFoundException;
-import nexters.moss.server.domain.model.Category;
+import nexters.moss.server.domain.Category;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 

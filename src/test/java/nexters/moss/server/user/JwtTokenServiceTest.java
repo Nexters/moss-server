@@ -1,7 +1,7 @@
 package nexters.moss.server.user;
 
-import nexters.moss.server.domain.model.Token;
-import nexters.moss.server.domain.service.HabikeryTokenService;
+import nexters.moss.server.domain.user.Token;
+import nexters.moss.server.domain.user.HabikeryTokenService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

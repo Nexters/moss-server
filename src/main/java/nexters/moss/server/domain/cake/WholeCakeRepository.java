@@ -1,6 +1,5 @@
-package nexters.moss.server.domain.repository;
+package nexters.moss.server.domain.cake;
 
-import nexters.moss.server.domain.model.WholeCake;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

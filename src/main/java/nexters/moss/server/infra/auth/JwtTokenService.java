@@ -4,12 +4,9 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import nexters.moss.server.domain.model.Token;
-import nexters.moss.server.domain.service.HabikeryTokenService;
+import nexters.moss.server.domain.user.Token;
+import nexters.moss.server.domain.user.HabikeryTokenService;
 import org.springframework.stereotype.Service;
-
-import java.time.*;
-import java.util.Date;
 
 @Service
 public class JwtTokenService implements HabikeryTokenService {

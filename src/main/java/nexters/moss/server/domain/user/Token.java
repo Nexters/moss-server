@@ -1,4 +1,4 @@
-package nexters.moss.server.domain.model;
+package nexters.moss.server.domain.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

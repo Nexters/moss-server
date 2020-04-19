@@ -1,4 +1,4 @@
-package nexters.moss.server.domain.model;
+package nexters.moss.server.domain;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;

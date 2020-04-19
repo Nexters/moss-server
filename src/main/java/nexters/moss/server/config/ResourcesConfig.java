@@ -1,7 +1,7 @@
 package nexters.moss.server.config;
 
 import nexters.moss.server.application.dto.Image;
-import nexters.moss.server.domain.model.Category;
+import nexters.moss.server.domain.Category;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;

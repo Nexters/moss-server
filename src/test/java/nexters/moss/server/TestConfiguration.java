@@ -1,7 +1,12 @@
 package nexters.moss.server;
 
 
-import nexters.moss.server.domain.repository.*;
+import nexters.moss.server.domain.cake.ReceivedPieceOfCakeRepository;
+import nexters.moss.server.domain.cake.SentPieceOfCakeRepository;
+import nexters.moss.server.domain.cake.WholeCakeRepository;
+import nexters.moss.server.domain.habit.HabitRepository;
+import nexters.moss.server.domain.user.ReportRepository;
+import nexters.moss.server.domain.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;

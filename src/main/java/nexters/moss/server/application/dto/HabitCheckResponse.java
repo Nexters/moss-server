@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import nexters.moss.server.domain.model.HabitRecord;
+import nexters.moss.server.domain.habit.HabitRecord;
 import nexters.moss.server.domain.value.HabitType;
 
 import java.util.List;

@@ -1,8 +1,5 @@
-package nexters.moss.server.domain.service;
+package nexters.moss.server.domain.habit;
 
-import nexters.moss.server.domain.model.Habit;
-import nexters.moss.server.domain.model.HabitRecord;
-import nexters.moss.server.domain.value.HabitStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

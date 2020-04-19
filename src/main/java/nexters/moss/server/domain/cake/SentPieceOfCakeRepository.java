@@ -1,6 +1,5 @@
-package nexters.moss.server.domain.repository;
+package nexters.moss.server.domain.cake;
 
-import nexters.moss.server.domain.model.SentPieceOfCake;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

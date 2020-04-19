@@ -1,7 +1,7 @@
 package nexters.moss.server.habit;
 
-import nexters.moss.server.domain.model.Habit;
-import nexters.moss.server.domain.service.HabitService;
+import nexters.moss.server.domain.habit.Habit;
+import nexters.moss.server.domain.habit.HabitService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

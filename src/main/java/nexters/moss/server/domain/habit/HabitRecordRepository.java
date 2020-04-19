@@ -1,7 +1,5 @@
-package nexters.moss.server.domain.repository;
+package nexters.moss.server.domain.habit;
 
-import nexters.moss.server.domain.model.Habit;
-import nexters.moss.server.domain.model.HabitRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
