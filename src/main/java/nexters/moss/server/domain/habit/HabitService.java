@@ -6,7 +6,7 @@ import java.util.List;
 
 @Service
 public class HabitService {
-    public void changeHabitsOrder (List<Habit> habits, int habitOrder, int changedOrder) {
+    public void changeHabitsOrder(List<Habit> habits, int habitOrder, int changedOrder) {
         habits.get(habitOrder).changeOrder(changedOrder);
 
         if(habitOrder < changedOrder) {
@@ -20,9 +20,19 @@ public class HabitService {
         }
     }
 
-    public void refreshHabitsOrderWhenDelete (List<Habit> habits, int deletedHabitOrder) {
-        for(int index = deletedHabitOrder + 1; index < habits.size(); index++) {
+    public void refreshHabitsOrder(List<Habit> habits) {
+        for(int index = getDeletedHabitOrder(habits) + 1; index < habits.size(); index++) {
             habits.get(index).decreaseOneOrder();
         }
+    }
+
+    private int getDeletedHabitOrder(List<Habit> habits) {
+        for(int index = 0 ; index < habits.size() ; index++) {
+            if(habits.get(index).getOrder() != index) {
+                return habits.get(index).getOrder() - 1;
+            }
+        }
+
+        return habits.size() - 1;
     }
 }

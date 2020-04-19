@@ -75,7 +75,7 @@ public class HabitApplicationService {
                         habit.getId(),
                         habit.getCategoryId(),
                         category.getHabitType(),
-                        habit.getIsFirstCheck(),
+                        habit.isFirstCheck(),
                         habit.getHabitRecords()
                 )
         );
@@ -94,7 +94,7 @@ public class HabitApplicationService {
                                             habit.getId(),
                                             habit.getCategoryId(),
                                             category.getHabitType(),
-                                            habit.getIsFirstCheck(),
+                                            habit.isFirstCheck(),
                                             habit.getHabitRecords()
                                     );
                                 }
@@ -106,8 +106,8 @@ public class HabitApplicationService {
     public Response<Long> deleteHabit(Long userId, Long habitId) {
         List<Habit> habits = habitRepository.findAllByUserIdOrderByOrderAsc(userId);
         Habit habit = findHabitById(habits, habitId);
-        habitService.refreshHabitsOrderWhenDelete(habits, habit.getOrder());
         habits.remove(habit);
+        habitService.refreshHabitsOrder(habits);
         habitRepository.deleteById(habitId);
         habitRepository.saveAll(habits);
         return new Response<>(habitId);
@@ -117,35 +117,29 @@ public class HabitApplicationService {
         User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException("No Matched User"));
         Habit habit = habitRepository.findById(habitId).orElseThrow(() -> new ResourceNotFoundException("No Matched Habit"));
         Category category = categoryApplicationService.findById(habit.getCategoryId());
-        if (habit.isDone()) {
-            throw new AlreadyExistException("Already done habit");
+        if (habit.isTodayDone()) {
+            throw new AlreadyExistException("Already todayDone habit");
         }
-        habit.count();
-        habit.offFirstCheck();
-        if (habit.isFirstCheck()) {
-            habit.onFirstCheck();
-        }
-        habit.done();
+        habit.countUp();
+        habit.todayDone();
         habit.refreshHabitHistory();
 
         return new HabitDoneResponse(
                 new HabitCheckResponse(
                         habit.getId(),
                         category.getHabitType(),
-                        habit.getIsFirstCheck(),
+                        habit.isFirstCheck(),
                         habit.getHabitRecords(),
                         habit.getCategoryId()
                 ),
-                habit.isReadyToReceiveCake() ? processSendPieceOfCake(user, category, habit) : null
+                habit.isReadyToReceiveCake() ? processGetNewCake(user, category) : null
         );
 
     }
 
-    private NewCakeDTO processSendPieceOfCake(User user, Category category, Habit habit) {
+    private NewCakeDTO processGetNewCake(User user, Category category) {
         SentPieceOfCake sentPieceOfCake = sentPieceOfCakeRepository.findRandomByUserIdAndCategoryId(user.getId(), category.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Has no remain cake message"));
-
-        int pieceCount = receivedPieceOfCakeRepository.countAllByUserIdAndCategoryId(user.getId(), category.getId());
 
         receivedPieceOfCakeRepository.save(
                 ReceivedPieceOfCake.builder()
@@ -155,10 +149,9 @@ public class HabitApplicationService {
                         .build()
         );
 
-        if ((pieceCount + 1) % 8 == 0) {
+        if (isCollectedAsWholeCake(user.getId(), category.getId())) {
             wholeCakeRepository.save(new WholeCake(
                     user.getId(),
-                    habit.getId(),
                     category.getId()
             ));
         }
@@ -169,6 +162,14 @@ public class HabitApplicationService {
                 category.getCakeType().getName(),
                 imageApplicationService.getMoveImagePath(category.getHabitType(), ImageEvent.NEW_CAKE)
         );
+    }
+
+    private boolean isCollectedAsWholeCake(Long userId, Long categoryId) {
+        int pieceCount = receivedPieceOfCakeRepository.countAllByUserIdAndCategoryId(userId, categoryId);
+        if ((pieceCount + 1) % 8 == 0) {
+            return true;
+        }
+        return false;
     }
 
     public Response<Long> changeHabitOrder(Long userId, Long habitId, int changedOrder) {
@@ -191,16 +192,6 @@ public class HabitApplicationService {
         habitService.changeHabitsOrder(habits, habitOrder, changedOrder);
         habitRepository.saveAll(habits);
         return new Response<>(habitId);
-    }
-
-    @Transactional(readOnly = true)
-    public User findUserById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException("No Matched User"));
-    }
-
-    @Transactional(readOnly = true)
-    public Habit findHabitById(Long habitId) {
-        return habitRepository.findById(habitId).orElseThrow(() -> new ResourceNotFoundException("No Matched Habit"));
     }
 
     private Habit findHabitById(List<Habit> habits, Long habitId) {

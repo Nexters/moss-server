@@ -20,9 +20,9 @@ public class ReceivedPieceOfCake extends TimeProvider {
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "sent_piece_of_cake_id")
-    private Long sentPieceOfCakeId;
-
     @Column(name = "category_id")
     private Long categoryId;
+
+    @Column(name = "sent_piece_of_cake_id")
+    private Long sentPieceOfCakeId;
 }

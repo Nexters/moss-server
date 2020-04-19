@@ -102,11 +102,11 @@ public class DiaryApplicationControllerTest {
 
         category = new Category(1L, habitTypes.get(0), cakeTypes.get(0), new Description("receivePieceOfCake"), new Description("diary"));
 
-        habit = habitRepository.save(new Habit(null, category.getId(), receiver.getId(), null, 0, false, false, 0));
+        habit = habitRepository.save(new Habit(null, category.getId(), receiver.getId(), null, 0, false, 0));
 
         sentPieceOfCake = sentPieceOfCakeRepository.save(new SentPieceOfCake(null, sender.getId(), category.getId(), "note", null));
         receivedPieceOfCakeRepository.save(new ReceivedPieceOfCake(null, receiver.getId(), sentPieceOfCake.getId(), category.getId()));
-        wholeCake = wholeCakeRepository.save(new WholeCake(null, receiver.getId(), habit.getId(), category.getId()));
+        wholeCake = wholeCakeRepository.save(new WholeCake(null, receiver.getId(), category.getId()));
     }
 
     @After

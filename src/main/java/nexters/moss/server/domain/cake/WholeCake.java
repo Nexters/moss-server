@@ -19,20 +19,15 @@ public class WholeCake extends TimeProvider {
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "habit_id")
-    private Long habitId;
-
     @Column(name = "category_id")
     private Long categoryId;
 
     @Builder
     public WholeCake(
             Long userId,
-            Long habitId,
             Long categoryId
     ) {
         this.userId = userId;
-        this.habitId = habitId;
         this.categoryId = categoryId;
     }
 }

@@ -31,5 +31,6 @@ public class SentPieceOfCake extends TimeProvider {
     private String note;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "sent_piece_of_cake_id")
     private List<ReceivedPieceOfCake> receivedPieceOfCakeList = new ArrayList<>();
 }
