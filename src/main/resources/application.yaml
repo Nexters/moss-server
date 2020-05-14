@@ -39,13 +39,13 @@ resources:
     - id: 7
       habit-type: DIARY
       cake-type: CHESTNUT
-      receiveCakeDescription: "책읽는 나에게"
+      receiveCakeDescription: "일기쓰는 나에게"
       diaryDescription: "나를 위한 시간"
     - id: 8
       habit-type: READING
       cake-type: WALNUT
-      receiveCakeDescription: "일기쓰는 나에게"
-      diaryDescription: "마음의 양"
+      receiveCakeDescription: "책읽는 나에게"
+      diaryDescription: "마음의 양식"
 
 spring:
   profiles:
