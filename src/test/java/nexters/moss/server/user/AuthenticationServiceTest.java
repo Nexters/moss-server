@@ -43,7 +43,7 @@ public class AuthenticationServiceTest {
                         .build()
         );
 
-        String testHabikeryToken = habikeryTokenService.createToken(user.getId(), "accessToken");
+        String testHabikeryToken = habikeryTokenService.createToken(user.getId());
         user.setHabikeryToken(testHabikeryToken);
         userRepository.save(user);
     }

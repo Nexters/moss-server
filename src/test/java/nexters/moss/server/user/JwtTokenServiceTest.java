@@ -1,6 +1,5 @@
 package nexters.moss.server.user;
 
-import nexters.moss.server.domain.user.Token;
 import nexters.moss.server.domain.user.HabikeryTokenService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,10 +21,9 @@ public class JwtTokenServiceTest {
     public void createTokenTest() {
         // given
         long userId = 12345678L;
-        String accessToken = "socialTokenString";
 
         // when
-        String testToken = habikeryTokenService.createToken(userId, accessToken);
+        String testToken = habikeryTokenService.createToken(userId);
 
         // then
         assertThat(testToken).isNotEmpty();
@@ -35,14 +33,12 @@ public class JwtTokenServiceTest {
     public void recoverTokenTest() {
         // given
         long userId = 12345678L;
-        String accessToken = "socialTokenString";
-        String jwtToken = habikeryTokenService.createToken(userId, accessToken);
+        String jwtToken = habikeryTokenService.createToken(userId);
 
         // when
-        Token testToken = habikeryTokenService.recoverToken(jwtToken);
+        long recoveredData = habikeryTokenService.recoverToken(jwtToken);
 
         // then
-        assertThat(testToken.getUserId()).isEqualTo(userId);
-        assertThat(testToken.getAccessToken()).isEqualTo(accessToken);
+        assertThat(recoveredData).isEqualTo(userId);
     }
 }

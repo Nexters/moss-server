@@ -45,7 +45,7 @@ public class UserApplicationService {
         User user = userRepository.findBySocialId(socialId)
                 .orElseThrow(() -> new UnauthorizedException("No Matched Habikery User with Social ID: " + socialId.toString()));
 
-        String habikeryToken = habikeryTokenService.createToken(user.getId(), accessToken);
+        String habikeryToken = habikeryTokenService.createToken(user.getId());
         user.setHabikeryToken(habikeryToken);
         return new Response<>(habikeryToken);
     }

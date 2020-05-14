@@ -13,9 +13,9 @@ public class AuthenticationService {
     private HabikeryTokenService habikeryTokenService;
 
     public Long authenticate(String habikeryToken) {
-        Token token = habikeryTokenService.recoverToken(habikeryToken);
+        long userId = habikeryTokenService.recoverToken(habikeryToken);
 
-        User user = userRepository.findById(token.getUserId()).orElseThrow(() -> new UnauthorizedException("Not joined User"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException("Not joined User"));
 
         if(!user.getHabikeryToken().equals(habikeryToken)) {
             throw new UnauthorizedException("Unauthorized Token");
