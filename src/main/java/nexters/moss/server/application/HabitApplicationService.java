@@ -132,7 +132,7 @@ public class HabitApplicationService {
                         habit.getHabitRecords(),
                         habit.getCategoryId()
                 ),
-                habit.isReadyToReceiveCake() ? processGetNewCake(user, category) : null
+                habit.isReadyToReceiveCake() || habit.isFirstCheck() ? processGetNewCake(user, category) : null
         );
 
     }
