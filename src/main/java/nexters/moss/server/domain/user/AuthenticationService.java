@@ -1,6 +1,6 @@
 package nexters.moss.server.domain.user;
 
-import nexters.moss.server.config.exception.UnauthorizedException;
+import nexters.moss.server.domain.exceptions.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

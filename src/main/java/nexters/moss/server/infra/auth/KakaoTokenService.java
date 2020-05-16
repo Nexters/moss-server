@@ -2,7 +2,7 @@ package nexters.moss.server.infra.auth;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nexters.moss.server.config.exception.UnauthorizedException;
+import nexters.moss.server.domain.exceptions.UnauthorizedException;
 import nexters.moss.server.domain.user.SocialTokenService;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;

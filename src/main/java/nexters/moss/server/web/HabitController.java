@@ -36,7 +36,7 @@ public class HabitController {
     }
 
     @PostMapping("")
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(value = HttpStatus.CREATED)
     public Response<HabitHistory> createHabit(
             @RequestBody CategoryRequest categoryRequest
     ) {

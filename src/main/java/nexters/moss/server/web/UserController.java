@@ -32,7 +32,7 @@ public class UserController {
             @ApiResponse(code = 409, message = "중복된 리소스 오류")
     })
     @PostMapping
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(value = HttpStatus.CREATED)
     public Response join(
             @ApiParam(value = "신규 회원이 입력한 닉네임", required = true) @RequestBody String nickname
     ) {

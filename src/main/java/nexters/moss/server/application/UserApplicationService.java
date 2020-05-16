@@ -2,9 +2,9 @@ package nexters.moss.server.application;
 
 import lombok.AllArgsConstructor;
 import nexters.moss.server.application.dto.Response;
-import nexters.moss.server.config.exception.AlreadyExistException;
-import nexters.moss.server.config.exception.ResourceNotFoundException;
-import nexters.moss.server.config.exception.UnauthorizedException;
+import nexters.moss.server.domain.exceptions.AlreadyExistException;
+import nexters.moss.server.domain.exceptions.ResourceNotFoundException;
+import nexters.moss.server.domain.exceptions.UnauthorizedException;
 import nexters.moss.server.domain.cake.ReceivedPieceOfCake;
 import nexters.moss.server.domain.cake.ReceivedPieceOfCakeRepository;
 import nexters.moss.server.domain.user.SocialTokenService;

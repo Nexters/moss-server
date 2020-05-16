@@ -82,6 +82,12 @@ public class Habit extends TimeProvider {
         this.habitRecords = habitRecords;
     }
 
+    public boolean isToday() {
+        int today = LocalDateTime.now().getDayOfMonth();
+        int recordToday = this.habitRecords.get(1).getDate().getDayOfMonth();
+        return today == recordToday;
+    }
+
     public void onActivation() {
         this.isActivated = true;
     }
@@ -137,14 +143,14 @@ public class Habit extends TimeProvider {
 
     public boolean refreshHabitHistory() {
         if(this.habitRecords.size() != 5) {
-            // TODO: throw exception
+            // TODO: throw exceptions
         }
         // TODO: check sorted right
-        int nowDay = LocalDateTime.now().getDayOfMonth();
-        int recordCurrentDay = this.habitRecords.get(1).getDate().getDayOfMonth();
+        int today = LocalDateTime.now().getDayOfMonth();
+        int recordToday = this.habitRecords.get(1).getDate().getDayOfMonth();
         HabitStatus currentHabitStatus =this.habitRecords.get(1).getHabitStatus();
 
-        if (nowDay != recordCurrentDay) {
+        if (today != recordToday) {
             switch (currentHabitStatus) {
                 case CAKE_NOT_DONE:
                 case NOT_DONE:

@@ -6,9 +6,10 @@ import nexters.moss.server.application.dto.HabitHistory;
 import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.application.dto.cake.NewCakeDTO;
 import nexters.moss.server.application.value.ImageEvent;
-import nexters.moss.server.config.exception.AlreadyExistException;
-import nexters.moss.server.config.exception.ResourceNotFoundException;
-import nexters.moss.server.config.exception.UnauthorizedException;
+import nexters.moss.server.domain.exceptions.AlreadyExistException;
+import nexters.moss.server.domain.exceptions.ResetContentsException;
+import nexters.moss.server.domain.exceptions.ResourceNotFoundException;
+import nexters.moss.server.domain.exceptions.UnauthorizedException;
 import nexters.moss.server.domain.Category;
 import nexters.moss.server.domain.cake.*;
 import nexters.moss.server.domain.habit.Habit;
@@ -116,6 +117,9 @@ public class HabitApplicationService {
     public HabitDoneResponse doneHabit(Long userId, Long habitId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException("No Matched User"));
         Habit habit = habitRepository.findById(habitId).orElseThrow(() -> new ResourceNotFoundException("No Matched Habit"));
+        if(!habit.isToday()) {
+            throw new ResetContentsException("You can only done today's habit");
+        }
         Category category = categoryApplicationService.findById(habit.getCategoryId());
         if (habit.isTodayDone()) {
             throw new AlreadyExistException("Already todayDone habit");
