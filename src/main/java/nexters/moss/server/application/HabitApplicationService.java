@@ -128,6 +128,10 @@ public class HabitApplicationService {
         habit.todayDone();
         habit.refreshHabitHistory();
 
+        if (habit.isFirstCheck()) {
+            processGetNewCake(user, category);
+        }
+
         return new HabitDoneResponse(
                 new HabitCheckResponse(
                         habit.getId(),
@@ -136,7 +140,7 @@ public class HabitApplicationService {
                         habit.getHabitRecords(),
                         habit.getCategoryId()
                 ),
-                habit.isReadyToReceiveCake() || habit.isFirstCheck() ? processGetNewCake(user, category) : null
+                habit.isReadyToReceiveCake() ? processGetNewCake(user, category) : null
         );
 
     }
