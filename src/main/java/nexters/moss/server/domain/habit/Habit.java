@@ -43,9 +43,6 @@ public class Habit extends TimeProvider {
     @Column(name = "isActivated", columnDefinition = "boolean default false")
     private Boolean isActivated = false;
 
-    @Column(name = "checkCount", columnDefinition = "integer default 0")
-    private int checkCount = 0;
-
     public Habit(Long id) {
         this.id = id;
     }
@@ -57,7 +54,6 @@ public class Habit extends TimeProvider {
         this.habitRecords = new ArrayList<>();
         this.order = 0;
         this.isActivated = false;
-        this.checkCount = 0;
         createHabitRecords(userId);
     }
 
@@ -90,17 +86,6 @@ public class Habit extends TimeProvider {
 
     public void onActivation() {
         this.isActivated = true;
-    }
-
-    public void countUp() {
-        this.checkCount++;
-    }
-
-    public boolean isFirstCheck() {
-        if(this.checkCount == 1) {
-            return true;
-        }
-        return false;
     }
 
     public boolean isReadyToReceiveCake() {

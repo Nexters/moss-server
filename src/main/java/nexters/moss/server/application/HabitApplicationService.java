@@ -57,6 +57,7 @@ public class HabitApplicationService {
 
     public Response<HabitHistory> createHabit(Long userId, Long categoryId) {
         // TODO: user exist validation
+        User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException("No Matched User"));
         Category category = categoryApplicationService.findById(categoryId);
 
         if (habitRepository.existsByUserIdAndCategoryId(userId, categoryId)) {
@@ -76,13 +77,14 @@ public class HabitApplicationService {
                         habit.getId(),
                         habit.getCategoryId(),
                         category.getHabitType(),
-                        habit.isFirstCheck(),
+                        user.isCheckedCategory(category),
                         habit.getHabitRecords()
                 )
         );
     }
 
     public Response<List<HabitHistory>> getHabit(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException("No Matched User"));
         List<Habit> habits = habitRepository.findAllByUserId(userId);
 
         return new Response<>(
@@ -95,7 +97,7 @@ public class HabitApplicationService {
                                             habit.getId(),
                                             habit.getCategoryId(),
                                             category.getHabitType(),
-                                            habit.isFirstCheck(),
+                                            user.isCheckedCategory(category),
                                             habit.getHabitRecords()
                                     );
                                 }
@@ -124,11 +126,11 @@ public class HabitApplicationService {
         if (habit.isTodayDone()) {
             throw new AlreadyExistException("Already todayDone habit");
         }
-        habit.countUp();
         habit.todayDone();
         habit.refreshHabitHistory();
 
-        if (habit.isFirstCheck()) {
+        if (!user.isCheckedCategory(category)) {
+            user.checkCategory(category);
             processGetNewCake(user, category);
         }
 
@@ -136,7 +138,7 @@ public class HabitApplicationService {
                 new HabitCheckResponse(
                         habit.getId(),
                         category.getHabitType(),
-                        habit.isFirstCheck(),
+                        user.isCheckedCategory(category),
                         habit.getHabitRecords(),
                         habit.getCategoryId()
                 ),

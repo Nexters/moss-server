@@ -10,21 +10,21 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
     @ExceptionHandler(AlreadyExistException.class)
     public ResponseEntity handleAlreadyExistException(AlreadyExistException e) {
-        return new ResponseEntity<>(e, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity handleNotFoundException(ResourceNotFoundException e) {
-        return new ResponseEntity<>(e, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity handleUnauthorizedException(UnauthorizedException e) {
-        return new ResponseEntity<>(e, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(ResetContentsException.class)
     public ResponseEntity handleResetContentsException(ResetContentsException e) {
-        return new ResponseEntity<>(e, HttpStatus.RESET_CONTENT);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.RESET_CONTENT);
     }
 }

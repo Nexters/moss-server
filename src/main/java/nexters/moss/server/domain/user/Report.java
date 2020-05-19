@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class Report extends TimeProvider {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "report_id")
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "reason")

@@ -128,7 +128,6 @@ public class HabitApplicationServiceTest {
 
         // then
         Habit habit = habitRepository.findById(habitId).get();
-        Assert.assertEquals(habit.isFirstCheck(), true);
         verify(wholeCakeRepository, times(1));
     }
 }
