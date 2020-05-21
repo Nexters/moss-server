@@ -34,6 +34,7 @@ public class HabitApplicationService {
     private SentPieceOfCakeRepository sentPieceOfCakeRepository;
     private ImageApplicationService imageApplicationService;
     private CategoryApplicationService categoryApplicationService;
+    private CakeApplicationService cakeApplicationService;
 
     public HabitApplicationService(
             HabitRepository habitRepository,
@@ -43,7 +44,8 @@ public class HabitApplicationService {
             WholeCakeRepository wholeCakeRepository,
             SentPieceOfCakeRepository sentPieceOfCakeRepository,
             ImageApplicationService imageApplicationService,
-            CategoryApplicationService categoryApplicationService
+            CategoryApplicationService categoryApplicationService,
+            CakeApplicationService cakeApplicationService
     ) {
         this.habitRepository = habitRepository;
         this.habitService = habitService;
@@ -53,6 +55,7 @@ public class HabitApplicationService {
         this.sentPieceOfCakeRepository = sentPieceOfCakeRepository;
         this.imageApplicationService = imageApplicationService;
         this.categoryApplicationService = categoryApplicationService;
+        this.cakeApplicationService = cakeApplicationService;
     }
 
     public Response<HabitHistory> createHabit(Long userId, Long categoryId) {
@@ -77,7 +80,7 @@ public class HabitApplicationService {
                         habit.getId(),
                         habit.getCategoryId(),
                         category.getHabitType(),
-                        user.isCheckedCategory(category),
+                        cakeApplicationService.didReceiveFirstCake(userId, categoryId),
                         habit.getHabitRecords()
                 )
         );
@@ -97,7 +100,7 @@ public class HabitApplicationService {
                                             habit.getId(),
                                             habit.getCategoryId(),
                                             category.getHabitType(),
-                                            user.isCheckedCategory(category),
+                                            cakeApplicationService.didReceiveFirstCake(userId, category.getId()),
                                             habit.getHabitRecords()
                                     );
                                 }
@@ -129,8 +132,7 @@ public class HabitApplicationService {
         habit.todayDone();
         habit.refreshHabitHistory();
 
-        if (!user.isCheckedCategory(category)) {
-            user.checkCategory(category);
+        if (!cakeApplicationService.didReceiveFirstCake(userId, category.getId())) {
             processGetNewCake(user, category);
         }
 
@@ -138,7 +140,7 @@ public class HabitApplicationService {
                 new HabitCheckResponse(
                         habit.getId(),
                         category.getHabitType(),
-                        user.isCheckedCategory(category),
+                        cakeApplicationService.didReceiveFirstCake(userId, category.getId()),
                         habit.getHabitRecords(),
                         habit.getCategoryId()
                 ),

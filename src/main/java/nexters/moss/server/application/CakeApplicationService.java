@@ -75,4 +75,8 @@ public class CakeApplicationService {
                         imageApplicationService.getMoveImagePath(category.getHabitType(), ImageEvent.NEW_CAKE))
         );
     }
+
+    public Boolean didReceiveFirstCake(Long userId, Long categoryId) {
+        return receivedPieceOfCakeRepository.existsByUserIdAndCategoryId(userId, categoryId);
+    }
 }

@@ -30,10 +30,6 @@ public class User extends TimeProvider {
     @Column(name = "nickname")
     private String nickname;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @JoinColumn(name = "check_list")
-    private List<Long> checkList = new ArrayList();
-
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "user_id")
     @Builder.Default
@@ -45,14 +41,5 @@ public class User extends TimeProvider {
                         .reason(reason)
                         .build()
         );
-    }
-
-    public void checkCategory(Category category) {
-        this.checkList.add(category.getId());
-    }
-
-    public boolean isCheckedCategory(Category category) {
-        return this.checkList.stream()
-                .anyMatch((checkedCategoryId) -> checkedCategoryId.equals(category.getId()));
     }
 }

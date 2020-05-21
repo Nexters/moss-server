@@ -18,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
+
 @Service
 @Transactional
 public class DiaryApplicationService {
@@ -26,65 +28,56 @@ public class DiaryApplicationService {
     private HabitRepository habitRepository;
     private ImageApplicationService imageApplicationService;
     private CategoryApplicationService categoryApplicationService;
-    private UserRepository userRepository;
 
     public DiaryApplicationService(
             WholeCakeRepository wholeCakeRepository,
             ReceivedPieceOfCakeRepository receivedPieceOfCakeRepository,
             HabitRepository habitRepository,
             ImageApplicationService imageApplicationService,
-            CategoryApplicationService categoryApplicationService,
-            UserRepository userRepository
+            CategoryApplicationService categoryApplicationService
     ) {
         this.wholeCakeRepository = wholeCakeRepository;
         this.receivedPieceOfCakeRepository = receivedPieceOfCakeRepository;
         this.habitRepository = habitRepository;
         this.imageApplicationService = imageApplicationService;
         this.categoryApplicationService = categoryApplicationService;
-        this.userRepository = userRepository;
     }
 
     public Response<List<DiaryDTO>> getPieceOfCakeDiary(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException("No Matched User"));
+        List<Habit> habits = habitRepository.findAllByUserId(userId);
         return new Response<>(
-                user.getCheckList()
-                        .stream()
-                        .map(categoryId -> {
-                                    Category category = categoryApplicationService.findById(categoryId);
-                                    return new DiaryDTO(
-                                            category.getHabitType().getName(),
-                                            category.getCakeType().getName(),
-                                            category.getDiaryDescription().getMessage(),
-                                            receivedPieceOfCakeRepository.countAllByUserIdAndCategoryId(userId, category.getId()) % 8,
-                                            imageApplicationService.getPieceDiaryImagePath(
-                                                    category.getHabitType(),
-                                                    ImageEvent.PIECE_OF_CAKE_DIARY,
-                                                    receivedPieceOfCakeRepository.countAllByUserIdAndCategoryId(userId, category.getId())
-                                            )
-                                    );
-                                }
-                        )
-                        .collect(Collectors.toList())
+                habits.stream()
+                        .map(Habit::getCategoryId)
+                        .map(categoryId -> categoryApplicationService.findById(categoryId))
+                        .map(category -> new DiaryDTO(
+                                category.getHabitType().getName(),
+                                category.getCakeType().getName(),
+                                category.getDiaryDescription().getMessage(),
+                                receivedPieceOfCakeRepository.countAllByUserIdAndCategoryId(userId, category.getId()) % 8,
+                                imageApplicationService.getPieceDiaryImagePath(
+                                        category.getHabitType(),
+                                        ImageEvent.PIECE_OF_CAKE_DIARY,
+                                        receivedPieceOfCakeRepository.countAllByUserIdAndCategoryId(userId, category.getId())
+                                )
+                        ))
+                        .collect(toList())
         );
     }
 
     public Response<List<DiaryDTO>> getWholeCakeDiary(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException("No Matched User"));
+        List<Habit> habits = habitRepository.findAllByUserId(userId);
         return new Response<>(
-                user.getCheckList()
-                        .stream()
-                        .map(categoryId -> {
-                                    Category category = categoryApplicationService.findById(categoryId);
-                                    return new DiaryDTO(
-                                            category.getHabitType().getName(),
-                                            category.getCakeType().getName(),
-                                            category.getDiaryDescription().getMessage(),
-                                            wholeCakeRepository.countAllByUserIdAndCategoryId(userId, category.getId()),
-                                            imageApplicationService.getWholeDiaryImagePath(category.getHabitType(), ImageEvent.WHOLE_CAKE_DIARY)
-                                    );
-                                }
-                        )
-                        .collect(Collectors.toList())
+                habits.stream()
+                        .map(Habit::getCategoryId)
+                        .map(categoryId -> categoryApplicationService.findById(categoryId))
+                        .map(category -> new DiaryDTO(
+                                category.getHabitType().getName(),
+                                category.getCakeType().getName(),
+                                category.getDiaryDescription().getMessage(),
+                                wholeCakeRepository.countAllByUserIdAndCategoryId(userId, category.getId()),
+                                imageApplicationService.getWholeDiaryImagePath(category.getHabitType(), ImageEvent.WHOLE_CAKE_DIARY)
+                        ))
+                        .collect(toList())
         );
     }
 
@@ -98,7 +91,7 @@ public class DiaryApplicationService {
                         wholeCakeRepository.findAllByUserIdAndCategoryId(userId, categoryId)
                                 .stream()
                                 .map(wholeCake -> wholeCake.getCreatedAt())
-                                .collect(Collectors.toList()),
+                                .collect(toList()),
                         imageApplicationService.getMoveImagePath(category.getHabitType(), ImageEvent.HISTORY)
                 )
         );
