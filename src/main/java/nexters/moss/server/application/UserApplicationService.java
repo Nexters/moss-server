@@ -2,6 +2,8 @@ package nexters.moss.server.application;
 
 import lombok.AllArgsConstructor;
 import nexters.moss.server.application.dto.Response;
+import nexters.moss.server.domain.cake.SentPieceOfCake;
+import nexters.moss.server.domain.cake.SentPieceOfCakeRepository;
 import nexters.moss.server.domain.exceptions.AlreadyExistException;
 import nexters.moss.server.domain.exceptions.ResourceNotFoundException;
 import nexters.moss.server.domain.exceptions.UnauthorizedException;
@@ -22,6 +24,7 @@ public class UserApplicationService {
     private HabikeryTokenService habikeryTokenService;
     private UserRepository userRepository;
     private ReceivedPieceOfCakeRepository receivedPieceOfCakeRepository;
+    private SentPieceOfCakeRepository sentPieceOfCakeRepository;
 
     public Response join(String accessToken, String nickname) {
         Long socialId = socialTokenService.getSocialUserId(accessToken);
@@ -68,8 +71,10 @@ public class UserApplicationService {
     public Response report(Long receivedPieceOfCakeId, String reason) {
         ReceivedPieceOfCake receivedPieceOfCake = receivedPieceOfCakeRepository.findById(receivedPieceOfCakeId)
                 .orElseThrow(() -> new ResourceNotFoundException("No Matched ReceivedPieceOfCake"));
+        SentPieceOfCake sentPieceOfCake = sentPieceOfCakeRepository.findById(receivedPieceOfCake.getSentPieceOfCakeId())
+                .orElseThrow(() -> new ResourceNotFoundException("No Matched SentPieceOfCake"));
         User reportedUser = userRepository.findById(
-                receivedPieceOfCake.getSentPieceOfCakeId()
+                sentPieceOfCake.getUserId()
         ).orElseThrow(() -> new ResourceNotFoundException("No Matched Habikery User with User ID"));
 
         reportedUser.reported(reason);

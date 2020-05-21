@@ -5,6 +5,8 @@ import nexters.moss.server.application.HabitApplicationService;
 import nexters.moss.server.application.dto.HabitHistory;
 import nexters.moss.server.application.dto.Response;
 import nexters.moss.server.domain.cake.ReceivedPieceOfCakeRepository;
+import nexters.moss.server.domain.cake.SentPieceOfCake;
+import nexters.moss.server.domain.cake.SentPieceOfCakeRepository;
 import nexters.moss.server.domain.cake.WholeCakeRepository;
 import nexters.moss.server.domain.habit.HabitRecordRepository;
 import nexters.moss.server.domain.habit.HabitRepository;
@@ -15,6 +17,7 @@ import nexters.moss.server.domain.user.User;
 import nexters.moss.server.domain.user.UserRepository;
 import nexters.moss.server.domain.value.CakeType;
 import nexters.moss.server.domain.value.HabitType;
+import org.hibernate.validator.constraints.Length;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,6 +28,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.persistence.Column;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -53,6 +57,9 @@ public class HabitApplicationServiceTest {
 
     @Autowired
     private HabitRecordRepository habitRecordRepository;
+
+    @Autowired
+    private SentPieceOfCakeRepository sentPieceOfCakeRepository;
 
     private ReceivedPieceOfCakeRepository receivedPieceOfCakeRepository;
     private WholeCakeRepository wholeCakeRepository;
@@ -114,6 +121,15 @@ public class HabitApplicationServiceTest {
     @Test
     public void doneHabitTest() {
         // given
+        Long senderId = testUser.getId() + 1;
+        sentPieceOfCakeRepository.save(new SentPieceOfCake(
+                0L,
+                senderId,
+                testCategory.getId(),
+                "test cake note",
+                null
+        ));
+
         receivedPieceOfCakeRepository = mock(ReceivedPieceOfCakeRepository.class);
         wholeCakeRepository = mock(WholeCakeRepository.class);
 
