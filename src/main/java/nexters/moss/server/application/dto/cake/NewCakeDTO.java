@@ -14,4 +14,5 @@ public class NewCakeDTO {
     private String note;
     private String cakeName;
     private String imagePath;
+    private String description;
 }

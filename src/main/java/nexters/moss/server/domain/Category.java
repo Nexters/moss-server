@@ -17,6 +17,6 @@ public class Category {
     private Long id;
     private HabitType habitType;
     private CakeType cakeType;
-    private Description receiveCakeDescription;
+    private Description cakeDescription;
     private Description diaryDescription;
 }

@@ -9,42 +9,42 @@ resources:
     - id: 1
       habit-type: WATER
       cake-type: WATERMELON
-      receiveCakeDescription: "물 마시는 나에게"
+      cakeDescription: "물 마시는 나에게"
       diaryDescription: "수분충전"
     - id: 2
       habit-type: STRETCHING
       cake-type: CHEESE
-      receiveCakeDescription: "스트레칭하는 나에게"
+      cakeDescription: "스트레칭하는 나에게"
       diaryDescription: "쭉쭉 늘어나는"
     - id: 3
       habit-type: MEDITATION
       cake-type: WHIPPING_CREAM
-      receiveCakeDescription: "명상하는 나에게"
+      cakeDescription: "명상하는 나에게"
       diaryDescription: "부드러운 마음"
     - id: 4
       habit-type: WALK
       cake-type: GREEN_TEA
-      receiveCakeDescription: "산책하는 나에게"
+      cakeDescription: "산책하는 나에게"
       diaryDescription: "싱그러운"
     - id: 5
       habit-type: NEWS
       cake-type: COFFEE
-      receiveCakeDescription: "뉴스보는 나에게"
+      cakeDescription: "뉴스보는 나에게"
       diaryDescription: "아침을 깨우는"
     - id: 6
       habit-type: BREAKFAST
       cake-type: APPLE
-      receiveCakeDescription: "아침먹는 나에게"
+      cakeDescription: "아침먹는 나에게"
       diaryDescription: "하루의 시작"
     - id: 7
       habit-type: DIARY
       cake-type: CHESTNUT
-      receiveCakeDescription: "일기쓰는 나에게"
+      cakeDescription: "일기쓰는 나에게"
       diaryDescription: "나를 위한 시간"
     - id: 8
       habit-type: READING
       cake-type: WALNUT
-      receiveCakeDescription: "책읽는 나에게"
+      cakeDescription: "책읽는 나에게"
       diaryDescription: "마음의 양식"
 
 spring:

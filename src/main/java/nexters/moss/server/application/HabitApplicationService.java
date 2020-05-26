@@ -172,7 +172,8 @@ public class HabitApplicationService {
                 user.getNickname(),
                 sentPieceOfCake.getNote(),
                 category.getCakeType().getName(),
-                imageApplicationService.getMoveImagePath(category.getHabitType(), ImageEvent.NEW_CAKE)
+                imageApplicationService.getMoveImagePath(category.getHabitType(), ImageEvent.NEW_CAKE),
+                category.getCakeDescription().getMessage()
         );
     }
 
