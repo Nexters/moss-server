@@ -132,10 +132,6 @@ public class HabitApplicationService {
         habit.todayDone();
         habit.refreshHabitHistory();
 
-        if (!cakeApplicationService.didReceiveFirstCake(userId, category.getId())) {
-            processGetNewCake(user, category);
-        }
-
         return new HabitDoneResponse(
                 new HabitCheckResponse(
                         habit.getId(),
@@ -144,9 +140,8 @@ public class HabitApplicationService {
                         habit.getHabitRecords(),
                         habit.getCategoryId()
                 ),
-                habit.isReadyToReceiveCake() ? processGetNewCake(user, category) : null
+                canReceiveNewCake(userId, habit) ? processGetNewCake(user, category) : null
         );
-
     }
 
     private NewCakeDTO processGetNewCake(User user, Category category) {
@@ -214,5 +209,11 @@ public class HabitApplicationService {
             }
         }
         return null;
+    }
+
+    private Boolean canReceiveNewCake(Long userId, Habit habit) {
+        Boolean isReadyToReceiveFirstCake = !cakeApplicationService.didReceiveFirstCake(userId, habit.getCategoryId());
+        Boolean isReadyToReceiveNewCake = habit.isReadyToReceiveCake();
+        return isReadyToReceiveFirstCake || isReadyToReceiveNewCake;
     }
 }
