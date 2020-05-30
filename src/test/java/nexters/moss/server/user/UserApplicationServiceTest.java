@@ -23,6 +23,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 
@@ -172,6 +173,22 @@ public class UserApplicationServiceTest {
         // then
         assertThat(leaveResponse).isNotNull();
         assertThat(userRepository.count()).isEqualTo(userCount - 1);
+    }
+
+    @Test
+    public void trimDoubleQuotesTest() {
+        // given
+        String methodName = "trimDoubleQuotes";
+        String nickname = "\"nickname\"";
+
+        // when
+        String result = ReflectionTestUtils.invokeMethod(userApplicationService, methodName, nickname);
+
+        // then
+        assertThat(result).isNotEqualTo(nickname);
+        assertThat(result.startsWith("\"")).isFalse();
+        assertThat(result.endsWith("\"")).isFalse();
+        assertThat(nickname.contains(result)).isTrue();
     }
 
     private User setupJoinAndLogin(String accessToken, User user) {

@@ -33,10 +33,12 @@ public class UserApplicationService {
             throw new AlreadyExistException("Duplicated Habikery User with Social ID: " + socialId.toString());
         }
 
+        String trimmedNickname = trimDoubleQuotes(nickname);
+
         userRepository.save(
                 User.builder()
                         .socialId(socialId)
-                        .nickname(nickname)
+                        .nickname(trimmedNickname)
                         .build()
         );
 
@@ -79,5 +81,19 @@ public class UserApplicationService {
 
         reportedUser.reported(reason);
         return new Response();
+    }
+
+    private String trimDoubleQuotes(String nickname) {
+        String trimmedNickname = nickname;
+
+        if (nickname.startsWith("\"")) {
+            trimmedNickname = trimmedNickname.substring(1);
+        }
+
+        if (nickname.endsWith("\"")) {
+            trimmedNickname = trimmedNickname.substring(0, trimmedNickname.length() - 1);
+        }
+
+        return trimmedNickname;
     }
 }
