@@ -9,7 +9,7 @@ public enum CakeType {
     WHIPPING_CREAM("WHIPPING_CREAM", "생크림"),
     GREEN_TEA("GREEN_TEA", "녹차"),
     COFFEE("COFFEE", "커피"),
-    APPLE("APPLE", "애플"),
+    APPLE("APPLE", "사과"),
     CHESTNUT("CHESTNUT", "밤"),
     WALNUT("WALNUT", "아몬드");
 

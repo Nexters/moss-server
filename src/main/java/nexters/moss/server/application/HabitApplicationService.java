@@ -132,7 +132,7 @@ public class HabitApplicationService {
         habit.todayDone();
         habit.refreshHabitHistory();
 
-        boolean isFirstCheck = cakeApplicationService.didReceiveCake(userId, habitId) ? false : true;
+        boolean isFirstCheck = cakeApplicationService.didReceiveCake(userId, category.getId()) ? false : true;
         if (isFirstCheck) {
             processGetNewCake(user, category);
         }

@@ -57,7 +57,7 @@ public class DiaryApplicationService {
                                 imageApplicationService.getPieceDiaryImagePath(
                                         category.getHabitType(),
                                         ImageEvent.PIECE_OF_CAKE_DIARY,
-                                        receivedPieceOfCakeRepository.countAllByUserIdAndCategoryId(userId, category.getId())
+                                        receivedPieceOfCakeRepository.countAllByUserIdAndCategoryId(userId, category.getId()) % 8
                                 )
                         ))
                         .collect(toList())
