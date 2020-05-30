@@ -124,6 +124,15 @@ public class HabitApplicationServiceTest {
     public void doneHabitTest() {
         // given
         Long senderId = testUser.getId() + 1;
+        userRepository.save(
+                new User(
+                        senderId,
+                        null,
+                        null,
+                        null,
+                        null
+                )
+        );
         sentPieceOfCakeRepository.save(new SentPieceOfCake(
                 0L,
                 senderId,
