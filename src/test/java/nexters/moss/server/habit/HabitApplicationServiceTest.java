@@ -103,10 +103,12 @@ public class HabitApplicationServiceTest {
 
         List<HabitRecord> habitRecords = createResponse.getData().getHabitRecords();
         Assert.assertEquals(5, habitRecords.size());
-        int nowDay = LocalDateTime.now().minusDays(1).getDayOfMonth();
+
+        int daysFromNow = -1;
         for (HabitRecord habitRecord : habitRecords) {
-            Assert.assertEquals(nowDay, habitRecord.getDate().getDayOfMonth());
-            nowDay++;
+            int recordDay = LocalDateTime.now().plusDays(daysFromNow).getDayOfMonth();
+            Assert.assertEquals(recordDay, habitRecord.getDate().getDayOfMonth());
+            daysFromNow++;
         }
     }
 
