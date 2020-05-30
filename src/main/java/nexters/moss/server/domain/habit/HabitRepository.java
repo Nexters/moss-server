@@ -9,4 +9,5 @@ public interface HabitRepository extends JpaRepository<Habit, Long> {
     Boolean existsByUserIdAndCategoryId(Long userId, Long categoryId);
     List<Habit> findAllByUserIdOrderByOrderAsc(Long userId);
     int countAllByUserId(Long userId);
+    void deleteByUserId(Long userId);
 }

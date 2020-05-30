@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface HabitRecordRepository extends JpaRepository<HabitRecord, Long> {
     List<HabitRecord> findAllByUserIdAndHabitId(Long userId, Long habitId);
+    void deleteByUserId(Long userId);
 }

@@ -7,4 +7,5 @@ import java.util.List;
 public interface WholeCakeRepository extends JpaRepository<WholeCake, Long> {
     List<WholeCake> findAllByUserIdAndCategoryId(Long userId, Long categoryId);
     int countAllByUserIdAndCategoryId(Long userId, Long categoryId);
+    void deleteByUserId(Long userId);
 }

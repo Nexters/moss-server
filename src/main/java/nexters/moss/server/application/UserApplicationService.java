@@ -2,13 +2,12 @@ package nexters.moss.server.application;
 
 import lombok.AllArgsConstructor;
 import nexters.moss.server.application.dto.Response;
-import nexters.moss.server.domain.cake.SentPieceOfCake;
-import nexters.moss.server.domain.cake.SentPieceOfCakeRepository;
+import nexters.moss.server.domain.cake.*;
 import nexters.moss.server.domain.exceptions.AlreadyExistException;
 import nexters.moss.server.domain.exceptions.ResourceNotFoundException;
 import nexters.moss.server.domain.exceptions.UnauthorizedException;
-import nexters.moss.server.domain.cake.ReceivedPieceOfCake;
-import nexters.moss.server.domain.cake.ReceivedPieceOfCakeRepository;
+import nexters.moss.server.domain.habit.HabitRecordRepository;
+import nexters.moss.server.domain.habit.HabitRepository;
 import nexters.moss.server.domain.user.SocialTokenService;
 import nexters.moss.server.domain.user.HabikeryTokenService;
 import nexters.moss.server.domain.user.User;
@@ -25,6 +24,9 @@ public class UserApplicationService {
     private UserRepository userRepository;
     private ReceivedPieceOfCakeRepository receivedPieceOfCakeRepository;
     private SentPieceOfCakeRepository sentPieceOfCakeRepository;
+    private WholeCakeRepository wholeCakeRepository;
+    private HabitRecordRepository habitRecordRepository;
+    private HabitRepository habitRepository;
 
     public Response join(String accessToken, String nickname) {
         Long socialId = socialTokenService.getSocialUserId(accessToken);
@@ -59,7 +61,13 @@ public class UserApplicationService {
         if (!userRepository.existsById(userId)) {
             throw new ResourceNotFoundException("No Matched Habikery User with User ID");
         }
+
         userRepository.deleteById(userId);
+        receivedPieceOfCakeRepository.deleteByUserId(userId);
+        wholeCakeRepository.deleteByUserId(userId);
+        habitRecordRepository.deleteByUserId(userId);
+        habitRepository.deleteByUserId(userId);
+
         return new Response(userId);
     }
 
