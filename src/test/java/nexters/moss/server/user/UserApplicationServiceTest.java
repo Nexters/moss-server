@@ -1,14 +1,17 @@
 package nexters.moss.server.user;
 
 import nexters.moss.server.TestConfiguration;
+import nexters.moss.server.application.CakeApplicationService;
+import nexters.moss.server.application.DiaryApplicationService;
+import nexters.moss.server.application.HabitApplicationService;
 import nexters.moss.server.application.UserApplicationService;
+import nexters.moss.server.application.dto.HabitHistory;
 import nexters.moss.server.application.dto.Response;
+import nexters.moss.server.application.dto.cake.CreateNewCakeRequest;
 import nexters.moss.server.domain.Category;
-import nexters.moss.server.domain.cake.ReceivedPieceOfCake;
-import nexters.moss.server.domain.cake.ReceivedPieceOfCakeRepository;
-import nexters.moss.server.domain.cake.SentPieceOfCake;
-import nexters.moss.server.domain.cake.SentPieceOfCakeRepository;
+import nexters.moss.server.domain.cake.*;
 import nexters.moss.server.domain.habit.Habit;
+import nexters.moss.server.domain.habit.HabitRecordRepository;
 import nexters.moss.server.domain.habit.HabitRepository;
 import nexters.moss.server.domain.user.*;
 import nexters.moss.server.domain.value.CakeType;
@@ -48,12 +51,20 @@ public class UserApplicationServiceTest {
     private SentPieceOfCakeRepository sentPieceOfCakeRepository;
     @Autowired
     private ReceivedPieceOfCakeRepository receivedPieceOfCakeRepository;
+    @Autowired
+    private HabitRecordRepository habitRecordRepository;
+    @Autowired
+    private WholeCakeRepository wholeCakeRepository;
 
     @MockBean(name = "socialTokenService")
     private SocialTokenService socialTokenService;
 
     @Autowired
     private UserApplicationService userApplicationService;
+    @Autowired
+    private CakeApplicationService cakeApplicationService;
+    @Autowired
+    private HabitApplicationService habitApplicationService;
 
     private String testAccessToken;
     private User testUser;
@@ -173,6 +184,48 @@ public class UserApplicationServiceTest {
         // then
         assertThat(leaveResponse).isNotNull();
         assertThat(userRepository.count()).isEqualTo(userCount - 1);
+    }
+
+    @Test
+    public void leaveTestWithOtherDomainData() {
+        // given
+        userApplicationService.join(testAccessToken, testUser.getNickname());
+
+        String dummyAccessToken = "dummyAccessToken";
+        userApplicationService.join(dummyAccessToken, "dummy");
+
+        List<User> userList = userRepository.findAll();
+        int userCount = userList.size();
+        User savedUser = userList.get(0);
+        User dummyUser = userList.get(1);
+
+        Long categoryId = 1L;
+
+        cakeApplicationService.sendCake(dummyUser.getId(), CreateNewCakeRequest.builder()
+                .categoryId(categoryId)
+                .note("dummy note!")
+                .build()
+        );
+        cakeApplicationService.sendCake(savedUser.getId(), CreateNewCakeRequest.builder()
+                .categoryId(categoryId)
+                .note("test note!")
+                .build()
+        );
+
+        Response<HabitHistory> history = habitApplicationService.createHabit(savedUser.getId(), categoryId);
+
+        habitApplicationService.doneHabit(savedUser.getId(), history.getData().getHabitId());
+
+        // when
+        Response leaveResponse = userApplicationService.leave(savedUser.getId());
+
+        // then
+        assertThat(leaveResponse).isNotNull();
+        assertThat(userRepository.count()).isEqualTo(userCount - 1);
+        assertThat(receivedPieceOfCakeRepository.count()).isEqualTo(0);
+        assertThat(wholeCakeRepository.count()).isEqualTo(0);
+        assertThat(habitRepository.count()).isEqualTo(0);
+        assertThat(habitRecordRepository.count()).isEqualTo(0);
     }
 
     @Test
