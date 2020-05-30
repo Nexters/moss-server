@@ -78,7 +78,7 @@ public class CakeApplicationService {
         );
     }
 
-    public Boolean didReceiveFirstCake(Long userId, Long categoryId) {
+    public Boolean didReceiveCake(Long userId, Long categoryId) {
         return receivedPieceOfCakeRepository.existsByUserIdAndCategoryId(userId, categoryId);
     }
 }

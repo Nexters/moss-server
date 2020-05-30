@@ -80,7 +80,7 @@ public class HabitApplicationService {
                         habit.getId(),
                         habit.getCategoryId(),
                         category.getHabitType(),
-                        cakeApplicationService.didReceiveFirstCake(userId, categoryId),
+                        cakeApplicationService.didReceiveCake(userId, categoryId),
                         habit.getHabitRecords()
                 )
         );
@@ -100,7 +100,7 @@ public class HabitApplicationService {
                                             habit.getId(),
                                             habit.getCategoryId(),
                                             category.getHabitType(),
-                                            cakeApplicationService.didReceiveFirstCake(userId, category.getId()),
+                                            cakeApplicationService.didReceiveCake(userId, category.getId()),
                                             habit.getHabitRecords()
                                     );
                                 }
@@ -132,15 +132,20 @@ public class HabitApplicationService {
         habit.todayDone();
         habit.refreshHabitHistory();
 
+        boolean isFirstCheck = cakeApplicationService.didReceiveCake(userId, habitId) ? false : true;
+        if (isFirstCheck) {
+            processGetNewCake(user, category);
+        }
+
         return new HabitDoneResponse(
                 new HabitCheckResponse(
                         habit.getId(),
                         category.getHabitType(),
-                        cakeApplicationService.didReceiveFirstCake(userId, category.getId()),
+                        isFirstCheck,
                         habit.getHabitRecords(),
                         habit.getCategoryId()
                 ),
-                canReceiveNewCake(userId, habit) ? processGetNewCake(user, category) : null
+                habit.isReadyToReceiveCake() ? processGetNewCake(user, category) : null
         );
     }
 
@@ -148,6 +153,7 @@ public class HabitApplicationService {
         SentPieceOfCake sentPieceOfCake = sentPieceOfCakeRepository.findRandomByUserIdAndCategoryId(user.getId(), category.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Has no remain cake message"));
 
+        User sentUser = userRepository.findById(sentPieceOfCake.getUserId()).orElseThrow(() -> new UnauthorizedException("No Matched User"));
         receivedPieceOfCakeRepository.save(
                 ReceivedPieceOfCake.builder()
                         .userId(user.getId())
@@ -164,7 +170,7 @@ public class HabitApplicationService {
         }
 
         return new NewCakeDTO(
-                user.getNickname(),
+                sentUser.getNickname(),
                 sentPieceOfCake.getNote(),
                 category.getCakeType().getName(),
                 imageApplicationService.getMoveImagePath(category.getHabitType(), ImageEvent.NEW_CAKE),
@@ -209,11 +215,5 @@ public class HabitApplicationService {
             }
         }
         return null;
-    }
-
-    private Boolean canReceiveNewCake(Long userId, Habit habit) {
-        Boolean isReadyToReceiveFirstCake = !cakeApplicationService.didReceiveFirstCake(userId, habit.getCategoryId());
-        Boolean isReadyToReceiveNewCake = habit.isReadyToReceiveCake();
-        return isReadyToReceiveFirstCake || isReadyToReceiveNewCake;
     }
 }
