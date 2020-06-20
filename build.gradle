@@ -48,6 +48,9 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     implementation 'junit:junit:4.12'
 
+    // aop
+    implementation 'org.springframework.boot:spring-boot-starter-aop:2.3.0.RELEASE'
+
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 }
