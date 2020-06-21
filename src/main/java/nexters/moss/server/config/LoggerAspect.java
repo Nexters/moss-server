@@ -20,28 +20,26 @@ public class LoggerAspect {
 
     private static final Logger logger = LoggerFactory.getLogger(LoggerAspect.class);
 
-    @Pointcut("execution(* nexters.moss.server.application.*.*(..))")
-    public void applicationLayerPointcut() {
-    }
-
-    @Pointcut("execution(* nexters.moss.server.domain.*.*(..))")
-    public void domainLayerPointcut() {
-    }
-
-    @Pointcut("execution(* nexters.moss.server.infra.*.*(..))")
-    public void infrastructureLayerPointcut() {
-    }
-
-    @Pointcut("execution(* nexters.moss.server.web.*ExceptionHandler.*(..))")
-    public void exceptionHandlerPointCut() {
+    @Pointcut("execution(* nexters.moss.server.*.*.login(..)) || execution(* nexters.moss.server.*.*.join(..))")
+    public void ignoredPointCut() {
     }
 
     @Pointcut("execution(* nexters.moss.server.web.*Controller.*(..))")
-    public void controllerPointCut() {
+    public void loggingPointCut() {
     }
 
-    @Around("controllerPointCut()")
-    public Object logController(ProceedingJoinPoint pjp) throws Throwable {
+    @Pointcut("execution(* nexters.moss.server.web.*ExceptionHandler.*(..))")
+    public void exceptionPointCut() {
+    }
+
+    @Pointcut("execution(* nexters.moss.server.application.*.*(..)) " +
+            "&& execution(* nexters.moss.server.domain.*.*(..)) " +
+            "&& execution(* nexters.moss.server.infra.*.*(..))")
+    public void debuggingPointCut() {
+    }
+
+    @Around("loggingPointCut() && !ignoredPointCut()")
+    public Object logInfo(ProceedingJoinPoint pjp) throws Throwable {
         logger.info("====================================== START ======================================");
         logger.info("Controller: " + pjp.getSignature().getDeclaringTypeName());
         logger.info("Method: " + pjp.getSignature().getName());
@@ -61,8 +59,8 @@ public class LoggerAspect {
         return result;
     }
 
-    @Around("applicationLayerPointcut() || domainLayerPointcut() || infrastructureLayerPointcut()")
-    public Object log(ProceedingJoinPoint pjp) throws Throwable {
+    @Around("debuggingPointCut() && !ignoredPointCut()")
+    public Object logDebug(ProceedingJoinPoint pjp) throws Throwable {
         logger.debug("Class: " + pjp.getSignature().getDeclaringTypeName());
         logger.debug("Method: " + pjp.getSignature().getName());
         String params = Arrays.stream(pjp.getArgs())
@@ -72,12 +70,12 @@ public class LoggerAspect {
         logger.debug("Param: " + params);
 
         Object result = pjp.proceed();
-        logger.debug(pjp.getSignature().getDeclaringTypeName() + " " +  pjp.getSignature().getName() + " execution is finished");
+        logger.debug(pjp.getSignature().getDeclaringTypeName() + " " + pjp.getSignature().getName() + " execution is finished");
         return result;
     }
 
-    @Around("exceptionHandlerPointCut()")
-    public Object logExceptionHandler(ProceedingJoinPoint pjp) throws Throwable {
+    @Around("exceptionPointCut() && !ignoredPointCut()")
+    public Object logException(ProceedingJoinPoint pjp) throws Throwable {
         logger.error("Class: " + pjp.getSignature().getDeclaringTypeName());
         logger.error("Method: " + pjp.getSignature().getName());
         String params = Arrays.stream(pjp.getArgs())
@@ -87,7 +85,7 @@ public class LoggerAspect {
         logger.error("Param: " + params);
 
         Object result = pjp.proceed();
-        logger.error(pjp.getSignature().getDeclaringTypeName() + " " +  pjp.getSignature().getName() + " exception handling is finished");
+        logger.error(pjp.getSignature().getDeclaringTypeName() + " " + pjp.getSignature().getName() + " exception handling is finished");
         return result;
     }
 }
