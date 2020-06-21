@@ -57,7 +57,6 @@ public class LoggerAspect {
 
         logger.info("Controller passes the request");
         Object result = pjp.proceed();
-        logger.info("Response: " + ((Response) result).getData());
         logger.info("======================================= END =======================================");
         return result;
     }

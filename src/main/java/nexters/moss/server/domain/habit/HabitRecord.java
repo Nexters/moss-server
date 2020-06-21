@@ -53,9 +53,4 @@ public class HabitRecord extends TimeProvider {
     public void switchHabitStatus(HabitStatus habitStatus) {
         this.habitStatus = habitStatus;
     }
-
-    public void changeContents(HabitRecord habitRecord) {
-        this.habitStatus = habitRecord.habitStatus;
-        this.date = habitRecord.getDate();
-    }
 }

@@ -8,6 +8,7 @@ import org.hibernate.annotations.OrderBy;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -126,7 +127,7 @@ public class Habit extends TimeProvider {
         this.order = order;
     }
 
-    public boolean refreshHabitHistory() {
+    public void refreshHabitHistory() {
         if(this.habitRecords.size() != 5) {
             // TODO: throw exceptions
         }
@@ -146,13 +147,11 @@ public class Habit extends TimeProvider {
                     refreshHabitRecords(this.habitRecords);
                     break;
             }
-            return true;
         }
-
-        return false;
     }
 
     private void resetHabitRecords(List<HabitRecord> habitRecords) {
+        LocalDateTime today = LocalDate.now().atTime(0, 0, 0);
         for (int day = 0; day < 5; day++) {
             HabitStatus habitStatus = HabitStatus.NOT_DONE;
             if (day == 3) {
@@ -161,24 +160,25 @@ public class Habit extends TimeProvider {
 
             if (day == 4) {
                 habitRecords.get(day).setDate(
-                        habitRecords.get(day).getDate().plusDays(1)
+                        today.plusDays(3)
                 );
                 habitRecords.get(day).setHabitStatus(habitStatus);
                 continue;
             }
 
             habitRecords.get(day).setDate(
-                    habitRecords.get(day + 1).getDate()
+                    today.plusDays(day - 1)
             );
             habitRecords.get(day).setHabitStatus(habitStatus);
         }
     }
 
     private void refreshHabitRecords(List<HabitRecord> habitRecords) {
+        LocalDateTime today = LocalDate.now().atTime(0, 0, 0);
         HabitStatus yesterdayHabitStatus = habitRecords.get(0).getHabitStatus();
         HabitRecord lastHabitRecord = habitRecords.get(4);
-        for (int index = 0; index < 5; index++) {
-            if (index == 4) {
+        for (int day = 0; day < 5; day++) {
+            if (day == 4) {
                 if(yesterdayHabitStatus == HabitStatus.DONE) {
                     if (lastHabitRecord.getHabitStatus() == HabitStatus.CAKE_NOT_DONE) {
                         lastHabitRecord.setHabitStatus(HabitStatus.NOT_DONE);
@@ -187,13 +187,16 @@ public class Habit extends TimeProvider {
                     }
                 }
 
-                habitRecords.get(index).setDate(
-                        habitRecords.get(index).getDate().plusDays(1)
+                habitRecords.get(day).setDate(
+                        today.plusDays(3)
                 );
                 continue;
             }
-            habitRecords.get(index).changeContents(
-                    habitRecords.get(index + 1)
+            habitRecords.get(day).setHabitStatus(
+                    habitRecords.get(day + 1).getHabitStatus()
+            );
+            habitRecords.get(day).setDate(
+                    today.plusDays(day - 1)
             );
         }
     }
